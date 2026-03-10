@@ -137,7 +137,9 @@ Observed: returns up to ~48 battles.
 | `friendly` | Friendly battle (not clanmate) | `Crazy_Arena`, `7xElixir_Friendly` |
 | `riverRacePvP` | River race 1v1 battle | `CW_Battle_1v1` |
 | `riverRaceDuel` | River race duel (best-of-3) | `CW_Duel_1v1` |
+| `riverRaceDuelColosseum` | Colosseum duel variant | `CW_Duel_1v1` |
 | `boatBattle` | River race boat attack/defense | `ClanWar_BoatBattle` |
+| `unknown` | Rare fallback value seen on some friendlies | `Friendly` |
 
 **Deck selection values:**
 
@@ -147,6 +149,9 @@ Observed: returns up to ~48 battles.
 | `eventDeck` | trail, some friendlies |
 | `draft` | clanMate2v2 (draft modes) |
 | `warDeckPick` | riverRaceDuel |
+| `pick` | pick-mode friendlies |
+| `draftCompetitive` | competitive draft friendlies |
+| `predefined` | preset-deck friendlies (e.g. Mirror Deck) |
 
 **Known game mode IDs:**
 
@@ -154,20 +159,29 @@ Observed: returns up to ~48 battles.
 |----|------|
 | 72000006 | Ladder |
 | 72000007 | Friendly |
+| 72000005 | DraftMode |
 | 72000009 | (tournament mode) |
 | 72000013 | (tournament mode) |
-| 72000042 | (tournament mode) |
+| 72000014 | TeamVsTeam |
+| 72000032 | TripleElixir_Friendly |
+| 72000042 | PickMode |
+| 72000050 | Touchdown_Draft |
 | 72000051 | TeamVsTeam_Touchdown_Draft |
-| 72000194 | (tournament mode) |
+| 72000060 | Overtime_Ladder |
+| 72000194 | Draft_Competitive |
 | 72000232 | 7xElixir_Friendly |
+| 72000254 | MirrorDeck_Friendly |
 | 72000266 | ClanWar_BoatBattle |
 | 72000267 | CW_Duel_1v1 |
 | 72000268 | CW_Battle_1v1 |
 | 72000464 | Ranked1v1_NewArena2 |
+| 72000469 | DraftMode_Princess |
 | 72000474 | Challenge_AllCards_EventDeck_NoSet |
+| 72000486 | Touchdown_Event |
+| 72000500 | RampUp_Friendly_EventDeck_4Card |
 | 72000502 | Crazy_Arena |
 
-Note: `gameMode.name` may be absent — tournament game modes only have `id`.
+Note: `gameMode.name` may be absent — tournament game modes often only have `id`.
 
 **Determining battle winner:** There is no explicit `winner` field. Use these signals:
 - `trophyChange > 0` on team[0] = win (PvP/pathOfLegend only)
@@ -254,7 +268,7 @@ Get the player's upcoming chest sequence.
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. `message` may be absent on some `404` responses, and `type`/`detail` were not observed.
 
 ---
 
@@ -269,5 +283,7 @@ All errors return: `{ reason, message, type, detail }`
 - `leagueStatistics.currentSeason` has no `id` field (it's the current season)
 - **2v2 battles:** `team` and `opponent` each contain 2 entries instead of 1
 - **Battle winner detection:** Compare `team[0].crowns` vs `opponent[0].crowns`, or check `trophyChange` sign on PvP/pathOfLegend battles
+- Additional battle variants observed in March 2026 sampling: `riverRaceDuelColosseum` and an occasional `unknown` type on friendlies
+- Additional `deckSelection` values observed in March 2026 sampling: `pick`, `draftCompetitive`, `predefined`
 - **Badges:** Two categories — progress badges (with `level`/`maxLevel`/`progress`/`target`) and one-time badges (level=null, just `progress` and `iconUrls`). Mastery badges are per-card (e.g. `MasteryKnight`).
 - **Achievements:** Fixed set of 12 achievements. `stars` (0-3) indicates completion tier. `completionInfo` is typically null.

@@ -51,7 +51,7 @@ Get all current in-game events.
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were not observed.
 
 ---
 
@@ -60,5 +60,6 @@ All errors return: `{ reason, message, type, detail }`
 - `title` and `description` are localized — locale is determined by the API token's configured region
 - `description` can be null for some events (observed for "Merge Tactics")
 - Returns only currently active events, not upcoming or historical
+- Query params appear to be ignored — `/events?limit=5` still returned the full bare array in March 2026 testing
 - `eventTag` values appear in battle log entries (`Battle.eventTag`) — can be used to cross-reference which event a battle was played in
 - Observed ~7 concurrent active events (Classic 1v1, Classic 2v2, Challenges, special modes)

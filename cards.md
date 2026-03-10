@@ -10,7 +10,7 @@ Auth: Bearer token in `Authorization` header
 ### GET /cards
 Get the full list of available cards in the game.
 
-**Query:** `limit`, `after`, `before` (pagination cursors — mutually exclusive)
+**Query:** None documented. In live March 2026 tests, `limit`, `after`, and `before` were ignored rather than applied.
 
 **Returns:** `Items` object with two arrays:
 - `items` — 121 standard cards (troops, spells, buildings)
@@ -58,7 +58,7 @@ Support items lack `elixirCost` and `maxEvolutionLevel`.
 **iconUrls variants:**
 - `medium` — always present on all cards
 - `heroMedium` — present on some cards (hero/star skins)
-- `evolutionMedium` — present only on cards with evolutions (46 of 121 cards)
+- `evolutionMedium` — present on some evolvable cards (39 of 121 observed)
 
 **ID ranges (observed):**
 - `26000xxx` — troops
@@ -79,13 +79,13 @@ Support items lack `elixirCost` and `maxEvolutionLevel`.
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. This endpoint ignored `limit=0` in March 2026 testing and still returned the full catalog. `type`/`detail` were not observed.
 
 ---
 
 ## Agent Notes
 - Global catalog endpoint — not player-specific. Use `/players/{playerTag}` for a player's collected cards with levels.
 - `items` vs `supportItems`: Tower Troops (cards that replace/augment crown towers) are in `supportItems`; everything else is in `items`
-- Pagination available but the full list (121 + 4 = 125 cards) is small enough that a single unpaginated call returns everything
+- Pagination parameters appear to be ignored — `/cards?limit=1`, `/cards?after=...`, and `/cards?before=...` still returned the full catalog in March 2026 testing
 - `maxEvolutionLevel` is optional — only 46/121 standard cards have evolutions (values observed: 1, 2, or 3)
-- No `paging` object in response when all cards fit in one page (cursors will be empty)
+- No `paging` object is present in responses

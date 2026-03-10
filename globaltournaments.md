@@ -32,7 +32,7 @@ When no global tournaments are active, returns:
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were not observed.
 
 ---
 

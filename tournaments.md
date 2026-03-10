@@ -12,7 +12,7 @@ Tag encoding: `#2ABC` → `%232ABC` in path
 Search tournaments by name.
 
 **Query:**
-- `name` — wildcard match, 3+ chars required
+- `name` — wildcard match. At least one filtering parameter is required; in live March 2026 tests, two-character values like `ab` still returned results.
 - `limit`, `after`, `before` (pagination cursors — mutually exclusive)
 
 **Returns:** `{ items: [...], paging: { ... } }` — array of `TournamentHeader` objects (summary data, not full detail)
@@ -107,12 +107,13 @@ Note: A third type `private` may exist but was not observed.
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. `GET /tournaments` with no filters returns `400 badRequest` with `At least one filtering parameter must exist`. `type`/`detail` were not observed.
 
 ---
 
 ## Agent Notes
 - Search returns `TournamentHeader` (summary) — fetch by tag to get `membersList` and full detail
+- `GET /tournaments` requires at least one filter, but the older "3+ chars required" assumption for `name` was not reproduced in March 2026 testing
 - `description` field is optional and may not be present on tournaments without one
 - `gameMode` in tournament context typically only has `id` (no `name`) — unlike battle log where both are present
 - Search only seems to return active tournaments (`inPreparation` or `inProgress`) — not ended ones

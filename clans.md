@@ -233,7 +233,7 @@ Note: search results do not include `memberList` or `description` — fetch the 
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were not observed.
 
 ---
 

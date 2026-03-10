@@ -44,7 +44,7 @@ Example: `20260309T135844.000Z`
 
 ### Error Responses
 
-All endpoints return errors with consistent `reason` and `message` fields:
+Error bodies are not fully consistent. `reason` is always present in observed responses, `message` is present on many `400` responses but often absent on `404`/`500` responses, and `type`/`detail` were not observed:
 
 | Code | Meaning |
 |------|---------|
@@ -56,12 +56,17 @@ All endpoints return errors with consistent `reason` and `message` fields:
 | 500 | Server error |
 | 503 | Maintenance |
 
-Error body: `{ reason, message }` — `type` and `detail` fields may be absent.
+Observed error shapes:
+- `{ "reason": "badRequest", "message": "..." }`
+- `{ "reason": "notFound" }`
+- `{ "reason": "unknownException" }`
 
 Notable `reason` values:
 - `accessDenied` — IP doesn't match token or invalid token
 - `notFound` — resource or endpoint not found
+- `badRequest` — invalid parameter combinations or values
 - `gone` — endpoint permanently removed
+- `unknownException` — observed for invalid `leaderboardId`
 
 ### Rate Limiting
 
@@ -90,8 +95,12 @@ These are countdown timers — the actual value returned decreases as the cache 
 ### Pagination Details
 
 - Cursors are base64-encoded JSON: `eyJwb3MiOjV9` decodes to `{"pos":5}`
-- `limit=0` returns `400 badRequest`
-- No explicit maximum for `limit` — the API will return all results if no limit is set (observed 10,000+ items from `/leaderboard/{id}`)
+- For paginated endpoints, `limit=0` usually returns `400 badRequest` with `Invalid 'limit' parameter used in the request`
+- Some non-paginated endpoints ignore pagination params instead of rejecting them:
+  - `/cards?limit=1` still returns the full catalog
+  - `/cards?limit=0` still returns the full catalog
+  - `/events?limit=5` still returns the full bare array
+- No explicit maximum for `limit` — the API will return all results if no limit is set (observed 10,000 items from `/leaderboard/{id}`)
 - When no more pages exist, `paging.cursors` is an empty object `{}`
 - When more pages exist, `paging.cursors.after` contains the next cursor
 - HEAD requests are not supported (return 404)
@@ -211,3 +220,4 @@ Supercell's rules for using their assets in fan-created content. Includes requir
 - **River race seasons:** `seasonId` in river race log is a sequential integer (e.g. 127, 128, 129, 130) — not the YYYY-MM format used for league seasons
 - **Global rankings:** Use `global` as locationId for worldwide rankings. Global player trophy rankings may be empty early in a season, but PoL and clan rankings are populated.
 - **Season trophy rankings broken:** `/seasons/{id}/rankings/players` returns notFound for all tested seasons (2024-2026). PoL season rankings work. This appears to be a long-standing issue, not transient.
+- **Odd error codes exist:** Invalid `locationId` values return `400 badRequest`, while invalid `leaderboardId` values currently return `500 unknownException` rather than `404`.

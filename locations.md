@@ -175,6 +175,8 @@ Get global player rankings for a specific tournament.
 
 **Returns:** `LadderTournamentRankingList`
 
+Note: This endpoint's success shape was not re-verified in the March 2026 pass because `/globaltournaments` returned no active tournaments.
+
 ---
 
 ## League Seasons (Global)
@@ -218,7 +220,7 @@ Get top trophy player rankings for a completed league season.
 
 **Returns:** `PlayerRankingList`
 
-**Current status:** Returns `{"reason":"notFound"}` for all tested seasons (2024 through 2026). This endpoint appears to be permanently broken. Use Path of Legend season rankings instead.
+**Current status:** Returns `{"reason":"notFound"}` for all tested seasons (2024 through 2026). In the March 2026 pass the body contained only `reason` (no `message`). This endpoint appears to be permanently broken. Use Path of Legend season rankings instead.
 
 ---
 
@@ -248,12 +250,12 @@ Get top Path of Legend player rankings for a specific season.
 |------|---------|
 | 400 | Bad parameters |
 | 403 | Auth failure / insufficient token scope |
-| 404 | Location/season not found |
+| 404 | Resource not found |
 | 429 | Rate limit exceeded |
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. Invalid `locationId` values return `400 badRequest` with a message such as `Unknown value for parameter locationId`. `type`/`detail` were not observed.
 
 ---
 
@@ -268,4 +270,5 @@ All errors return: `{ reason, message, type, detail }`
 - `previousRank` of `-1` in clan rankings means the clan was not previously ranked
 - **Global player trophy rankings** may return empty results early in a season. PoL global rankings and clan rankings work consistently.
 - `/locations` returns all 262 locations with no limit by default. No pagination needed for the full list.
+- `/locations?limit=0` returns `400 badRequest`
 - Cache duration: location data is cached ~10 minutes server-side; rankings ~1 minute

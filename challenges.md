@@ -33,7 +33,7 @@ Get all current and upcoming challenges.
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. In the March 2026 pass this endpoint returned only `{ "reason": "notFound" }`. `type`/`detail` were not observed.
 
 ---
 

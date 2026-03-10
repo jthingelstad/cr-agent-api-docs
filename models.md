@@ -105,14 +105,14 @@ Known achievements: Team Player, Friend in Need, Road to Glory, Gatherer, TV Roy
 }
 ```
 
-**Battle types:** `PvP`, `pathOfLegend`, `trail`, `clanMate`, `clanMate2v2`, `friendly`, `riverRacePvP`, `riverRaceDuel`, `boatBattle`
+**Battle types:** `PvP`, `pathOfLegend`, `trail`, `clanMate`, `clanMate2v2`, `friendly`, `riverRacePvP`, `riverRaceDuel`, `riverRaceDuelColosseum`, `boatBattle`, `unknown`
 
 **Conditional battle fields:**
 - `eventTag` — present on trail/event battles, links to `/events`
 - `modifiers` — CHAOS mode only (trail with Crazy_Arena)
 - `boatBattleSide` (`defender`/`attacker`), `boatBattleWon`, `newTowersDestroyed`, `prevTowersDestroyed`, `remainingTowers` — boat battles only
 
-**Deck selection values:** `collection`, `eventDeck`, `draft`, `warDeckPick`
+**Deck selection values:** `collection`, `eventDeck`, `draft`, `warDeckPick`, `pick`, `draftCompetitive`, `predefined`
 
 ### PlayerBattleData
 ```json
@@ -307,7 +307,7 @@ Multiple leaderboards can share the same name (different seasons/variants of the
 
 | Model | Notes |
 |-------|-------|
-| `ClientError` | `{ reason, message }` — `type` and `detail` fields may be absent |
+| `ClientError` | Usually `{ reason, message? }` — many `404`/`500` responses omit `message`; `type` and `detail` were not observed |
 | `Version` | API version metadata |
 | `Fingerprint` | Device/session fingerprint |
 | `JsonNode` | Generic untyped JSON node — treat as `any` |

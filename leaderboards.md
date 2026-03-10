@@ -19,7 +19,7 @@ List all available leaderboards (game modes / trophy roads).
 { "id": 170000019, "name": "Merge Tactics" }
 ```
 
-**Example response (observed):**
+**Example response (subset, observed):**
 ```json
 {
   "items": [
@@ -35,7 +35,7 @@ List all available leaderboards (game modes / trophy roads).
 }
 ```
 
-Note: Multiple leaderboards can share the same `name` (e.g. "Merge Tactics" appears multiple times with different IDs — likely different seasons or variants).
+Note: Multiple leaderboards can share the same `name` (e.g. "Merge Tactics" appears multiple times with different IDs — likely different seasons or variants). The March 2026 response contained 15 items.
 
 ---
 
@@ -74,12 +74,11 @@ Get players ranked on a specific leaderboard.
 |------|---------|
 | 400 | Bad parameters |
 | 403 | Auth failure / insufficient token scope |
-| 404 | Leaderboard not found |
 | 429 | Rate limit exceeded |
 | 500 | Server error |
 | 503 | Maintenance |
 
-All errors return: `{ reason, message, type, detail }`
+Observed error bodies are usually `{ reason, message? }`. Invalid `leaderboardId` values currently return `500 {"reason":"unknownException"}` rather than a clean `404`. `type`/`detail` were not observed.
 
 ---
 
@@ -91,5 +90,6 @@ All errors return: `{ reason, message, type, detail }`
 - Multiple leaderboards may share a name but have different IDs — likely representing different seasons of the same mode
 - `clan` field on ranking entries is optional — omitted for clanless players
 - **No default limit:** `/leaderboard/{id}` returns ALL entries (up to 10,000 observed) when no `limit` is specified. Set a limit if you don't need the full list.
+- `/leaderboard/{id}?limit=0` returns `400 badRequest`
 - Observed leaderboard names: Merge Tactics, Touchdown, Mega Draft Challenge, 2v2 League, Retro Royale, Goblin Queen's Journey
 - IDs in range 170000xxx for newer leaderboards; some older ones have smaller IDs (e.g. 270849)
