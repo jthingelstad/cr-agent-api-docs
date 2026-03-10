@@ -12,7 +12,12 @@ Get list of global tournaments.
 
 **No parameters**
 
-**Returns:** `LadderTournamentList` — array of `LadderTournament` objects
+**Returns:** `{ items: [...] }` — array of `LadderTournament` objects
+
+When no global tournaments are active, returns:
+```json
+{ "items": [] }
+```
 
 ---
 
@@ -32,8 +37,7 @@ All errors return: `{ reason, message, type, detail }`
 ---
 
 ## Agent Notes
-- Single endpoint, no parameters — fetch and parse
 - Returns `LadderTournament` type — distinct from the player-created `Tournament` type returned by `/tournaments/{tag}`
 - To get player rankings for a global tournament, use `tournamentTag` from results with `/locations/global/rankings/tournaments/{tournamentTag}` (see Locations reference)
-
-
+- Returns empty `items` array when no global tournaments are active (not a 404)
+- Global tournaments are Supercell-run events that appear on a schedule — they may not always be active

@@ -18,6 +18,8 @@ Get all current and upcoming challenges.
 - Each chain is of type `singleChallenge` or `challengeChain`
 - Prize types: `none`, `cardStack`, `chest`, `cardStackRandom`, `resource`, `tradeToken`, `consumable`
 
+**Current status:** Returns `{"reason":"notFound"}` as of March 2026. This endpoint may be temporarily unavailable or permanently removed. Challenge information may be available through the `/events` endpoint instead.
+
 ---
 
 ## Error Codes
@@ -36,9 +38,7 @@ All errors return: `{ reason, message, type, detail }`
 ---
 
 ## Agent Notes
-- Single endpoint, no parameters — just fetch and parse
-- `singleChallenge` is a standalone challenge; `challengeChain` is a sequence of challenges that must be completed in order
-- Returns both active and upcoming challenges — check timing fields to determine current state
-- Prize type `cardStackRandom` indicates a random card reward; useful context for player-facing commentary
-
-
+- This endpoint returned `notFound` in testing (March 2026) — may be unavailable or deprecated
+- Challenge events still appear in `/events` (e.g. "Classic Challenge", "Grand Challenge", "Mega Draft Challenge") — use that endpoint to detect active challenges
+- If the endpoint does return data, `singleChallenge` is a standalone challenge; `challengeChain` is a sequence that must be completed in order
+- Prize type `cardStackRandom` indicates a random card reward

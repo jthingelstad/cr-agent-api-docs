@@ -12,12 +12,31 @@ Get all current in-game events.
 
 **No parameters**
 
-**Returns:** bare JSON array of `TrailEvent` objects (not wrapped in `{ items: [...] }`)
+**Returns:** bare JSON array of `TrailEvent` objects (NOT wrapped in `{ items: [...] }`)
 
-**TrailEvent fields:**
-- `eventTag` (string) — e.g. `#R8U2RCJ`
-- `title` (string) — localized event name
-- `description` (string, nullable) — localized event description
+**TrailEvent shape:**
+```json
+{ "eventTag": "#R8U2RCJ", "title": "C.H.A.O.S", "description": "Choose different modifiers during battle..." }
+```
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `eventTag` | string | Unique identifier, e.g. `#R8U2RCJ` |
+| `title` | string | Localized event name |
+| `description` | string, nullable | Localized event description — null for some events |
+
+**Example response (observed):**
+```json
+[
+  { "eventTag": "#R8U2RCJ", "title": "C.H.A.O.S", "description": "Choose different modifiers during battle..." },
+  { "eventTag": "#R8UJQUU", "title": "Classic 1v1", "description": "Play a good old-fashioned Battle..." },
+  { "eventTag": "#R8UJR98", "title": "Classic 2v2", "description": "Play a classic game of 2v2!..." },
+  { "eventTag": "#R8UJCCJ", "title": "Mega Draft Challenge", "description": "Each win in a Challenge..." },
+  { "eventTag": "#R8UJV80", "title": "Classic Challenge", "description": "Each win in a Challenge..." },
+  { "eventTag": "#R8UC0LP", "title": "Grand Challenge", "description": "Each win in a Challenge..." },
+  { "eventTag": "#R8UURVL", "title": "Merge Tactics", "description": null }
+]
+```
 
 ---
 
@@ -37,10 +56,9 @@ All errors return: `{ reason, message, type, detail }`
 ---
 
 ## Agent Notes
-- Single endpoint, no parameters — fetch and parse
+- Returns a **bare array**, not `{ items: [...] }` — this is one of two endpoints that do this (the other is `/players/{tag}/battlelog`)
 - `title` and `description` are localized — locale is determined by the API token's configured region
-- `description` can be null for some events
+- `description` can be null for some events (observed for "Merge Tactics")
 - Returns only currently active events, not upcoming or historical
-- Useful for Elixir clan commentary context (e.g. referencing an active event in posts)
-
-
+- `eventTag` values appear in battle log entries (`Battle.eventTag`) — can be used to cross-reference which event a battle was played in
+- Observed ~7 concurrent active events (Classic 1v1, Classic 2v2, Challenges, special modes)
