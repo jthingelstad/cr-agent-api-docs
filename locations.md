@@ -175,7 +175,10 @@ Get global player rankings for a specific tournament.
 
 **Returns:** `LadderTournamentRankingList`
 
-Note: This endpoint's success shape was not re-verified in the March 2026 pass because `/globaltournaments` returned no active tournaments.
+Status note:
+- Endpoint is documented and appears active
+- Success shape was not re-verified in the March 2026 pass because `/globaltournaments` returned no active tournaments
+- For agentic use, treat this endpoint as requiring fresh live validation before depending on exact field-level schema
 
 ---
 

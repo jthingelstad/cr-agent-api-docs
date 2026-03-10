@@ -47,6 +47,8 @@ Support items lack `elixirCost` and `maxEvolutionLevel`.
 
 **Rarity → maxLevel mapping (observed):**
 
+This is the API's rarity-relative upgrade scale, not a universal cross-rarity power scale. Higher-rarity cards have fewer API level steps, but all rarities still top out at the same effective end-state when normalized.
+
 | Rarity | maxLevel |
 |--------|----------|
 | common | 16 |
@@ -54,6 +56,22 @@ Support items lack `elixirCost` and `maxEvolutionLevel`.
 | epic | 11 |
 | legendary | 8 |
 | champion | 6 |
+
+**Normalized interpretation:**
+
+- `common`: API levels `1-16` -> normalized `1-16`
+- `rare`: API levels `1-14` -> normalized `3-16`
+- `epic`: API levels `1-11` -> normalized `6-16`
+- `legendary`: API levels `1-8` -> normalized `9-16`
+- `champion`: API levels `1-6` -> normalized `11-16`
+
+Equivalent conversion from API `level` to normalized level:
+
+- `common`: `normalized = level`
+- `rare`: `normalized = level + 2`
+- `epic`: `normalized = level + 5`
+- `legendary`: `normalized = level + 8`
+- `champion`: `normalized = level + 10`
 
 **iconUrls variants:**
 - `medium` — always present on all cards
@@ -87,5 +105,6 @@ Observed error bodies are usually `{ reason, message? }`. This endpoint ignored 
 - Global catalog endpoint — not player-specific. Use `/players/{playerTag}` for a player's collected cards with levels.
 - `items` vs `supportItems`: Tower Troops (cards that replace/augment crown towers) are in `supportItems`; everything else is in `items`
 - Pagination parameters appear to be ignored — `/cards?limit=1`, `/cards?after=...`, and `/cards?before=...` still returned the full catalog in March 2026 testing
+- `maxLevel` is the rarity-relative API cap, not a normalized universal cap. Example: champions report `maxLevel: 6`, which corresponds to normalized level 16 at full upgrade.
 - `maxEvolutionLevel` is optional — only 46/121 standard cards have evolutions (values observed: 1, 2, or 3)
 - No `paging` object is present in responses

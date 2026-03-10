@@ -36,6 +36,18 @@ Paginated responses always wrap data in `{ items: [...], paging: { cursors: { af
 - `GET /players/{playerTag}/battlelog`
 - `GET /events`
 
+### Response Shapes
+
+The API uses three distinct collection response patterns:
+
+| Shape | Meaning | Examples |
+|------|---------|----------|
+| bare array | Non-paginated list response | `/events`, `/players/{playerTag}/battlelog` |
+| `{ items: [...] }` | Non-paginated object wrapper | `/leaderboards`, `/globaltournaments`, `/players/{playerTag}/upcomingchests` |
+| `{ items: [...], paging: { cursors: ... } }` | Paginated list response | `/locations`, `/clans/{tag}/members`, `/tournaments`, `/leaderboard/{id}` |
+
+Do not assume that every response with `items` is paginated. Presence of `paging` is the reliable signal.
+
 ### Datetime Format
 
 All datetime strings use: `YYYYMMDDTHHmmss.sssZ` (no dashes or colons)
@@ -67,6 +79,20 @@ Notable `reason` values:
 - `badRequest` — invalid parameter combinations or values
 - `gone` — endpoint permanently removed
 - `unknownException` — observed for invalid `leaderboardId`
+
+### Optional vs Null
+
+The API frequently omits optional fields entirely instead of returning `null`.
+
+- Treat missing keys and nullable values as different cases
+- Check key existence before reading optional fields
+- Observed nullable fields are less common than absent fields
+
+Examples:
+- Player `clan`, `role`, `leagueStatistics`
+- Tournament `description`, `startedTime`, `endedTime`
+- Ranking entry `clan`
+- Event `description` can be `null`
 
 ### Rate Limiting
 

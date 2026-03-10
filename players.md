@@ -90,7 +90,7 @@ Player cards include additional fields beyond the catalog:
   "AutoChess_2026_Mar": { "arena": { ... }, "trophies": 3460, "bestTrophies": 3593 }
 }
 ```
-Keys are mode identifiers (empty string = legacy/default season). Contains Merge Tactics mode progress with arena, trophies, and bestTrophies.
+Keys are opaque mode-season identifiers. The empty string key `""` is a legacy/default bucket. Clients should not hardcode specific key names beyond treating them as labels.
 
 ---
 
@@ -183,10 +183,13 @@ Observed: returns up to ~48 battles.
 
 Note: `gameMode.name` may be absent — tournament game modes often only have `id`.
 
-**Determining battle winner:** There is no explicit `winner` field. Use these signals:
-- `trophyChange > 0` on team[0] = win (PvP/pathOfLegend only)
-- `team[0].crowns > opponent[0].crowns` = win
-- `boatBattleWon` for boat battles
+**Determining battle winner:** There is no explicit `winner` field. Use this order:
+1. If `boatBattleWon` exists, use it.
+2. Else if `team[0].trophyChange` exists, positive = win, negative = loss, zero = unresolved/draw.
+3. Else if both sides have crowns, compare `team[0].crowns` vs `opponent[0].crowns`.
+4. Else treat the outcome as unresolved.
+
+For 2v2 battles, the outcome is still determined from the first team entry because both teammates share the same result.
 
 **PlayerBattleData shape:**
 ```json
@@ -279,10 +282,11 @@ Observed error bodies are usually `{ reason, message? }`. `message` may be absen
 - Path of Legend `rank` field is null when the player hasn't achieved a rank yet
 - Battlelog returns a bare array (like `/events`), not a paginated response — no `paging` object. Returns up to ~48 battles.
 - `progress` is a map of side-mode season results (Merge Tactics / AutoChess) — keys are mode season identifiers. Empty string key `""` = legacy/default season.
+- `progress` keys should be treated as opaque identifiers, not a stable enum. Parse the nested values, not the key naming pattern.
 - `battleTime` format is `YYYYMMDDTHHmmss.sssZ` — parse carefully, no dashes or colons
 - `leagueStatistics.currentSeason` has no `id` field (it's the current season)
 - **2v2 battles:** `team` and `opponent` each contain 2 entries instead of 1
-- **Battle winner detection:** Compare `team[0].crowns` vs `opponent[0].crowns`, or check `trophyChange` sign on PvP/pathOfLegend battles
+- **Battle winner detection:** Apply the explicit precedence above: `boatBattleWon` -> `trophyChange` -> crowns -> unresolved
 - Additional battle variants observed in March 2026 sampling: `riverRaceDuelColosseum` and an occasional `unknown` type on friendlies
 - Additional `deckSelection` values observed in March 2026 sampling: `pick`, `draftCompetitive`, `predefined`
 - **Badges:** Two categories — progress badges (with `level`/`maxLevel`/`progress`/`target`) and one-time badges (level=null, just `progress` and `iconUrls`). Mastery badges are per-card (e.g. `MasteryKnight`).

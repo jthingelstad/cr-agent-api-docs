@@ -28,7 +28,7 @@ Used in: Player, PlayerBattleData, TournamentMember, ranking entries. **Absent**
 ```json
 { "id": 72000006, "name": "Ladder" }
 ```
-In tournament contexts, `name` may be absent (only `id`). Known IDs:
+In tournament contexts, `name` may be absent (only `id`). This list is non-exhaustive; see `players.md` for the fuller observed game-mode table. Known IDs:
 - `72000006` = Ladder, `72000007` = Friendly, `72000051` = TeamVsTeam_Touchdown_Draft
 - `72000232` = 7xElixir_Friendly, `72000266` = ClanWar_BoatBattle
 - `72000267` = CW_Duel_1v1, `72000268` = CW_Battle_1v1
@@ -52,6 +52,15 @@ In tournament contexts, `name` may be absent (only `id`). Known IDs:
 | `PathOfLegendSeasonResult` | nested in Player | leagueNumber (int), trophies (int), rank (int, nullable) |
 | `PlayerItemLevel` | currentDeck, cards, supportCards | name, id, level, starLevel?, evolutionLevel?, maxLevel, maxEvolutionLevel?, rarity, count, elixirCost?, iconUrls |
 | `Item` | currentFavouriteCard, card catalog | name, id, maxLevel, maxEvolutionLevel?, elixirCost?, iconUrls, rarity |
+
+**Card level interpretation:**
+- `level` and `maxLevel` use the API's rarity-relative scale, not a universal cross-rarity scale
+- `common`: API `1-16` = normalized `1-16`
+- `rare`: API `1-14` = normalized `3-16`
+- `epic`: API `1-11` = normalized `6-16`
+- `legendary`: API `1-8` = normalized `9-16`
+- `champion`: API `1-6` = normalized `11-16`
+- Practical implication: a champion at API `level: 1` is already at normalized level 11, and all rarities cap out at normalized level 16
 
 ### Badges
 Two categories:
@@ -168,7 +177,7 @@ Observed chest names: Gold Crate, Plentiful Gold Crate, Overflowing Gold Crate, 
   "AutoChess_2026_Mar": { "arena": { ... }, "trophies": 3460, "bestTrophies": 3593 }
 }
 ```
-Map of mode-season IDs to arena/trophy data. Empty string key = legacy/default season. Arena IDs for side modes use 168000xxx range.
+Map of opaque mode-season IDs to arena/trophy data. Empty string key = legacy/default season. Clients should not rely on the key naming pattern as a stable enum. Arena IDs for side modes use 168000xxx range.
 
 ---
 

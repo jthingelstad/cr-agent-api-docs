@@ -118,6 +118,8 @@ Observed error bodies are usually `{ reason, message? }`. `GET /tournaments` wit
 - `gameMode` in tournament context typically only has `id` (no `name`) — unlike battle log where both are present
 - Search only seems to return active tournaments (`inPreparation` or `inProgress`) — not ended ones
 - No ordering guarantee on search results
+- Treat search as discovery, not archival lookup. If search returns a tag you care about, fetch `/tournaments/{tag}` immediately.
+- Do not assume search is complete, stable, or ordered by recency
 - `levelCap` sets the max card level allowed — all observed tournaments had `levelCap: 11`
 - `firstPlaceCardPrize` was always 0 in observations — may be a legacy field
 - `preparationDuration` and `duration` are in seconds (e.g. 3600 = 1 hour, 14400 = 4 hours)
