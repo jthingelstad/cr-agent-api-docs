@@ -33,3 +33,6 @@ field shape, optionality, nullability, and shared nested objects.
 - Nullable fields are called out explicitly in the relevant model file.
 - `PlayerClan`-shaped objects are reused for player, battle, tournament, and ranking clan references.
 - `GameMode.name` is reliably present in battle logs but may be absent in tournament payloads.
+- Official Swagger often names wrapper models such as `BattleList`, `ClanMemberList`, `TrailEventList`,
+  `TournamentHeaderList`, and `LocationList`. Local endpoint docs describe the observed JSON shape directly, including
+  bare arrays where the live API returns them.

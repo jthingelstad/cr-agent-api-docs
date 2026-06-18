@@ -158,11 +158,12 @@ These are countdown timers — the actual value returned decreases as the cache 
 
 Player profiles, battle logs, and upcoming chests.
 
-| Endpoint                                  | Description                                        |
-| ----------------------------------------- | -------------------------------------------------- |
-| `GET /players/{playerTag}`                | Full player profile                                |
-| `GET /players/{playerTag}/battlelog`      | Recent battle history (bare array, ~30-40 battles) |
-| `GET /players/{playerTag}/upcomingchests` | Upcoming chest sequence                            |
+| Endpoint                                             | Description                                        |
+| ---------------------------------------------------- | -------------------------------------------------- |
+| `GET /players/{playerTag}`                           | Full player profile                                |
+| `GET /players/{playerTag}/battlelog`                 | Recent battle history (bare array, ~30-40 battles) |
+| `GET /players/{playerTag}/upcomingchests`            | Upcoming chest sequence                            |
+| `POST /players/{playerTag}/verifytoken` (restricted) | Player token verification; requires extra scope    |
 
 ### Clans — [clans.md](clans.md)
 

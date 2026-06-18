@@ -42,6 +42,9 @@ Verified fields:
 - `prevTowersDestroyed?`
 - `remainingTowers?`
 
+Official Swagger also lists `challengeWinCountBefore`, `challengeId`, and `challengeTitle` on `Battle`. They were not
+observed in the March-April 2026 live-call pass; treat them as optional official-only fields until seen in payloads.
+
 Observed battle types:
 
 - `PvP`

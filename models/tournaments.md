@@ -97,11 +97,29 @@ tournaments.
 
 `GET /globaltournaments` returns `LadderTournamentList`.
 
+Official Swagger describes each `LadderTournament` item with these fields:
+
+- `tag`
+- `title`
+- `startTime`
+- `endTime`
+- `gameMode`
+- `maxLosses`
+- `tournamentLevel`
+- `minExpLevel`
+- `milestoneRewards`
+- `freeTierRewards`
+- `topRankReward`
+- `maxTopRewardRank`
+
+Reward arrays use `SurvivalMilestoneReward` items with official fields: `rarity`, `chest`, `resource`, `type`, `amount`,
+`card`, `consumableName`, and `wins`.
+
 When no global tournaments are active, the endpoint returns:
 
 ```json
 { "items": [] }
 ```
 
-The success shape for populated global tournament entries was not re-verified in the March 2026 pass because no global
-tournaments were active.
+The populated `LadderTournament` shape was not re-verified in the March 2026 pass because no global tournaments were
+active. Treat the field list above as official Swagger surface until confirmed live.

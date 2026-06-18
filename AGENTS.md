@@ -22,6 +22,9 @@ This repository is an agent-first reference for the public Clash Royale API.
 
 ## Official Docs Comparison
 
+The official Swagger UI is a useful baseline, but observed live API behavior is higher-confidence when the two conflict.
+Keep both signals explicit instead of silently replacing one with the other.
+
 The official Swagger UI currently lists these endpoint groups:
 
 - `clans`

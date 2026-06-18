@@ -10,7 +10,8 @@ Base URL: `https://api.clashroyale.com/v1` Auth: Bearer token in `Authorization`
 
 Get the full list of available cards in the game.
 
-**Query:** None documented. In live March 2026 tests, `limit`, `after`, and `before` were ignored rather than applied.
+**Query:** Official Swagger lists `limit`, `after`, and `before`. In live March 2026 tests, those parameters were
+ignored rather than applied, and the endpoint returned the full card catalog.
 
 **Returns:** `Items` object with two arrays:
 

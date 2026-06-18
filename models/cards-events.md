@@ -89,12 +89,12 @@ Fields:
 
 `GET /challenges` is not currently shown in the official Swagger UI and returned `notFound` in observed live behavior.
 
-| Model                                    | Status                                      |
-| ---------------------------------------- | ------------------------------------------- |
-| `ChallengeChain` / `ChallengeChainsList` | Endpoint returning `notFound` in March 2026 |
-| `Challenge` / `ChallengeList`            | Not currently accessible                    |
-| `ChallengeGameMode`                      | Not currently accessible                    |
-| `SurvivalMilestoneReward`                | Not currently accessible                    |
+| Model                                    | Status                                                                 |
+| ---------------------------------------- | ---------------------------------------------------------------------- |
+| `ChallengeChain` / `ChallengeChainsList` | Endpoint returning `notFound` in March 2026                            |
+| `Challenge` / `ChallengeList`            | Not currently accessible                                               |
+| `ChallengeGameMode`                      | Not currently accessible                                               |
+| `SurvivalMilestoneReward`                | Officially used by `LadderTournament`; not live-verified in March 2026 |
 
 Challenge-like active events can still appear through `GET /events`.
 

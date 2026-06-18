@@ -79,12 +79,12 @@ Example:
 
 The public Swagger surface contains several generic or inaccessible utility models:
 
-| Model                                                                              | Notes                       |
-| ---------------------------------------------------------------------------------- | --------------------------- |
-| `Version`                                                                          | API version metadata        |
-| `Fingerprint`                                                                      | Device/session fingerprint  |
-| `JsonNode`                                                                         | Generic untyped JSON node   |
-| `Match` / `RegisterMatchRequest` / `RegisterMatchResponse` / `CancelMatchResponse` | No public endpoint observed |
-| `VerifyTokenRequest` / `VerifyTokenResponse`                                       | Token verification          |
+| Model                                                                              | Notes                         |
+| ---------------------------------------------------------------------------------- | ----------------------------- |
+| `Version`                                                                          | API version metadata          |
+| `Fingerprint`                                                                      | Device/session fingerprint    |
+| `JsonNode`                                                                         | Generic untyped JSON node     |
+| `Match` / `RegisterMatchRequest` / `RegisterMatchResponse` / `CancelMatchResponse` | No public endpoint observed   |
+| `VerifyTokenRequest` / `VerifyTokenResponse`                                       | Restricted token verification |
 
 Treat these as non-primary for public Clash Royale API integrations unless an official endpoint exposes them.

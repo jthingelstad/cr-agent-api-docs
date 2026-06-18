@@ -44,6 +44,23 @@
       "quirks": ["tag_path_param_must_be_url_encoded", "chest_indices_are_not_contiguous"]
     },
     {
+      "method": "POST",
+      "path": "/players/{playerTag}/verifytoken",
+      "group": "players",
+      "doc": "players.md",
+      "models": ["models/errors.md"],
+      "responseShape": "object_or_error",
+      "pagination": false,
+      "status": "restricted",
+      "quirks": [
+        "not_shown_in_official_swagger_operations",
+        "official_verify_token_models_exist",
+        "requires_additional_api_key_scope",
+        "tag_path_param_must_be_url_encoded",
+        "player_token_goes_in_json_body"
+      ]
+    },
+    {
       "method": "GET",
       "path": "/clans/{clanTag}",
       "group": "clans",
