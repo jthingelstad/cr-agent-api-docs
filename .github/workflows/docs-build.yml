@@ -1,27 +1,35 @@
 name: Docs Build
 
 on:
-  pull_request:
   push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   docs-build:
     name: Docs build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: "22"
+          node-version: "24"
           cache: npm
           cache-dependency-path: tools/docs-build/package-lock.json
 
       - name: Install docs build dependencies
         run: npm ci --prefix tools/docs-build
+
+      - name: Audit docs build dependencies
+        run: npm audit --prefix tools/docs-build --audit-level=high
 
       - name: Run docs build
         run: npm --prefix tools/docs-build run build
