@@ -2,6 +2,10 @@
 
 This repository documents the public Clash Royale API for coding agents and automation workflows.
 
+Unofficial, non-commercial fan reference; not affiliated with or endorsed by Supercell. Clash Royale is a trademark of
+Supercell, referenced under Supercell's Fan Content Policy. This material is unofficial and is not endorsed by Supercell.
+For more information see Supercell's Fan Content Policy: <www.supercell.com/fan-content-policy>.
+
 ## Entry Points
 
 - [Index](index.md): global rules, endpoint table, response shapes, pagination, errors, caching
