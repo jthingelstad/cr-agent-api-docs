@@ -166,14 +166,14 @@ Get Path of Legend player rankings for a location (current season).
 }
 ```
 
-| Field       | Type    | Notes                              |
-| ----------- | ------- | ---------------------------------- |
-| `tag`       | string  | Player tag                         |
-| `name`      | string  |                                    |
-| `expLevel`  | integer | King level                         |
-| `eloRating` | integer | Path of Legend ELO rating          |
-| `rank`      | integer |                                    |
-| `clan`      | object  | Optional — absent if not in a clan |
+| Field       | Type    | Notes                                                                                                 |
+| ----------- | ------- | ----------------------------------------------------------------------------------------------------- |
+| `tag`       | string  | Player tag                                                                                            |
+| `name`      | string  |                                                                                                       |
+| `expLevel`  | integer | Legacy experience level — retired in-game in 2026 (see [players.md](players.md)); treat as unreliable |
+| `eloRating` | integer | Path of Legend ELO rating                                                                             |
+| `rank`      | integer |                                                                                                       |
+| `clan`      | object  | Optional — absent if not in a clan                                                                    |
 
 ---
 

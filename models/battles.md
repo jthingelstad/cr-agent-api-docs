@@ -119,6 +119,9 @@ Verified fields:
 
 Conditional notes:
 
+- `kingTowerHitPoints` and `princessTowersHitPoints` are the hitpoints _remaining_ when the battle ended — a
+  margin-of-victory signal, not a tower level and not a maximum. Do not read them as progression or compare them across
+  players as if they were levels.
 - `startingTrophies` appears on PvP, Path of Legend, river race PvP, river race duel, friendly, and clanmate battles.
 - `trophyChange` appears only on PvP and Path of Legend battles.
 - `globalRank` is present on all battles and is null unless the player is globally ranked.

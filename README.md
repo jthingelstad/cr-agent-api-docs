@@ -111,11 +111,10 @@ The local `pre-commit` and `pre-push` hooks run the same docs build as CI.
 
 ## Fan Content and Attribution
 
-This is an unofficial, non-commercial fan reference. It is not affiliated with,
-authorized, or endorsed by Supercell. Clash Royale and the Clash Royale API are
-trademarks of Supercell, and the game data, card names, and API behavior described
-here are Supercell's intellectual property, referenced under Supercell's
+This is an unofficial, non-commercial fan reference. It is not affiliated with, authorized, or endorsed by Supercell.
+Clash Royale and the Clash Royale API are trademarks of Supercell, and the game data, card names, and API behavior
+described here are Supercell's intellectual property, referenced under Supercell's
 [Fan Content Policy](fan-content-policy.md).
 
-> This material is unofficial and is not endorsed by Supercell. For more information
-> see Supercell's Fan Content Policy: <www.supercell.com/fan-content-policy>.
+> This material is unofficial and is not endorsed by Supercell. For more information see Supercell's Fan Content Policy:
+> <www.supercell.com/fan-content-policy>.

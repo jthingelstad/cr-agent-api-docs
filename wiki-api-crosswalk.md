@@ -126,7 +126,7 @@ API surfaces:
 - `Player.trophies`
 - `Player.bestTrophies`
 - `Player.arena`
-- `Player.expLevel`
+- `Player.expLevel` (deprecated — Experience Level retired in-game 2026; see [players.md](players.md))
 - `Player.expPoints`
 - `Player.totalExpPoints`
 - `Player.starPoints`

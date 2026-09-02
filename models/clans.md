@@ -75,6 +75,9 @@ Role values:
 - `coLeader`
 - `leader`
 
+`expLevel` now reads `0` for every roster member (Experience Level was retired in-game in 2026 — see
+[players.md](../players.md)); the sample above predates the change.
+
 ## Clan Search Result
 
 Used by `GET /clans`.

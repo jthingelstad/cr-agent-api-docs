@@ -8,26 +8,26 @@ Used by `GET /players/{playerTag}`.
 
 Verified fields:
 
-| Field                                                                                             | Notes                                           |
-| ------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `tag`, `name`                                                                                     | Player identity                                 |
-| `expLevel`, `expPoints`, `totalExpPoints`, `starPoints`                                           | Account progression                             |
-| `trophies`, `bestTrophies`                                                                        | Trophy Road values                              |
-| `arena`                                                                                           | [Arena](common.md#arena)                        |
-| `role`                                                                                            | Optional clan role                              |
-| `wins`, `losses`, `battleCount`, `threeCrownWins`                                                 | Battle totals                                   |
-| `donations`, `donationsReceived`, `totalDonations`                                                | Donation counters                               |
-| `challengeCardsWon`, `challengeMaxWins`, `tournamentCardsWon`, `tournamentBattleCount`            | Challenge and tournament counters               |
-| `warDayWins`, `clanCardsCollected`                                                                | Legacy war counters                             |
-| `currentWinLoseStreak`                                                                            | Optional signed streak counter                  |
-| `clan`                                                                                            | Optional [PlayerClan](common.md#playerclan)     |
-| `leagueStatistics`                                                                                | Optional `PlayerLeagueStatistics`               |
-| `currentDeck`, `cards`, `currentDeckSupportCards`, `supportCards`                                 | Player card arrays                              |
-| `currentFavouriteCard`                                                                            | Catalog-like `Item` object                      |
-| `badges`, `achievements`                                                                          | Progress and account markers                    |
-| `currentPathOfLegendSeasonResult`, `lastPathOfLegendSeasonResult`, `bestPathOfLegendSeasonResult` | Nullable `PathOfLegendSeasonResult`             |
-| `legacyTrophyRoadHighScore`                                                                       | Nullable integer                                |
-| `progress`                                                                                        | Map of side-mode season IDs to progress objects |
+| Field                                                                                             | Notes                                                                                                      |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `tag`, `name`                                                                                     | Player identity                                                                                            |
+| `expLevel`, `expPoints`, `totalExpPoints`, `starPoints`                                           | Legacy account progression — Experience Level was retired in-game in 2026; see [players.md](../players.md) |
+| `trophies`, `bestTrophies`                                                                        | Trophy Road values                                                                                         |
+| `arena`                                                                                           | [Arena](common.md#arena)                                                                                   |
+| `role`                                                                                            | Optional clan role                                                                                         |
+| `wins`, `losses`, `battleCount`, `threeCrownWins`                                                 | Battle totals                                                                                              |
+| `donations`, `donationsReceived`, `totalDonations`                                                | Donation counters                                                                                          |
+| `challengeCardsWon`, `challengeMaxWins`, `tournamentCardsWon`, `tournamentBattleCount`            | Challenge and tournament counters                                                                          |
+| `warDayWins`, `clanCardsCollected`                                                                | Legacy war counters                                                                                        |
+| `currentWinLoseStreak`                                                                            | Optional signed streak counter                                                                             |
+| `clan`                                                                                            | Optional [PlayerClan](common.md#playerclan)                                                                |
+| `leagueStatistics`                                                                                | Optional `PlayerLeagueStatistics`                                                                          |
+| `currentDeck`, `cards`, `currentDeckSupportCards`, `supportCards`                                 | Player card arrays                                                                                         |
+| `currentFavouriteCard`                                                                            | Catalog-like `Item` object                                                                                 |
+| `badges`, `achievements`                                                                          | Progress and account markers                                                                               |
+| `currentPathOfLegendSeasonResult`, `lastPathOfLegendSeasonResult`, `bestPathOfLegendSeasonResult` | Nullable `PathOfLegendSeasonResult`                                                                        |
+| `legacyTrophyRoadHighScore`                                                                       | Nullable integer                                                                                           |
+| `progress`                                                                                        | Map of side-mode season IDs to progress objects                                                            |
 
 Optional Player fields, absent when not applicable:
 
@@ -183,6 +183,15 @@ Badge categories observed:
 - Seasonal badges, such as `SeasonalBadge_202507_v2`
 - Event badges, such as `CrlSpectator2022` and `EasterEgg`
 - Career badges, such as `YearsPlayed`, `BattleWins`, `ClanWarsVeteran`, `LadderTop1000`
+
+Two badges are load-bearing for account progression:
+
+- `CollectionLevel` — since the game's 2026 Collection Level update, its `progress` is the player's current Collection
+  Level (the progression number the game now shows), while `level`/`maxLevel` are the badge's own tier. Read progression
+  from this badge — not from the deprecated `expLevel`, and not from the top-level `collectionLevel` profile key, which
+  is a stub observed to read `0`.
+- `YearsPlayed` — its `level` is the number of years the account has existed. It is genuinely absent on some accounts,
+  so treat a missing badge as unknown, not zero.
 
 ## Achievements
 

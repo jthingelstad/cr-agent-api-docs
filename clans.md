@@ -57,6 +57,9 @@ Get full clan info including member list, scores, description, badge.
 ```
 
 - `role` values: `member`, `elder`, `coLeader`, `leader`
+- `expLevel` now reads `0` for every member — Experience Level was retired in-game in 2026 (see
+  [players.md](players.md)); the sample above predates the change. Fetch each member's profile and read the
+  `CollectionLevel` badge for real progression.
 - `lastSeen` uses the same `YYYYMMDDTHHmmss.sssZ` format as battlelog
 - `arena` is an Arena object with `id`, `name`, `rawName`
 
@@ -104,9 +107,7 @@ active war periods).
   "badgeId": 16000146,
   "fame": 0,
   "repairPoints": 0,
-  "participants": [
-    /* RiverRaceParticipant array */
-  ],
+  "participants": [/* RiverRaceParticipant array */],
   "periodPoints": 0,
   "clanScore": 160
 }
@@ -187,9 +188,7 @@ Historical river race results (paginated).
         "finishTime": "20260309T095604.000Z",
         "periodPoints": 0,
         "clanScore": 340,
-        "participants": [
-          /* RiverRaceParticipant array */
-        ]
+        "participants": [/* RiverRaceParticipant array */]
       }
     }
   ]
