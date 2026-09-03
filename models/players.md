@@ -23,7 +23,7 @@ Verified fields:
 | `clan`                                                                                            | Optional [PlayerClan](common.md#playerclan)                                                                |
 | `leagueStatistics`                                                                                | Optional `PlayerLeagueStatistics`                                                                          |
 | `currentDeck`, `cards`, `currentDeckSupportCards`, `supportCards`                                 | Player card arrays                                                                                         |
-| `currentFavouriteCard`                                                                            | Catalog-like `Item` object                                                                                 |
+| `currentFavouriteCard`                                                                            | Catalog-like `Item` object; not reliably player-settable (no liveness challenges)                                                                                 |
 | `badges`, `achievements`                                                                          | Progress and account markers                                                                               |
 | `currentPathOfLegendSeasonResult`, `lastPathOfLegendSeasonResult`, `bestPathOfLegendSeasonResult` | Nullable `PathOfLegendSeasonResult`                                                                        |
 | `legacyTrophyRoadHighScore`                                                                       | Nullable integer                                                                                           |
