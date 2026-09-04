@@ -190,8 +190,11 @@ Two badges are load-bearing for account progression:
   Level (the progression number the game now shows), while `level`/`maxLevel` are the badge's own tier. Read progression
   from this badge — not from the deprecated `expLevel`, and not from the top-level `collectionLevel` profile key, which
   is a stub observed to read `0`.
-- `YearsPlayed` — its `level` is the number of years the account has existed. It is genuinely absent on some accounts,
-  so treat a missing badge as unknown, not zero.
+- `YearsPlayed` — its `level` is the number of completed years the account has existed, and its `progress` is the
+  account age in days (observed live: level 4 / progress 1648 / target 1825 — targets are 365-day tiers). The badge
+  first appears at one year, so absence USUALLY means a sub-1-year account — but not always: a 74-profile sweep
+  (2026-09) found 2 accounts carrying a `Royals2v2_2024` event badge with no `YearsPlayed`. Treat a missing badge as
+  unknown, not zero, and never infer "new player" from absence alone.
 
 ## Achievements
 
