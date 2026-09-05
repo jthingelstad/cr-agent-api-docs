@@ -89,7 +89,7 @@ Get the clan's active river race state.
 | -------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `state`        | string        | Observed `full` across all period types (training/warDay/colosseum) — `state` does not flip per day; `periodType` is the field that tracks the war's daily phase. |
 | `sectionIndex` | integer       | Current section (week)                                                                                                                                            |
-| `periodIndex`  | integer       | Current period within section                                                                                                                                     |
+| `periodIndex`  | integer       | Season-monotonic period counter: `periodIndex // 7 === sectionIndex`, `periodIndex % 7` is the day (0-2 training, 3-6 war days 1-4). NOT within-section                                                                                                                                     |
 | `periodType`   | string        | Observed: `training`, `warDay`, `colosseum` (see notes)                                                                                                           |
 | `clan`         | RiverRaceClan | This clan's data (see below)                                                                                                                                      |
 | `clans`        | array         | All 5 clans in the race                                                                                                                                           |
