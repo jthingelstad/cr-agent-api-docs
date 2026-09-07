@@ -1,0 +1,29 @@
+[project]
+name = "crprobe"
+version = "0.1.0"
+description = "Observe, watch and record the live Clash Royale API so findings can be written down as fact."
+requires-python = ">=3.11"
+dependencies = [
+  "requests>=2.32",
+  "click>=8.1",
+  "rich>=13.7",
+  "python-dotenv>=1.0",
+  "pyjwt>=2.8",
+  "deepdiff>=8.0",
+]
+
+[project.scripts]
+crprobe = "crprobe.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "responses>=0.25"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["crprobe"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

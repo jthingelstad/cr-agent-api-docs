@@ -1,2 +1,8 @@
 .env
 node_modules/
+
+# crprobe capture archive: real player tags and names, and this repo is public.
+captures/
+tools/cr-probe/.venv/
+__pycache__/
+.pytest_cache/

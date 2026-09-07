@@ -2,9 +2,9 @@
 
 This repository is an agent-first reference for the public Clash Royale API.
 
-> **This repo is the single source of truth, and it is meant to be edited.** It exists to accumulate hard-won,
-> observed API behavior. When the live API surprises you, write it down here as part of the fix — that is the point of
-> the repo, not a favour to it.
+> **This repo is the single source of truth, and it is meant to be edited.** It exists to accumulate hard-won, observed
+> API behavior. When the live API surprises you, write it down here as part of the fix — that is the point of the repo,
+> not a favour to it.
 >
 > **If you are reading this file from inside another project** (a `docs/cr-api-docs/` or similar folder), you are in a
 > stale copy. Vendored copies drifted in both directions and have been removed; edit the checkout at
@@ -21,6 +21,10 @@ This repository is an agent-first reference for the public Clash Royale API.
 5. Read only the focused model file(s) in [models/](models/) needed for that route.
 6. Use [data/endpoints.json](data/endpoints.json), [data/game-modes.json](data/game-modes.json), and
    [data/wiki-api-crosswalk.json](data/wiki-api-crosswalk.json) for machine-readable endpoint and gameplay routing.
+7. **Before writing a new rule down, check it** — see [recipes/verify-a-claim.md](recipes/verify-a-claim.md).
+   `tools/cr-probe` calls the live API, surveys a claim across every week the API remembers, and records a scheduled
+   transition (a season roll, a week close) unattended. A pattern that looks certain after one observation is how a
+   wrong rule gets published.
 
 ## Important Rules
 
@@ -33,6 +37,12 @@ This repository is an agent-first reference for the public Clash Royale API.
 - Do not equate all activity with Trophy Road. Ranked / Path of Legend, Clan Wars, events, tournaments, 2v2, and side
   modes have distinct API signals.
 - Do not add notes about specific downstream consumers of this repo.
+- Prefer a measurement to a memory. State what was observed, when, and against which clan or player; say "observed
+  August 2026", not "usually".
+- Where a value was bounded rather than measured exactly — anything derived from polling — write the bounds. Claiming a
+  precision you did not measure is guessing with a timestamp on it.
+- When you add an observed enum value or a specific fact, add it to
+  `tools/docs-build/scripts/validate-observed-enums.mjs` so a later rewrite cannot quietly drop it.
 
 ## Official Docs Comparison
 
