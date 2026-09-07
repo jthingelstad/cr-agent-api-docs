@@ -10,7 +10,8 @@ Verified fields:
 
 - `state`
 - `sectionIndex`
-- `periodIndex` — season-monotonic: `periodIndex // 7 === sectionIndex`; `periodIndex % 7` gives the day (0-2 training, 3-6 war days)
+- `periodIndex` — season-monotonic: `periodIndex // 7 === sectionIndex`; `periodIndex % 7` gives the day
+  (0-2 training, 3-6 war days)
 - `periodType`
 - `clan`
 - `clans`
