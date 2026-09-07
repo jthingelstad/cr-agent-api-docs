@@ -23,8 +23,9 @@ Get full player profile.
 | `tag`                             | string        | e.g. `#PU9RCVYUG`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `name`                            | string        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `expLevel`                        | integer       | **Deprecated.** The game retired Experience Level / King's Journey in the 2026 "New Collection Levels and Mastery Changes" update, and this field no longer tracks progression — clan-roster responses report `expLevel: 0` for every member, and a high-trophy profile can report a low value here. Do NOT derive King Tower as `min(expLevel, 16)`: King Tower Level (still capped at 16) is now earned by upgrading a required count of cards to required levels and must be computed from the card collection. Read current progression from the `CollectionLevel` badge instead — see [models/players.md](models/players.md#badges). |
-| `expPoints`                       | integer       | XP within current level                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `totalExpPoints`                  | integer       | Lifetime XP earned                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `expPoints`                       | integer       | **Deprecated.** Legacy XP within the current level; the 2026 update removed XP from the game                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `kingTowerLevel`                  | integer       | Current King Tower Level (still capped at 16). First observed 2026-09-02; retained profile payloads reported 12-16 through 2026-09-03. Where an independent card-upgrade calculation was available it matched this field on every sampled current profile, so it is trustworthy — but it appeared only recently, so treat its ABSENCE on older payloads as normal rather than as an error.                                                                                                                                                                                                                                                |
+| `totalExpPoints`                  | integer       | **Deprecated.** Legacy lifetime XP; the 2026 update removed XP from the game                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `starPoints`                      | integer       | Star points for card cosmetics                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `collectionLevel`                 | integer       | Stub — observed to read `0` on live profiles. The real Collection Level (the progression number the game shows since the 2026 update) is the `CollectionLevel` badge's `progress` value; see [models/players.md](models/players.md#badges).                                                                                                                                                                                                                                                                                                                                                                                               |
 | `trophies`                        | integer       | Current trophy count                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -51,7 +52,7 @@ Get full player profile.
 | `currentDeckSupportCards`         | array         | Tower Troops in current deck                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `cards`                           | array         | Full card collection with levels                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `supportCards`                    | array         | Tower Troops collection with levels                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `currentFavouriteCard`            | Item          | Full card object for favourite card. NOT reliably player-settable in-game — unusable as a liveness/ownership challenge (elixir-mcp tried 2026-09-03; players could not change it on demand)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `currentFavouriteCard`            | Item          | Full card object for favourite card. NOT reliably player-settable in-game — unusable as a liveness/ownership challenge (elixir-mcp tried 2026-09-03; players could not change it on demand)                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `badges`                          | array         | See below                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `achievements`                    | array         | See below                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `currentPathOfLegendSeasonResult` | object\|null  | `{ leagueNumber, trophies, rank }` — null if no PoL history; `rank` can also be null within the object                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -65,7 +66,12 @@ Get full player profile.
 ```json
 {
   "currentSeason": { "trophies": 12530, "bestTrophies": 6650 },
-  "previousSeason": { "id": "2026-02", "rank": 3288, "trophies": 7163, "bestTrophies": 7250 },
+  "previousSeason": {
+    "id": "2026-02",
+    "rank": 3288,
+    "trophies": 7163,
+    "bestTrophies": 7250
+  },
   "bestSeason": { "id": "2021-02", "rank": 926, "trophies": 7506 }
 }
 ```
@@ -80,7 +86,14 @@ Get full player profile.
 **badge shape (progress badge):**
 
 ```json
-{ "name": "Classic12Wins", "level": 1, "maxLevel": 8, "progress": 2, "target": 10, "iconUrls": { "large": "..." } }
+{
+  "name": "Classic12Wins",
+  "level": 1,
+  "maxLevel": 8,
+  "progress": 2,
+  "target": 10,
+  "iconUrls": { "large": "..." }
+}
 ```
 
 **badge shape (one-time badge):**
@@ -96,7 +109,14 @@ One-time badges **omit** `level`, `maxLevel`, and `target` entirely (they are no
 **achievement shape:**
 
 ```json
-{ "name": "Team Player", "stars": 3, "value": 1717, "target": 1, "info": "Join a Clan", "completionInfo": null }
+{
+  "name": "Team Player",
+  "stars": 3,
+  "value": 1717,
+  "target": 1,
+  "info": "Join a Clan",
+  "completionInfo": null
+}
 ```
 
 **Player card (in `cards` / `currentDeck`) vs catalog card:** Player cards include additional fields beyond the catalog:
@@ -256,7 +276,7 @@ Observed: returns ~30-40 battles (most commonly 30).
 | 72000032 | TripleElixir_Friendly                                                              |
 | 72000042 | PickMode                                                                           |
 | 72000050 | Touchdown_Draft                                                                    |
-| 72000051 | TeamVsTeam_Touchdown_Draft (listed, not observed March–April 2026)                 |
+| 72000051 | TeamVsTeam_Touchdown_Draft (observed August 2026)                                  |
 | 72000060 | Overtime_Ladder                                                                    |
 | 72000062 | TripleElixir_Ladder                                                                |
 | 72000065 | Showdown_Friendly                                                                  |
@@ -282,6 +302,10 @@ Observed: returns ~30-40 battles (most commonly 30).
 | 72000500 | RampUp_Friendly_EventDeck_4Card (listed, not observed March–April 2026)            |
 | 72000502 | Crazy_Arena                                                                        |
 | 72000503 | FloodHounds_Draft                                                                  |
+| 72000501 | All_Random_Princess (observed on the wire; `deckSelection` reported `unknown`)     |
+| 72000510 | Crazy_Arena_InfiniteElixir (observed August 2026)                                  |
+| 72000511 | Crazy_Arena_SuddenDeath (observed August 2026)                                     |
+| 72000512 | Chaos_1v1_MegaDraft_All (observed August 2026)                                     |
 
 Note: `gameMode.name` was observed on 100% of battles across March–April 2026 sampling (all tournament battles
 included). Earlier notes suggesting `name` might be absent on some tournament modes no longer apply — treat `name` as
@@ -352,7 +376,10 @@ total for duels).
 ```json
 [
   { "tag": "#PU9RCVYUG", "modifiers": ["Pekka3", "Graveyard2", "Rage1"] },
-  { "tag": "#2JVGV9CG9", "modifiers": ["Fireball3", "GoblinHut2", "Berserker1"] }
+  {
+    "tag": "#2JVGV9CG9",
+    "modifiers": ["Fireball3", "GoblinHut2", "Berserker1"]
+  }
 ]
 ```
 
