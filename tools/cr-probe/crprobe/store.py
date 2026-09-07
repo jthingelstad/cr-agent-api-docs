@@ -64,8 +64,14 @@ class Store:
     def __init__(self, path: Path | None = None):
         self.path = Path(path) if path else default_db_path()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self._conn = sqlite3.connect(self.path)
+        self._conn = sqlite3.connect(self.path, timeout=30.0)
         self._conn.row_factory = sqlite3.Row
+        # WAL so a `crprobe timeline` can read a session while a four-hour
+        # `record` is still writing it, and a generous busy timeout so a
+        # concurrent writer waits instead of killing an unattended run.
+        self._conn.execute("PRAGMA journal_mode=WAL")
+        self._conn.execute("PRAGMA busy_timeout=30000")
+        self._conn.execute("PRAGMA synchronous=NORMAL")
         self._conn.executescript(SCHEMA)
         self._conn.commit()
 

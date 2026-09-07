@@ -69,6 +69,29 @@ between two observations, so every transition carries `between` bounds and every
 are recorded as `poll_error` rather than passing silently, because a gap in observation must never read as "nothing
 happened".
 
+## Running it unattended
+
+A season roll happens at 10:00 UTC on the first Monday, which is the middle of the night locally. Start it before the
+boundary and read the timeline later.
+
+Stop a background recording with **SIGTERM**, not Ctrl-C — it is handled, and closes the session cleanly rather than
+truncating it mid-cycle:
+
+```sh
+kill "$(pgrep -f 'crprobe record')"
+```
+
+Two things that bite when backgrounding it:
+
+- A shell that backgrounds a job usually sets SIGINT to ignore, so `kill -INT` does nothing. Use SIGTERM.
+- `uv run` is a wrapper process. Signalling it does not necessarily reach the Python child, so signal the child — or run
+  `.venv/bin/crprobe` directly, which is one process and behaves predictably.
+
+Polls are paced from the START of each cycle, so the cadence does not drift as request latency varies; if a cycle cannot
+keep up with `--interval`, it says so once rather than quietly producing a coarser record than you asked for.
+
+The capture database is WAL-mode, so `crprobe timeline` can read a session while a long `record` is still writing to it.
+
 ## Checking a claim before you write it
 
 ```sh

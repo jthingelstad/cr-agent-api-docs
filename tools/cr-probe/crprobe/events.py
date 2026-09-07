@@ -41,7 +41,10 @@ def redact_payload(node):
                 if key == "tag" and isinstance(val, str):
                     out[key] = pseudo(val, "#REDACT")
                 elif key == "name" and isinstance(val, str):
-                    out[key] = pseudo(val, "player-")
+                    # Neutral prefix: a `name` here may belong to a player or a
+                    # clan and there is no reliable way to tell, so do not
+                    # assert one.
+                    out[key] = pseudo(val, "redacted-")
                 else:
                     out[key] = walk(val)
             return out
@@ -61,6 +64,9 @@ class PathState:
     body: object | None = None
     last_seen_at: str | None = None
     fields: tuple[str, ...] = field(default=())
+    # True once a non-200 has interrupted the stream, so the next successful
+    # diff can be labelled as spanning that gap.
+    gapped: bool = False
 
     def observe(self, response) -> list[dict]:
         """Compare a fresh response to the last one; return transition events."""
@@ -84,7 +90,18 @@ class PathState:
             )
 
         if response.ok and self.body is not None and response.body != self.body:
-            events.extend(self._field_events(self.body, response.body, now))
+            changes = self._field_events(self.body, response.body, now)
+            if self.gapped:
+                # This diff spans a window where the endpoint was unavailable,
+                # so it compares across the gap rather than poll-to-poll. Say
+                # so, but DO produce it: at a season roll this is the single
+                # most informative comparison there is (sectionIndex 4 -> 0,
+                # periodIndex 34 -> 0, colosseum -> training), and discarding
+                # the pre-gap state made the tool go quiet exactly when the
+                # thing it exists to observe finally happened.
+                for change in changes:
+                    change["across_gap"] = True
+            events.extend(changes)
 
         if response.error:
             # Never let a failed poll masquerade as "nothing changed" — a gap
@@ -94,8 +111,12 @@ class PathState:
 
         if response.ok:
             self.body = response.body
+            self.gapped = False
         elif response.status != 0:
-            self.body = None
+            # Keep the last good body. It is the only thing the post-gap
+            # payload can be compared against, and a 404 is a statement about
+            # availability, not evidence the previous state was wrong.
+            self.gapped = True
         self.status = response.status
         self.last_seen_at = now
         return events
@@ -105,19 +126,29 @@ class PathState:
         # real change silently degrades into a bare 'payload_change'.
         diff = DeepDiff(old, new, ignore_order=True, verbose_level=2)
         changes: list[dict] = []
+        # iterable_item_* matter as much as the dict keys: a river race log
+        # gaining an entry, a clan joining a race, a participant appearing.
+        # Without them a list change degraded to a contentless payload_change.
         for kind, key in (("values_changed", "changed"), ("type_changes", "changed"),
                           ("dictionary_item_added", "added"),
-                          ("dictionary_item_removed", "removed")):
+                          ("dictionary_item_removed", "removed"),
+                          ("iterable_item_added", "added"),
+                          ("iterable_item_removed", "removed")):
             for entry in diff.get(kind, []) or []:
                 pointer = _pretty_pointer(entry if isinstance(entry, str) else str(entry))
                 if self.fields and not _matches(pointer, self.fields):
                     continue
                 item = {"kind": "field_change", "at": now, "path": self.path,
                         "field": pointer, "change": key}
-                if isinstance(diff.get(kind), dict):
-                    detail = diff[kind][entry]
-                    item["from"] = _small(detail.get("old_value"))
-                    item["to"] = _small(detail.get("new_value"))
+                container = diff.get(kind)
+                if isinstance(container, dict):
+                    detail = container[entry]
+                    if isinstance(detail, dict) and {"old_value", "new_value"} & detail.keys():
+                        item["from"] = _small(detail.get("old_value"))
+                        item["to"] = _small(detail.get("new_value"))
+                    else:
+                        # iterable_item_* carry the value itself, not a pair.
+                        item["to" if key == "added" else "from"] = _small(detail)
                 changes.append(item)
         if not changes and not self.fields:
             # Something moved but nothing scalar surfaced (list churn, ordering).

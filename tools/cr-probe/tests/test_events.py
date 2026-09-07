@@ -88,5 +88,6 @@ def test_redaction_is_stable_so_repeat_players_stay_linkable():
     first, second = out["participants"]
     assert first["tag"] == second["tag"]
     assert first["tag"].startswith("#REDACT")
+    assert second["name"].startswith("redacted-")
     assert "Real Name" not in str(out)
     assert first["fame"] == 5, "redaction must not damage the data being studied"

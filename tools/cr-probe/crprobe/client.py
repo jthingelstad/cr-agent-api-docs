@@ -55,14 +55,26 @@ def normalize_path(path: str) -> str:
     `/clans/%23ABC` or the tag silently disappears at the first `#`.
     """
     path = path.strip()
-    if path.startswith("http"):
-        parts = urlsplit(path)
-        path = parts.path.replace("/v1", "", 1) + (f"?{parts.query}" if parts.query else "")
+    # Strip a pasted full URL by string, NOT with urlsplit: a URL parser treats
+    # everything after '#' as a fragment, so urlsplit silently deletes the clan
+    # tag. `/v1/clans/#ABC` came back as `/clans/` with the tag gone.
+    for prefix in ("https://api.clashroyale.com/v1", "http://api.clashroyale.com/v1"):
+        if path.startswith(prefix):
+            path = path[len(prefix):]
+            break
+    else:
+        if path.startswith("http"):
+            # Some other host (a local fake API in tests): drop scheme+authority
+            # up to the first path separator, again without parsing fragments.
+            rest = path.split("://", 1)[1]
+            path = rest[rest.index("/"):] if "/" in rest else "/"
+            if path.startswith("/v1"):
+                path = path[3:]
     if not path.startswith("/"):
         path = "/" + path
     head, sep, query = path.partition("?")
-    head = head.replace("#", "%23")
-    # Re-encode a bare '#' only; leave already-encoded %23 alone.
+    # Encode the tag sigil, leaving an already-encoded %23 alone.
+    head = head.replace("%23", "\x00").replace("#", "%23").replace("\x00", "%23")
     return BASE_URL + head + (sep + query if sep else "")
 
 

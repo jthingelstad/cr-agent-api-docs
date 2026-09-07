@@ -51,7 +51,8 @@ PRESETS: dict[str, dict] = {
 
 def resolve(name: str, *, clan: str | None, player: str | None) -> tuple[list[str], list[str], int]:
     preset = PRESETS[name]
-    missing = [r for r in preset["requires"] if not locals().get(r) and not {"clan": clan, "player": player}[r]]
+    supplied = {"clan": clan, "player": player}
+    missing = [need for need in preset["requires"] if not supplied.get(need)]
     if missing:
         raise ValueError(
             f"preset '{name}' needs {' and '.join('--' + m for m in missing)}"

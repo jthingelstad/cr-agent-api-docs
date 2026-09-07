@@ -9,6 +9,7 @@ would be a nasty surprise.)
 from __future__ import annotations
 
 import json
+import signal
 import sys
 import time
 from pathlib import Path
@@ -229,9 +230,33 @@ def record(preset, clan, player, extra_paths, session, interval, duration, redac
 
 
 def _run_loop(client, states, interval, duration, human, *, store, session, redact=None):
+    """Poll on a fixed cadence until the clock runs out or the user stops us.
+
+    Sleep is measured from the START of each cycle, not the end. Sleeping a
+    flat `interval` after the work makes the real period `interval + cycle`,
+    which drifts: over a four-hour record that is both fewer polls than asked
+    for and less uniform bounds on every transition, and bound precision is the
+    whole point of the exercise.
+    """
     started = time.monotonic()
+    behind = 0
+
+    # An unattended record is stopped by SIGTERM, not Ctrl-C: launchd, a
+    # `kill`, a shell that backgrounded it (and so set SIGINT to ignore).
+    # Translate it into the same graceful path so the session is closed and
+    # reported rather than truncated mid-cycle.
+    def _stop(_signum, _frame):
+        raise KeyboardInterrupt
+
+    try:
+        signal.signal(signal.SIGTERM, _stop)
+    except (ValueError, OSError):
+        # Not on the main thread; the default disposition still applies.
+        pass
+
     try:
         while True:
+            cycle_started = time.monotonic()
             for path, state in states.items():
                 response = client.get(path)
                 if store is not None:
@@ -243,7 +268,16 @@ def _run_loop(client, states, interval, duration, human, *, store, session, reda
                     sys.stdout.flush()
             if duration and (time.monotonic() - started) >= duration:
                 break
-            time.sleep(interval)
+            remaining = interval - (time.monotonic() - cycle_started)
+            if remaining <= 0:
+                # Polling slower than requested. Say so once rather than
+                # silently producing a coarser record than the operator thinks.
+                behind += 1
+                if behind == 1:
+                    err.print(f"[yellow]cycle takes longer than --interval {interval}s; "
+                              f"polling as fast as it can[/yellow]")
+                continue
+            time.sleep(remaining)
     except KeyboardInterrupt:
         err.print("\n[dim]stopped[/dim]")
 
