@@ -23,7 +23,7 @@ You do not tell it the variable name. Point it at whatever file the thing you ar
 value is the key:
 
 ```sh
-uv run crprobe keys --key-file ~/Projects/elixir-mcp/.env --human
+uv run crprobe keys --key-file ~/Projects/clash-royale/elixir-mcp/.env --human
 ```
 
 Supercell keys are JWTs, so a candidate is identified by its claims rather than guessed from its name; other services'

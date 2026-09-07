@@ -40,7 +40,7 @@ now, not at the boundary.
 
 ```text
 We are observing a Clash Royale WAR WEEK rollover today with crprobe
-(~/Projects/cr-agent-api-docs/tools/cr-probe). This is a recurring exercise:
+(~/Projects/clash-royale/cr-agent-api-docs/tools/cr-probe). This is a recurring exercise:
 each run should reduce the open-questions list in
 recipes/observe-a-boundary.md, and anything we learn goes into the docs.
 
@@ -89,7 +89,7 @@ as one.
 
 ```text
 We are observing a Clash Royale SEASON rollover today with crprobe
-(~/Projects/cr-agent-api-docs/tools/cr-probe). The season rolls at 10:00:00
+(~/Projects/clash-royale/cr-agent-api-docs/tools/cr-probe). The season rolls at 10:00:00
 UTC. This is a recurring exercise: each run should reduce the open-questions
 list in recipes/observe-a-boundary.md, and anything we learn goes into the docs.
 

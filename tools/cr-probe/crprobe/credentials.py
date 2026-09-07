@@ -1,7 +1,7 @@
 """Finding a usable Clash Royale API key without being told its name.
 
 The point is that you can hand this the .env of whatever you are debugging --
-`--key-file ~/Projects/elixir-mcp/.env` -- and probe with the SAME credential
+`--key-file ~/Projects/clash-royale/elixir-mcp/.env` -- and probe with the SAME credential
 that service uses, IP binding and all. "Works for me but not for the service"
 is otherwise very hard to answer.
 
@@ -43,10 +43,10 @@ _NOT_OURS = re.compile(
 # Files searched when none are given. Ordered by how likely they are to hold a
 # key that works from THIS machine rather than from deployed infrastructure.
 DEFAULT_KEY_FILES = (
-    "~/Projects/drop.poapkings.com/.env",
-    "~/Projects/elixir-bot/.env",
-    "~/Projects/elixir-mcp/.env",
-    "~/Projects/cr-agent-api-docs/.env",
+    "~/Projects/clash-royale/drop.poapkings.com/.env",
+    "~/Projects/clash-royale/elixir-bot/.env",
+    "~/Projects/clash-royale/elixir-mcp/.env",
+    "~/Projects/clash-royale/cr-agent-api-docs/.env",
     "./.env",
 )
 

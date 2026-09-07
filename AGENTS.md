@@ -8,7 +8,7 @@ This repository is an agent-first reference for the public Clash Royale API.
 >
 > **If you are reading this file from inside another project** (a `docs/cr-api-docs/` or similar folder), you are in a
 > stale copy. Vendored copies drifted in both directions and have been removed; edit the checkout at
-> `~/Projects/cr-agent-api-docs` (github `jthingelstad/cr-agent-api-docs`) instead, or your learning is stranded.
+> `~/Projects/clash-royale/cr-agent-api-docs` (github `jthingelstad/cr-agent-api-docs`) instead, or your learning is stranded.
 
 ## Start Here
 
