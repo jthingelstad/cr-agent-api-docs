@@ -200,6 +200,21 @@ The embedded clan object is the full `RiverRaceClan` shape (see [models/river-ra
 across 40 log entries sampled April 2026.
 
 - `seasonId` is a sequential integer (e.g. 127, 128, 129, 130) — NOT the YYYY-MM format used for league seasons
+- **`seasonId` is ABSENT from the live `currentriverrace` payload** — it appears only in `riverracelog` items. Anything
+  reading the live race must derive the season itself, which makes the boundary rules below load-bearing rather than
+  trivia.
+- **A season runs first Monday of the month → first Monday of the next, and rolls at 10:00:00Z.** That gives 4 or 5
+  weeks depending only on how many Mondays fall between. Verified against the client's own "Season Ends In" countdown
+  on 2026-09-07: 24m46s remaining at 09:35:14Z and 19m58s at 09:40:02Z, both resolving to exactly 10:00:00Z.
+- **The week close and the season roll are TWO different events ~26 minutes apart. Do not conflate them.** The race
+  closes first (`riverracelog[0].createdDate`, ~09:34Z in Season 135), the client then shows
+  "Week N ending... Please stand by..." while already counting down to the season, and the season rolls at 10:00Z.
+  Deriving the season from the race-close stamp dates it ~26 minutes early, so live payloads captured in that gap —
+  which still describe the FINISHED race, at the OLD section index — get stamped with the NEXT season id. That
+  produces impossible `(season N+1, last section)` rows.
+- **The race-close time drifts season to season, the 10:00Z season hour does not.** Observed closes: `093005Z` for every
+  week of Season 134, `093404Z`-`093406Z` for every week of Season 135. Stable within a season, moved between them — so
+  anchor week math on the observed close and season math on the fixed hour.
 - `sectionIndex` = week within the season. Most seasons are 4 weeks (sections 0-3) but some are 5 weeks (sections 0-4).
   Supercell varies the war season length to keep it roughly aligned with Pass Royale seasons.
 - `standings` contains all 5 clans ranked by finish position
@@ -281,12 +296,29 @@ Note: search results do not include `memberList` or `description` — fetch the 
 | ---- | --------------------------------------- |
 | 400  | Bad parameters                          |
 | 403  | Auth failure / insufficient token scope |
-| 404  | Clan not found                          |
+| 404  | Clan not found — or, on `currentriverrace`, no race is active (see below) |
 | 429  | Rate limit exceeded                     |
 | 500  | Server error                            |
 | 503  | Maintenance                             |
 
 Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were not observed.
+
+**A 404 on `currentriverrace` does not mean the clan is gone.** Between the season roll and the moment the new river
+race is created, `GET /clans/{clanTag}/currentriverrace` returns `404 {"reason":"notFound"}` with no `message`, while
+`GET /clans/{clanTag}` for the same tag still returns `200`. The client shows "Waiting for Clan War to start..." for
+this window. It is a normal, recurring state once a month, not an error and not a deleted clan — treat it as "no
+active race yet", hold the last known race, and keep polling.
+
+The window is long and varies season to season. Measured on `#J2RGCRVG` from the race-close stamp
+(`riverracelog[0].createdDate`) to the first sighting of the new race:
+
+| season roll  | race closed         | new race first seen | gap after the 10:00Z season roll |
+| ------------ | ------------------- | ------------------- | -------------------------------- |
+| 2026-07-06   | `093005Z`           | `101542Z`           | ~16 min                          |
+| 2026-08-03   | `093005Z`           | `111722Z`           | ~77 min                          |
+
+Anything keyed on "the new season is observable" — season-close events, award finalization, leaderboard rollovers —
+therefore fires up to well over an hour AFTER the season itself rolls. Do not treat the delay as a polling fault.
 
 ---
 
@@ -326,9 +358,28 @@ Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were n
   roll, each race lands in a staggered close slot, and that slot is stable for the duration of the season. The REST API
   does not expose a `nextWarStart` / `timeUntilTransition` countdown. For approximate transition timing, derive the
   anchor from the most recent non-sentinel `finishTime` and assume it holds until the next season roll.
-- **Non-rank-1 clans carry a sentinel `finishTime`:** only the rank-1 standings entry shows a real `finishTime`; the
-  other four clans in the race show `19691231T235959.000Z` (epoch zero) because they didn't hit a completion condition.
-  Don't treat the sentinel as a real time.
+- **Non-rank-1 clans carry a sentinel `finishTime`:** in a NORMAL war week only the rank-1 standings entry shows a real
+  `finishTime`; the other four clans in the race show `19691231T235959.000Z` (epoch zero) because they didn't hit a
+  completion condition. Don't treat the sentinel as a real time.
+- **In a Colosseum week EVERY clan carries the sentinel, rank 1 included.** Colosseum has no finish line — it scores war
+  points across all four battle days with no completion condition to hit — so no entry in that week's standings has a
+  real `finishTime`. Code that reads "the rank-1 `finishTime`" as the race-close anchor gets epoch zero on exactly the
+  week that ends a season. Clean across 10 consecutive weeks of `#J2RGCRVG` (`riverracelog`, 2026-09-07) - every
+  Colosseum week all-sentinel, every normal week not:
+
+  | week      | Colosseum (`trophyChange` 100) | rank-1 `finishTime`    | all five sentinel |
+  | --------- | ------------------------------ | ---------------------- | ----------------- |
+  | S135 sec4 | yes                            | sentinel               | yes               |
+  | S135 sec3 | no                             | `20260830T093404.000Z` | no                |
+  | S135 sec2 | no                             | `20260823T093404.000Z` | no                |
+  | S135 sec1 | no                             | `20260816T093404.000Z` | no                |
+  | S135 sec0 | no                             | `20260809T093404.000Z` | no                |
+  | S134 sec3 | yes                            | sentinel               | yes               |
+  | S134 sec2 | no                             | `20260726T093003.000Z` | no                |
+  | S133 sec4 | yes                            | sentinel               | yes               |
+
+  A `trophyChange` magnitude of 100 on the standings entries is a reliable Colosseum marker and predicts the
+  all-sentinel case.
 - **Member roles observed:** `member`, `elder`, `coLeader`, `leader`
 - **Participant counts:** River race participants can exceed the current member count (includes players who left the
   clan during the race)
