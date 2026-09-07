@@ -251,16 +251,17 @@ Observed: returns ~30-40 battles (most commonly 30).
 
 **Deck selection values:**
 
-| `deckSelection`    | Used in                                                                        |
-| ------------------ | ------------------------------------------------------------------------------ |
-| `collection`       | PvP, pathOfLegend, riverRacePvP, clanMate, friendly                            |
-| `eventDeck`        | trail, some friendlies                                                         |
-| `draft`            | clanMate2v2 (draft modes)                                                      |
-| `warDeckPick`      | riverRaceDuel                                                                  |
-| `pick`             | pick-mode friendlies                                                           |
-| `draftCompetitive` | competitive draft friendlies, Triple Draft tournaments                         |
-| `predefined`       | preset-deck friendlies (e.g. Mirror Deck)                                      |
-| `quadDeckPick`     | 1v1 Duel friendlies (`72000314 Duel_1v1_Friendly`) — 4 decks brought per match |
+| `deckSelection`    | Used in                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `collection`       | PvP, pathOfLegend, riverRacePvP, clanMate, friendly                                         |
+| `eventDeck`        | trail, some friendlies                                                                      |
+| `draft`            | clanMate2v2 (draft modes)                                                                   |
+| `warDeckPick`      | riverRaceDuel                                                                               |
+| `pick`             | pick-mode friendlies                                                                        |
+| `draftCompetitive` | competitive draft friendlies, Triple Draft tournaments                                      |
+| `predefined`       | preset-deck friendlies (e.g. Mirror Deck)                                                   |
+| `unknown`          | Observed on an event-tagged mode (`All_Random_Princess`, 72000501); do not infer deck rules |
+| `quadDeckPick`     | 1v1 Duel friendlies (`72000314 Duel_1v1_Friendly`) — 4 decks brought per match              |
 
 **Known game mode IDs:**
 
@@ -270,10 +271,12 @@ Observed: returns ~30-40 battles (most commonly 30).
 | 72000006 | Ladder                                                                             |
 | 72000007 | Friendly                                                                           |
 | 72000009 | Tournament                                                                         |
+| 72000011 | DoubleElixir_Friendly                                                              |
 | 72000013 | (tournament mode — listed by Supercell, not observed on the wire March–April 2026) |
 | 72000014 | TeamVsTeam                                                                         |
 | 72000031 | Overtime_Friendly                                                                  |
 | 72000032 | TripleElixir_Friendly                                                              |
+| 72000033 | RampUpElixir_Friendly                                                              |
 | 72000042 | PickMode                                                                           |
 | 72000050 | Touchdown_Draft                                                                    |
 | 72000051 | TeamVsTeam_Touchdown_Draft (observed August 2026)                                  |
@@ -292,17 +295,22 @@ Observed: returns ~30-40 battles (most commonly 30).
 | 72000266 | ClanWar_BoatBattle                                                                 |
 | 72000267 | CW_Duel_1v1                                                                        |
 | 72000268 | CW_Battle_1v1                                                                      |
+| 72000286 | TeamVsTeam_TripleElixir_Friendly                                                   |
 | 72000314 | Duel_1v1_Friendly                                                                  |
 | 72000321 | Touchdown_ClanWar                                                                  |
+| 72000376 | Event_RestlessDead                                                                 |
 | 72000450 | Ranked1v1_NewArena                                                                 |
 | 72000464 | Ranked1v1_NewArena2                                                                |
 | 72000469 | DraftMode_Princess                                                                 |
 | 72000474 | Challenge_AllCards_EventDeck_NoSet                                                 |
 | 72000486 | Touchdown_Event (listed, not observed April–May 2026)                              |
 | 72000500 | RampUp_Friendly_EventDeck_4Card (listed, not observed March–April 2026)            |
+| 72000501 | All_Random_Princess (observed on the wire; `deckSelection` reported `unknown`)     |
 | 72000502 | Crazy_Arena                                                                        |
 | 72000503 | FloodHounds_Draft                                                                  |
-| 72000501 | All_Random_Princess (observed on the wire; `deckSelection` reported `unknown`)     |
+| 72000504 | Crazy_Arena_EpicOnly                                                               |
+| 72000505 | Chaos_1v1_Draft                                                                    |
+| 72000506 | Chaos_1v1_TripleDraft                                                              |
 | 72000510 | Crazy_Arena_InfiniteElixir (observed August 2026)                                  |
 | 72000511 | Crazy_Arena_SuddenDeath (observed August 2026)                                     |
 | 72000512 | Chaos_1v1_MegaDraft_All (observed August 2026)                                     |

@@ -89,7 +89,7 @@ Get the clan's active river race state.
 | -------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `state`        | string        | Observed `full` across all period types (training/warDay/colosseum) — `state` does not flip per day; `periodType` is the field that tracks the war's daily phase. |
 | `sectionIndex` | integer       | Current section (week)                                                                                                                                            |
-| `periodIndex`  | integer       | Season-monotonic period counter: `periodIndex // 7 === sectionIndex`, `periodIndex % 7` is the day (0-2 training, 3-6 war days 1-4). NOT within-section                                                                                                                                     |
+| `periodIndex`  | integer       | Season-monotonic period counter: `periodIndex // 7 === sectionIndex`, `periodIndex % 7` is the day (0-2 training, 3-6 war days 1-4). NOT within-section           |
 | `periodType`   | string        | Observed: `training`, `warDay`, `colosseum` (see notes)                                                                                                           |
 | `clan`         | RiverRaceClan | This clan's data (see below)                                                                                                                                      |
 | `clans`        | array         | All 5 clans in the race                                                                                                                                           |
@@ -233,7 +233,10 @@ across 40 log entries sampled April 2026.
 **Status: Permanently removed.** Returns:
 
 ```json
-{ "reason": "gone", "message": "This API endpoint has been permanently removed." }
+{
+  "reason": "gone",
+  "message": "This API endpoint has been permanently removed."
+}
 ```
 
 ---
@@ -277,7 +280,12 @@ Clan search results include a subset of clan fields:
   "badgeId": 16000146,
   "clanScore": 67536,
   "clanWarTrophies": 160,
-  "location": { "id": 57000249, "name": "United States", "isCountry": true, "countryCode": "US" },
+  "location": {
+    "id": 57000249,
+    "name": "United States",
+    "isCountry": true,
+    "countryCode": "US"
+  },
   "requiredTrophies": 2000,
   "donationsPerWeek": 278,
   "clanChestLevel": 1,
@@ -292,14 +300,14 @@ Note: search results do not include `memberList` or `description` — fetch the 
 
 ## Error Codes
 
-| Code | Meaning                                 |
-| ---- | --------------------------------------- |
-| 400  | Bad parameters                          |
-| 403  | Auth failure / insufficient token scope |
+| Code | Meaning                                                                   |
+| ---- | ------------------------------------------------------------------------- |
+| 400  | Bad parameters                                                            |
+| 403  | Auth failure / insufficient token scope                                   |
 | 404  | Clan not found — or, on `currentriverrace`, no race is active (see below) |
-| 429  | Rate limit exceeded                     |
-| 500  | Server error                            |
-| 503  | Maintenance                             |
+| 429  | Rate limit exceeded                                                       |
+| 500  | Server error                                                              |
+| 503  | Maintenance                                                               |
 
 Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were not observed.
 
@@ -312,15 +320,45 @@ active race yet", hold the last known race, and keep polling.
 The window is long and varies season to season. Measured on `#J2RGCRVG` from the race-close stamp
 (`riverracelog[0].createdDate`) to the first sighting of the new race:
 
-| season roll  | race closed         | new race first seen | gap after the 10:00Z season roll |
-| ------------ | ------------------- | ------------------- | -------------------------------- |
-| 2026-07-06   | `093005Z`           | `101542Z`           | ~16 min                          |
-| 2026-08-03   | `093005Z`           | `111722Z`           | ~77 min                          |
+| season roll | race closed | new race first seen | gap after the 10:00Z season roll |
+| ----------- | ----------- | ------------------- | -------------------------------- |
+| 2026-07-06  | `093005Z`   | `101542Z`           | ~16 min                          |
+| 2026-08-03  | `093005Z`   | `111722Z`           | ~77 min                          |
 
 Anything keyed on "the new season is observable" — season-close events, award finalization, leaderboard rollovers —
 therefore fires up to well over an hour AFTER the season itself rolls. Do not treat the delay as a polling fault.
 
 ---
+
+## The season rollover, minute by minute
+
+Watched end to end on the S135 -> S136 roll, 2026-09-07, against `#J2RGCRVG`. Nearly every rollover bug comes from
+assuming this is ONE instant. It is a sequence, and the API says different things at each stage.
+
+| UTC           | What happens     | `currentriverrace`                                                                         | Client says                        |
+| ------------- | ---------------- | ------------------------------------------------------------------------------------------ | ---------------------------------- |
+| `09:34:04`    | Race closes      | `200`, still the FINISHED race: old `sectionIndex`, final fame                             | "Week N ending... Please stand by" |
+| `09:34-10:00` | Stand-by         | unchanged - still the finished race                                                        | season countdown running           |
+| `10:00:00`    | **Season rolls** | unchanged - still the finished race                                                        | countdown hits zero                |
+| `10:00-10:09` | No race exists   | **`404 notFound`** (`GET /clans/{tag}` still `200`)                                        | "Waiting for Clan War to start..." |
+| `~10:09`      | New race created | `200`, `sectionIndex 0`, `periodIndex 0`, `periodType training`, `fame 0`, `periodLogs []` | "Training Days Started! Week 1"    |
+
+Consequences worth designing for:
+
+- **There is no payload that announces the new season.** `seasonId` is absent from the live race, and between the roll
+  and the new race there is no race at all. A consumer learns the season changed only when the new race appears with
+  `sectionIndex 0` - which is up to well over an hour late.
+- **The stand-by window is the dangerous one.** For ~26 minutes the API returns a payload that describes the OLD race
+  while the calendar has (or is about to) move on. Deriving the season from wall-clock during that window stamps the
+  old race's final section with the NEW season id.
+- **`periodLogs` is `[]` on a fresh race.** Anything that reads "the most recent closed day" must handle empty, not
+  assume at least one entry.
+- **`fame` is `0` on a fresh race** even though the previous race ended with a large value. Do not read `fame: 0` as a
+  failed capture.
+- **The 404 is normal.** It recurs monthly. It is not a deleted clan, not an auth failure (that is `403 invalidIp`),
+  and not a reason to alarm or to drop the clan from a roster.
+- **The gap length is not stable.** ~16 min (July), ~77 min (August), ~9 min (September) after the season roll. Do not
+  encode a timeout that assumes the short case.
 
 ## Agent Notes
 
@@ -380,6 +418,7 @@ therefore fires up to well over an hour AFTER the season itself rolls. Do not tr
 
   A `trophyChange` magnitude of 100 on the standings entries is a reliable Colosseum marker and predicts the
   all-sentinel case.
+
 - **Member roles observed:** `member`, `elder`, `coLeader`, `leader`
 - **Participant counts:** River race participants can exceed the current member count (includes players who left the
   clan during the race)

@@ -8,26 +8,26 @@ Used by `GET /players/{playerTag}`.
 
 Verified fields:
 
-| Field                                                                                             | Notes                                                                                                      |
-| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `tag`, `name`                                                                                     | Player identity                                                                                            |
-| `expLevel`, `expPoints`, `totalExpPoints`, `starPoints`                                           | Legacy account progression — Experience Level was retired in-game in 2026; see [players.md](../players.md) |
-| `trophies`, `bestTrophies`                                                                        | Trophy Road values                                                                                         |
-| `arena`                                                                                           | [Arena](common.md#arena)                                                                                   |
-| `role`                                                                                            | Optional clan role                                                                                         |
-| `wins`, `losses`, `battleCount`, `threeCrownWins`                                                 | Battle totals                                                                                              |
-| `donations`, `donationsReceived`, `totalDonations`                                                | Donation counters                                                                                          |
-| `challengeCardsWon`, `challengeMaxWins`, `tournamentCardsWon`, `tournamentBattleCount`            | Challenge and tournament counters                                                                          |
-| `warDayWins`, `clanCardsCollected`                                                                | Legacy war counters                                                                                        |
-| `currentWinLoseStreak`                                                                            | Optional signed streak counter                                                                             |
-| `clan`                                                                                            | Optional [PlayerClan](common.md#playerclan)                                                                |
-| `leagueStatistics`                                                                                | Optional `PlayerLeagueStatistics`                                                                          |
-| `currentDeck`, `cards`, `currentDeckSupportCards`, `supportCards`                                 | Player card arrays                                                                                         |
-| `currentFavouriteCard`                                                                            | Catalog-like `Item` object; not reliably player-settable (no liveness challenges)                                                                                 |
-| `badges`, `achievements`                                                                          | Progress and account markers                                                                               |
-| `currentPathOfLegendSeasonResult`, `lastPathOfLegendSeasonResult`, `bestPathOfLegendSeasonResult` | Nullable `PathOfLegendSeasonResult`                                                                        |
-| `legacyTrophyRoadHighScore`                                                                       | Nullable integer                                                                                           |
-| `progress`                                                                                        | Map of side-mode season IDs to progress objects                                                            |
+| Field                                                                                             | Notes                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tag`, `name`                                                                                     | Player identity                                                                                                                                                                                                            |
+| `expLevel`, `expPoints`, `totalExpPoints`, `starPoints`                                           | Legacy account progression — Experience Level was retired in-game in 2026; see [players.md](../players.md)                                                                                                                 |
+| `trophies`, `bestTrophies`                                                                        | Trophy Road values. The Trophy Road ceiling is **14,000** — a legitimate max that real accounts sit at, not a sentinel or a capture bug. Do not treat high values as bad data; older ~9,000 ceiling assumptions are wrong. |
+| `arena`                                                                                           | [Arena](common.md#arena)                                                                                                                                                                                                   |
+| `role`                                                                                            | Optional clan role                                                                                                                                                                                                         |
+| `wins`, `losses`, `battleCount`, `threeCrownWins`                                                 | Battle totals                                                                                                                                                                                                              |
+| `donations`, `donationsReceived`, `totalDonations`                                                | Donation counters                                                                                                                                                                                                          |
+| `challengeCardsWon`, `challengeMaxWins`, `tournamentCardsWon`, `tournamentBattleCount`            | Challenge and tournament counters                                                                                                                                                                                          |
+| `warDayWins`, `clanCardsCollected`                                                                | Legacy war counters                                                                                                                                                                                                        |
+| `currentWinLoseStreak`                                                                            | Optional signed streak counter                                                                                                                                                                                             |
+| `clan`                                                                                            | Optional [PlayerClan](common.md#playerclan)                                                                                                                                                                                |
+| `leagueStatistics`                                                                                | Optional `PlayerLeagueStatistics`                                                                                                                                                                                          |
+| `currentDeck`, `cards`, `currentDeckSupportCards`, `supportCards`                                 | Player card arrays                                                                                                                                                                                                         |
+| `currentFavouriteCard`                                                                            | Catalog-like `Item` object; not reliably player-settable (no liveness challenges)                                                                                                                                          |
+| `badges`, `achievements`                                                                          | Progress and account markers                                                                                                                                                                                               |
+| `currentPathOfLegendSeasonResult`, `lastPathOfLegendSeasonResult`, `bestPathOfLegendSeasonResult` | Nullable `PathOfLegendSeasonResult`                                                                                                                                                                                        |
+| `legacyTrophyRoadHighScore`                                                                       | Nullable integer                                                                                                                                                                                                           |
+| `progress`                                                                                        | Map of side-mode season IDs to progress objects                                                                                                                                                                            |
 
 Optional Player fields, absent when not applicable:
 
@@ -48,7 +48,12 @@ Nullable Player fields, always present but null when not applicable:
 ```json
 {
   "currentSeason": { "trophies": 12530, "bestTrophies": 6650 },
-  "previousSeason": { "id": "2026-02", "rank": 3288, "trophies": 7163, "bestTrophies": 7250 },
+  "previousSeason": {
+    "id": "2026-02",
+    "rank": 3288,
+    "trophies": 7163,
+    "bestTrophies": 7250
+  },
   "bestSeason": { "id": "2021-02", "rank": 926, "trophies": 7506 }
 }
 ```
@@ -163,7 +168,14 @@ Conversion:
 Progress badge:
 
 ```json
-{ "name": "Grand12Wins", "level": 5, "maxLevel": 8, "progress": 150, "target": 250, "iconUrls": { "large": "..." } }
+{
+  "name": "Grand12Wins",
+  "level": 5,
+  "maxLevel": 8,
+  "progress": 150,
+  "target": 250,
+  "iconUrls": { "large": "..." }
+}
 ```
 
 One-time badge:
@@ -189,7 +201,9 @@ Two badges are load-bearing for account progression:
 - `CollectionLevel` — since the game's 2026 Collection Level update, its `progress` is the player's current Collection
   Level (the progression number the game now shows), while `level`/`maxLevel` are the badge's own tier. Read progression
   from this badge — not from the deprecated `expLevel`, and not from the top-level `collectionLevel` profile key, which
-  is a stub observed to read `0`.
+  is a stub observed to read `0`. Collection Level is the SUM of the levels of every card the player owns, plus 5 for
+  each Evolution and each Hero form unlocked, so it is a four-digit number (observed 1673) and only ever rises. It is
+  independent of King Tower Level, which is a separate ~1-16 value earned by upgrading required counts of cards.
 - `YearsPlayed` — its `level` is the number of completed years the account has existed, and its `progress` is the
   account age in days (observed live: level 4 / progress 1648 / target 1825 — targets are 365-day tiers). The badge
   first appears at one year, so absence USUALLY means a sub-1-year account — but not always: a 74-profile sweep
@@ -199,7 +213,14 @@ Two badges are load-bearing for account progression:
 ## Achievements
 
 ```json
-{ "name": "Team Player", "stars": 3, "value": 1717, "target": 1, "info": "Join a Clan", "completionInfo": null }
+{
+  "name": "Team Player",
+  "stars": 3,
+  "value": 1717,
+  "target": 1,
+  "info": "Join a Clan",
+  "completionInfo": null
+}
 ```
 
 Fields:
@@ -232,12 +253,20 @@ Chest, Epic Chest, Legendary Chest, Mega Lightning Chest, Royal Wild Chest, and 
 ```json
 {
   "": {
-    "arena": { "id": 168000059, "name": "Diamond", "rawName": "AutoChessArena10_2025_Oct" },
+    "arena": {
+      "id": 168000059,
+      "name": "Diamond",
+      "rawName": "AutoChessArena10_2025_Oct"
+    },
     "trophies": 4257,
     "bestTrophies": 4337
   },
   "AutoChess_2026_Mar": {
-    "arena": { "id": 168000059, "name": "Diamond", "rawName": "AutoChessArena10_2025_Oct" },
+    "arena": {
+      "id": 168000059,
+      "name": "Diamond",
+      "rawName": "AutoChessArena10_2025_Oct"
+    },
     "trophies": 3460,
     "bestTrophies": 3593
   }

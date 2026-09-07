@@ -2,6 +2,14 @@
 
 This repository is an agent-first reference for the public Clash Royale API.
 
+> **This repo is the single source of truth, and it is meant to be edited.** It exists to accumulate hard-won,
+> observed API behavior. When the live API surprises you, write it down here as part of the fix — that is the point of
+> the repo, not a favour to it.
+>
+> **If you are reading this file from inside another project** (a `docs/cr-api-docs/` or similar folder), you are in a
+> stale copy. Vendored copies drifted in both directions and have been removed; edit the checkout at
+> `~/Projects/cr-agent-api-docs` (github `jthingelstad/cr-agent-api-docs`) instead, or your learning is stranded.
+
 ## Start Here
 
 1. Read [index.md](index.md) for global API rules, response-shape patterns, pagination, errors, caching, and endpoint
