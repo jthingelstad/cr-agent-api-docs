@@ -69,6 +69,11 @@ between two observations, so every transition carries `between` bounds and every
 are recorded as `poll_error` rather than passing silently, because a gap in observation must never read as "nothing
 happened".
 
+## Observing a boundary
+
+The standing prompts for a war week roll and a season roll, plus the questions still open about them, live in
+[recipes/observe-a-boundary.md](../../recipes/observe-a-boundary.md). Use those rather than improvising each month.
+
 ## Running it unattended
 
 A season roll happens at 10:00 UTC on the first Monday, which is the middle of the night locally. Start it before the

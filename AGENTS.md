@@ -25,6 +25,10 @@ This repository is an agent-first reference for the public Clash Royale API.
    `tools/cr-probe` calls the live API, surveys a claim across every week the API remembers, and records a scheduled
    transition (a season roll, a week close) unattended. A pattern that looks certain after one observation is how a
    wrong rule gets published.
+8. **To observe a war week or season boundary as it happens**, use
+   [recipes/observe-a-boundary.md](recipes/observe-a-boundary.md). It carries the standing prompts for both, and the
+   list of questions still open about those boundaries — boundaries are unrepeatable, so an unobserved one costs a week
+   or a month.
 
 ## Important Rules
 
