@@ -20,7 +20,7 @@ ignored rather than applied, and the endpoint returned the full card catalog.
 
 **Returns:** `Items` object with two arrays:
 
-- `items` — 121 standard cards (troops, spells, buildings)
+- `items` — 123 standard cards (troops, spells, buildings), observed 2026-09-08
 - `supportItems` — 4 Tower Troops
 
 **Standard card shape (`items`):**
@@ -137,7 +137,8 @@ still returned the full catalog. `type`/`detail` were not observed.
   returned the full catalog in March 2026 testing
 - `maxLevel` is the rarity-relative API cap, not a normalized universal cap. Example: champions report `maxLevel: 6`,
   which corresponds to normalized level 16 at full upgrade.
-- `maxEvolutionLevel` is optional — only 46/121 standard cards have evolutions (values observed: 1, 2, or 3)
+- `maxEvolutionLevel` is optional. In two independent live catalog captures on 2026-09-08, 55/123 standard cards
+  carried it: 38 Evo-only (`1`), 13 Hero-only (`2`), and 4 Evo + Hero (`3`); the other 68 omitted the field.
 - Observed icon correlation: `evolutionMedium` aligns with Evo capability, `heroMedium` aligns with Hero capability, and
   cards with both assets appear to support both
 - No `paging` object is present in responses

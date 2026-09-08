@@ -40,6 +40,16 @@ const OBSERVED_GAME_MODES = [
 
 // Free-text claims that must survive a rewrite, keyed to the file that owns them.
 const OBSERVED_CLAIMS = [
+  [
+    "index.md",
+    "123 standard + 4 Tower Troops",
+    "the standard and support catalog sizes observed 2026-09-08",
+  ],
+  [
+    "cards.md",
+    "55/123 standard cards",
+    "the alternate-form capability count observed 2026-09-08",
+  ],
   ["players.md", "`kingTowerLevel`", "the profile field that replaced the expLevel-derived King Tower"],
   ["players.md", "`unknown`", "the deckSelection value seen on an event-tagged mode"],
   ["models/battles.md", "- `unknown`", "unknown as a battle type"],

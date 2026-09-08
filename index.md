@@ -227,7 +227,7 @@ Game-mode-specific leaderboards (Merge Tactics, Touchdown, etc.).
 
 ### Cards — [cards.md](cards.md)
 
-Game card catalog (121 standard + 4 Tower Troops).
+Game card catalog (123 standard + 4 Tower Troops, observed 2026-09-08).
 
 | Endpoint     | Description                              |
 | ------------ | ---------------------------------------- |
