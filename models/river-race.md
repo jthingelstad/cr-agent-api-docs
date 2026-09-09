@@ -57,6 +57,36 @@ Verified fields:
 `finishTime` can appear in live current-river-race payloads after a clan finishes. The sentinel value
 `19691231T235959.000Z` should not be treated as a usable completion timestamp.
 
+### `participants` is the race roster, not the member list
+
+**`participants.length` is not a member count, and the two can disagree.**
+Observed 2026-09-09 on `/clans/{tag}/currentriverrace` during a training
+period (`periodType: "training"`, `periodIndex: 2`): a clan with 49 current
+members returned **44** entries in `clan.participants`. The same 44 appeared
+under both `clan.participants` and the clan's own entry in `clans[]`, so the
+shortfall is not a rendering difference between the two copies.
+
+The omitted members were not explained by the obvious rules, each of which is
+disproved by a counter-example in the same payload:
+
+- **Not "joined after the race started"** — a member who joined two days after
+  the race began was present.
+- **Not "has not played since the race started"** — a member whose last battle
+  predated the race start was present.
+- **Not "zero participation"** — every participant in that payload had
+  `decksUsed: 0` and `fame: 0`, including the ones that were listed.
+
+The omitted members skewed toward long inactivity (9-12 days without a
+recorded battle), but activity alone does not predict membership of the list.
+The API gives no field explaining the omission.
+
+**Consequence for callers:** reconcile `participants` against
+`/clans/{tag}` `memberList` explicitly if you need "who in the clan is
+eligible to score this week". Treating `participants` as the roster silently
+loses members, and the loss concentrates on exactly the members a clan-management
+tool most wants to notice. Do not infer a capture gap in your own recorder
+from a shortfall here.
+
 ## Scoring: fame vs period points (and boat defenses)
 
 A River Race exposes two distinct scores. They are **not interchangeable**, and comparing one clan's period points
