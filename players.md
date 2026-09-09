@@ -158,6 +158,12 @@ Evidence for deployment semantics in `currentDeck` and battle-log arrays (verifi
 
 **Value mapping (all three contexts):**
 
+The value is a **bit field**, not an ordinal and not a progress counter: bit 1 = Evo, bit 2 = Hero, so `3` is `1 | 2`.
+Never read `evolutionLevel=2` against `maxEvolutionLevel=3` as "two-thirds of the way to an evolution" — it means the
+Hero form is unlocked and the Evolution form is not. The catalog corroborates the bit assignment exactly: on 2026-09-09,
+all 123 standard cards matched (`maxEvolutionLevel & 1` ⇔ `iconUrls.evolutionMedium` present, `& 2` ⇔
+`iconUrls.heroMedium` present, no exceptions).
+
 - `evolutionLevel=1` → Evo
 - `evolutionLevel=2` → Hero
 - `evolutionLevel=3` → Evo + Hero (observed only in `cards[]`, never in deck/battle arrays)
@@ -354,7 +360,7 @@ For 2v2 battles, the outcome is still determined from the first team entry becau
 - `globalRank` — present on all battles, null unless player is in top global rankings (then integer)
 - `elixirLeaked` — float, present on all battles
 - `supportCards` — array (may be empty `[]`)
-- `rounds` — array, only on riverRaceDuel (best-of-3 duel rounds)
+- `rounds` — array, only on `riverRaceDuel` and `riverRaceDuelColosseum` (best-of-3 duel rounds)
 - `clan` — absent if player has no clan
 
 **`cards[*].evolutionLevel` on battle-log cards is played-as state, not ownership.** If
@@ -376,8 +382,24 @@ above for the full three-context semantics.
 }
 ```
 
-The `used` boolean on each card in a round indicates if that card was played. Each round has a different deck (3 decks
-total for duels).
+The `used` boolean on each card in a round indicates if that card was played. Each round has a different deck (up to 3
+decks for a duel; a 2-0 duel carries 2 rounds). The top-level `cards` array on a duel participant is all rounds
+concatenated (16 or 24 cards), so it is not a deck: read `rounds[*].cards` for deck identity.
+
+**A duel row collapses up to three games, and three top-level fields inherit that (observed June–September 2026, 412
+duel rows across one clan's recorded members):**
+
+- **`crowns` is the SUM across rounds**, up to 9 — never a 0–3 per-game value. 134 of 412 duel rows carried a
+  participant with more than 3 crowns (maximum observed: 7). A crowns-based statistic that pools duel rows with
+  head-to-head rows mixes units.
+- **`kingTowerHitPoints` and `princessTowersHitPoints` describe the FINAL ROUND only.** A participant who earned crowns
+  in earlier rounds can still finish with `kingTowerHitPoints: 0` and `princessTowersHitPoints: [0, 0]`; the fields
+  cannot be an aggregate. Margin-of-victory readings from a duel row describe one of its games.
+- **`princessTowersHitPoints` uses two shapes.** On head-to-head rows a destroyed tower is OMITTED (length 2 → 1), and
+  the field is `null` when no princess tower survives (every observed 2-crown-conceded and king-fallen row; a handful of
+  1-crown rows are also `null`). On duel rows destroyed towers can appear as `0` — `[0, 0]` and `[0, n]` were observed —
+  and length-1 arrays also occur, so array length is NOT a reliable tower count on duel rows. No head-to-head row was
+  ever observed with a `0` entry, and no duel row was ever observed `null`.
 
 **CHAOS mode modifiers (type=trail with Crazy_Arena):**
 

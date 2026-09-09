@@ -122,15 +122,20 @@ Conditional notes:
 - `kingTowerHitPoints` and `princessTowersHitPoints` are the hitpoints _remaining_ when the battle ended — a
   margin-of-victory signal, not a tower level and not a maximum. Do not read them as progression or compare them across
   players as if they were levels.
-- Both hit-point fields can also be `null` (observed live 2026-09: `princessTowersHitPoints: null` on a regular
-  1-crown ladder loss where a surviving princess tower is certain). Treat null as "the game did not report tower
-  data for this battle" — it carries no information about tower state.
+- Both hit-point fields can also be `null` (observed live 2026-09: `princessTowersHitPoints: null` on a regular 1-crown
+  ladder loss where a surviving princess tower is certain). Treat null as "the game did not report tower data for this
+  battle" — it carries no information about tower state.
+- `princessTowersHitPoints` shape (observed June–September 2026, ~50,000 rows): on head-to-head rows a destroyed tower
+  is omitted, so length runs 2 → 1, and the field is `null` whenever no princess tower survives (all 2-crown-conceded
+  and king-fallen rows) plus a few 1-crown rows. A `0` entry never appears on head-to-head rows. On duel rows destroyed
+  towers can appear as `0` (`[0, 0]`, `[0, n]`) and length-1 arrays also occur, so array length is not a tower count
+  there. See [Duel Rounds](#duel-rounds).
 - `startingTrophies` appears on PvP, Path of Legend, river race PvP, river race duel, friendly, and clanmate battles.
 - `trophyChange` appears only on PvP and Path of Legend battles.
 - `globalRank` is present on all battles and is null unless the player is globally ranked.
 - `supportCards` is always an array and may be empty.
 - `clan` is absent if the player has no clan.
-- `rounds` appears only on river race duel battles.
+- `rounds` appears only on river race duel battles (`riverRaceDuel` and `riverRaceDuelColosseum`).
 
 `cards[*].evolutionLevel` is played-as state for that battle, not collection ownership. See
 [players.md](players.md#evolution-fields).
@@ -158,7 +163,15 @@ Fields:
 - `cards`
 
 Cards in duel rounds include an additional `used` boolean. Each round has a different deck. Rounds arrays usually
-contain 2-3 rounds.
+contain 2-3 rounds, and the participant's top-level `cards` is all rounds concatenated, not a deck.
+
+A duel is ONE battle-log row for up to three games, and the participant's top-level fields inherit that (observed
+June–September 2026, 412 duel rows):
+
+- top-level `crowns` is the sum across rounds, up to 9 (134 of 412 rows carried more than 3; maximum seen 7);
+- top-level `kingTowerHitPoints` / `princessTowersHitPoints` describe the final round only — a participant with
+  earlier-round crowns can still finish at king `0`, princess `[0, 0]`;
+- per-round `crowns` and tower hit points sit inside `rounds[*]`.
 
 ## CHAOS Modifiers
 

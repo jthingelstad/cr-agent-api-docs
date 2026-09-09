@@ -137,6 +137,10 @@ Value mapping:
 | `3`    | Evo + Hero, observed only in `cards[]`                                                                           |
 | absent | No unlocked alternate mode in `cards[]`, or not configured/played as an alternate mode in deck and battle arrays |
 
+Both fields are bit fields (bit 1 = Evo, bit 2 = Hero; `3` = `1 | 2`), never an ordinal or a progress counter:
+`evolutionLevel=2` with `maxEvolutionLevel=3` means Hero unlocked and Evo not, not "2 of 3". The catalog's `iconUrls`
+corroborate the bit assignment on all 123 standard cards (2026-09-09, see [../cards.md](../cards.md)).
+
 Verified empirically across 15,442 live battles (April 2026): `evolutionLevel` appears on only 2-3 slots per battle,
 slot positions match evo/hero slot mechanics, and `evolutionLevel=3` was not observed in deck or battle arrays.
 

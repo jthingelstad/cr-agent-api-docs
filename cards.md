@@ -84,6 +84,14 @@ Equivalent conversion from API `level` to normalized level:
 - `legendary`: `normalized = level + 8`
 - `champion`: `normalized = level + 10`
 
+All five rows are one rule, and the rarity-independent form is what to implement:
+
+`normalized = level + (16 - maxLevel)`
+
+It uses the card's own `maxLevel` rather than a rarity lookup, so it survives a new rarity or a cap change without a
+code edit, and it applies unchanged to `supportCards` / `supportItems` (Tower Troops, `maxLevel: 16`). The offset is the
+same for `level` and `maxLevel`, so "N levels from max" is invariant under the conversion.
+
 **iconUrls variants:**
 
 - `medium` — always present on all cards
@@ -137,10 +145,12 @@ still returned the full catalog. `type`/`detail` were not observed.
   returned the full catalog in March 2026 testing
 - `maxLevel` is the rarity-relative API cap, not a normalized universal cap. Example: champions report `maxLevel: 6`,
   which corresponds to normalized level 16 at full upgrade.
-- `maxEvolutionLevel` is optional. In two independent live catalog captures on 2026-09-08, 55/123 standard cards
-  carried it: 38 Evo-only (`1`), 13 Hero-only (`2`), and 4 Evo + Hero (`3`); the other 68 omitted the field.
-- Observed icon correlation: `evolutionMedium` aligns with Evo capability, `heroMedium` aligns with Hero capability, and
-  cards with both assets appear to support both
+- `maxEvolutionLevel` is optional. In two independent live catalog captures on 2026-09-08, 55/123 standard cards carried
+  it: 38 Evo-only (`1`), 13 Hero-only (`2`), and 4 Evo + Hero (`3`); the other 68 omitted the field.
+- `maxEvolutionLevel` is a bit field (bit 1 = Evo, bit 2 = Hero; `3` = both), not an ordinal. The icon assets
+  corroborate it exactly: in a live capture on 2026-09-09, all 123 standard cards matched — `evolutionMedium` present
+  iff bit 1 set (42 cards), `heroMedium` present iff bit 2 set (17 cards), the 68 cards without the field carrying
+  neither asset — with no exceptions
 - No `paging` object is present in responses
 
 ---

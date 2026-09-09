@@ -10,7 +10,10 @@ The API reports card levels on a rarity-relative scale. Normalize before compari
 | `legendary` |      `1-8` |            `9-16` | `level + 8`  |
 | `champion`  |      `1-6` |           `11-16` | `level + 10` |
 
-Tower Troops are in `supportItems` in the catalog and `supportCards` in player payloads.
+The table is one rule: `normalized = level + (16 - maxLevel)`, using the card's own `maxLevel`. Implement that form
+rather than a rarity lookup; it needs no edit when a rarity is added or a cap moves.
+
+Tower Troops are in `supportItems` in the catalog and `supportCards` in player payloads; the same formula applies.
 
 ## Related Docs
 

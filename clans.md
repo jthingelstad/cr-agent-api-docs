@@ -204,14 +204,14 @@ across 40 log entries sampled April 2026.
   reading the live race must derive the season itself, which makes the boundary rules below load-bearing rather than
   trivia.
 - **A season runs first Monday of the month → first Monday of the next, and rolls at 10:00:00Z.** That gives 4 or 5
-  weeks depending only on how many Mondays fall between. Verified against the client's own "Season Ends In" countdown
-  on 2026-09-07: 24m46s remaining at 09:35:14Z and 19m58s at 09:40:02Z, both resolving to exactly 10:00:00Z.
+  weeks depending only on how many Mondays fall between. Verified against the client's own "Season Ends In" countdown on
+  2026-09-07: 24m46s remaining at 09:35:14Z and 19m58s at 09:40:02Z, both resolving to exactly 10:00:00Z.
 - **The week close and the season roll are TWO different events ~26 minutes apart. Do not conflate them.** The race
-  closes first (`riverracelog[0].createdDate`, ~09:34Z in Season 135), the client then shows
-  "Week N ending... Please stand by..." while already counting down to the season, and the season rolls at 10:00Z.
-  Deriving the season from the race-close stamp dates it ~26 minutes early, so live payloads captured in that gap —
-  which still describe the FINISHED race, at the OLD section index — get stamped with the NEXT season id. That
-  produces impossible `(season N+1, last section)` rows.
+  closes first (`riverracelog[0].createdDate`, ~09:34Z in Season 135), the client then shows "Week N ending... Please
+  stand by..." while already counting down to the season, and the season rolls at 10:00Z. Deriving the season from the
+  race-close stamp dates it ~26 minutes early, so live payloads captured in that gap — which still describe the FINISHED
+  race, at the OLD section index — get stamped with the NEXT season id. That produces impossible
+  `(season N+1, last section)` rows.
 - **The race-close time drifts season to season, the 10:00Z season hour does not.** Observed closes: `093005Z` for every
   week of Season 134, `093404Z`-`093406Z` for every week of Season 135. Stable within a season, moved between them — so
   anchor week math on the observed close and season math on the fixed hour.
@@ -314,8 +314,8 @@ Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were n
 **A 404 on `currentriverrace` does not mean the clan is gone.** Between the season roll and the moment the new river
 race is created, `GET /clans/{clanTag}/currentriverrace` returns `404 {"reason":"notFound"}` with no `message`, while
 `GET /clans/{clanTag}` for the same tag still returns `200`. The client shows "Waiting for Clan War to start..." for
-this window. It is a normal, recurring state once a month, not an error and not a deleted clan — treat it as "no
-active race yet", hold the last known race, and keep polling.
+this window. It is a normal, recurring state once a month, not an error and not a deleted clan — treat it as "no active
+race yet", hold the last known race, and keep polling.
 
 The window is long and varies season to season. Measured on `#J2RGCRVG` from the race-close stamp
 (`riverracelog[0].createdDate`) to the first sighting of the new race:
@@ -349,14 +349,14 @@ Consequences worth designing for:
   and the new race there is no race at all. A consumer learns the season changed only when the new race appears with
   `sectionIndex 0` - which is up to well over an hour late.
 - **The stand-by window is the dangerous one.** For ~26 minutes the API returns a payload that describes the OLD race
-  while the calendar has (or is about to) move on. Deriving the season from wall-clock during that window stamps the
-  old race's final section with the NEW season id.
+  while the calendar has (or is about to) move on. Deriving the season from wall-clock during that window stamps the old
+  race's final section with the NEW season id.
 - **`periodLogs` is `[]` on a fresh race.** Anything that reads "the most recent closed day" must handle empty, not
   assume at least one entry.
 - **`fame` is `0` on a fresh race** even though the previous race ended with a large value. Do not read `fame: 0` as a
   failed capture.
-- **The 404 is normal.** It recurs monthly. It is not a deleted clan, not an auth failure (that is `403 invalidIp`),
-  and not a reason to alarm or to drop the clan from a roster.
+- **The 404 is normal.** It recurs monthly. It is not a deleted clan, not an auth failure (that is `403 invalidIp`), and
+  not a reason to alarm or to drop the clan from a roster.
 - **The gap length is not stable.** ~16 min (July), ~77 min (August), ~9 min (September) after the season roll. Do not
   encode a timeout that assumes the short case.
 

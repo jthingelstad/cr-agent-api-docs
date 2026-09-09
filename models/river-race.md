@@ -10,8 +10,8 @@ Verified fields:
 
 - `state`
 - `sectionIndex`
-- `periodIndex` — season-monotonic: `periodIndex // 7 === sectionIndex`; `periodIndex % 7` gives the day
-  (0-2 training, 3-6 war days)
+- `periodIndex` — season-monotonic: `periodIndex // 7 === sectionIndex`; `periodIndex % 7` gives the day (0-2 training,
+  3-6 war days)
 - `periodType`
 - `clan`
 - `clans`
@@ -78,24 +78,23 @@ clan:
   after the day; `progressEarned` is the gain.
 - `endOfDayRank` — the clan's placement at day end (0-indexed).
 
-`periodLogs` spans the WHOLE SEASON so far, not just the current week: a section-4 payload carries every battle day
-back to the season start. Anything aggregating it must scope to the current section
-(`periodIndex // 7 == sectionIndex`) or it silently inflates per-week totals for every week after the first. It is also
-empty (`[]`) on a freshly created race, before the first day has closed.
+`periodLogs` spans the WHOLE SEASON so far, not just the current week: a section-4 payload carries every battle day back
+to the season start. Anything aggregating it must scope to the current section (`periodIndex // 7 == sectionIndex`) or
+it silently inflates per-week totals for every week after the first. It is also empty (`[]`) on a freshly created race,
+before the first day has closed.
 
 **Boat defenses.** Each clan's boat has defenses; `numOfDefensesRemaining` tracks how many are still standing, and
 `progressEarnedFromDefenses` is the portion of that day's `progressEarned` contributed by surviving defenses (as opposed
 to offensive attacks). Defensive contribution is part of the clan's daily progress, so a clan can gain fame at day close
-from defenses even beyond its members' attack points. `numOfDefensesRemaining` appears only in CLOSED-day
-`periodLogs`, so there is no live count of defenses standing during a practice day.
+from defenses even beyond its members' attack points. `numOfDefensesRemaining` appears only in CLOSED-day `periodLogs`,
+so there is no live count of defenses standing during a practice day.
 
 **Finish line / Colosseum.** A standard River Race week runs until a clan reaches the end of the river (a
 cumulative-fame threshold — commonly 10,000 in a normal week). **Colosseum** (the season's final section,
 `periodType: "colosseum"`) is a multi-day period-point contest rather than a weekly fame race, and uses ±100 trophy
 stakes (vs ±20 for regular weeks — see `RiverRaceStanding`). It has **no finish line**, which is why no clan in a
 Colosseum week carries a real `finishTime`. Note the labelling trap: the API keeps reporting the Colosseum score in
-`clan.fame` (values well past the normal 10,000 finish line) while `periodPoints` stays `0` — the game calls it
-points.
+`clan.fame` (values well past the normal 10,000 finish line) while `periodPoints` stays `0` — the game calls it points.
 
 `trophyChange` appears in `/riverracelog` standings, not in the live `currentriverrace` payload.
 
