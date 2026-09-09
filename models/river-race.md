@@ -57,35 +57,41 @@ Verified fields:
 `finishTime` can appear in live current-river-race payloads after a clan finishes. The sentinel value
 `19691231T235959.000Z` should not be treated as a usable completion timestamp.
 
-### `participants` is the race roster, not the member list
+### `participants` is seeded from members seen since the race began
 
-**`participants.length` is not a member count, and the two can disagree.**
-Observed 2026-09-09 on `/clans/{tag}/currentriverrace` during a training
-period (`periodType: "training"`, `periodIndex: 2`): a clan with 49 current
-members returned **44** entries in `clan.participants`. The same 44 appeared
-under both `clan.participants` and the clan's own entry in `clans[]`, so the
-shortfall is not a rendering difference between the two copies.
+**`participants.length` is not a member count.** Observed 2026-09-09 on a
+single clan, comparing `/clans/{tag}` against
+`/clans/{tag}/currentriverrace` in the same minute: `memberList` held 49
+members while `clan.participants` held 44. The same 44 appeared under both
+`clan.participants` and the clan's own entry in `clans[]`, so it is not a
+difference between the two copies, and none of the five had left the clan.
 
-The omitted members were not explained by the obvious rules, each of which is
-disproved by a counter-example in the same payload:
+**The five omitted members were exactly the five whose `memberList.lastSeen`
+predated the start of the race.** The race began at the section's first
+period boundary (2026-09-07T10:00Z); the omitted members were last seen
+2026-08-29, 08-31, 09-02, 09-03 and 09-05. Every one of the 44 included
+members had a `lastSeen` after the race start.
 
-- **Not "joined after the race started"** — a member who joined two days after
-  the race began was present.
-- **Not "has not played since the race started"** — a member whose last battle
-  predated the race start was present.
-- **Not "zero participation"** — every participant in that payload had
-  `decksUsed: 0` and `fame: 0`, including the ones that were listed.
+Two cases that look like counter-examples and are not:
 
-The omitted members skewed toward long inactivity (9-12 days without a
-recorded battle), but activity alone does not predict membership of the list.
-The API gives no field explaining the omission.
+- A member who **joined after the race started** was present (joined
+  2026-09-09, `lastSeen` 2026-09-09). Joining late does not exclude you.
+- A member who **had not battled since before the race started** was present
+  (`lastSeen` 2026-09-07T20:07Z, no war battle since 09-03). The predicate is
+  `lastSeen`, i.e. presence, **not** battling and not war participation.
+  Every participant in that payload had `decksUsed: 0` and `fame: 0`.
 
-**Consequence for callers:** reconcile `participants` against
-`/clans/{tag}` `memberList` explicitly if you need "who in the clan is
-eligible to score this week". Treating `participants` as the roster silently
-loses members, and the loss concentrates on exactly the members a clan-management
-tool most wants to notice. Do not infer a capture gap in your own recorder
-from a shortfall here.
+Caveat on precision: no member in this sample had a `lastSeen` between
+2026-09-07T00:00Z and the 10:00Z race start, so this observation cannot
+distinguish "since the race start instant" from "since the race start date".
+It also comes from one clan in one training period, and whether a member who
+becomes active mid-race is added to `participants` later was not observed.
+
+**Consequence for callers:** reconcile `participants` against `memberList`
+explicitly if you need "who in the clan is eligible to score this week".
+Treating `participants` as the roster silently loses members, and it loses
+precisely the dormant ones a clan-management tool most wants to notice.
+A shortfall here is upstream behaviour, not a gap in your own recording.
 
 ## Scoring: fame vs period points (and boat defenses)
 
