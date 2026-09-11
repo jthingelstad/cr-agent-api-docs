@@ -273,6 +273,14 @@ Get top Path of Legend player rankings for a specific season.
 }
 ```
 
+Observed 2026-09-11, probing with **numeric season ids** (the ordinal the game clock counts — S136 is September 2026):
+the endpoint accepts them, and returns the season's FINAL standings at full depth — `9999` items, no paging cursor, `#1`
+for S135 at `eloRating` 3914 and `#9999` at 2222. That is a different view from the current-season
+`/locations/{id}/pathoflegend/players`, which lists only players above a rating floor (869 rated on day 4 of S136, the
+last at 1212) and whose ratings are still climbing. **S97 is the earliest season with a board**; S96 and below return
+`items: []` — consistent with Path of Legend's mid-2023 launch. Thirty-nine final boards were being served on the probe
+date; nothing says how long they will be.
+
 ---
 
 ## Error Codes
@@ -294,7 +302,8 @@ message such as `Unknown value for parameter locationId`. `type`/`detail` were n
 ## Agent Notes
 
 - `locationId` for global endpoints is the literal string `global` — e.g. `/locations/global/seasons`
-- `/seasonsV2` is broken (all null fields) — use `/seasons` (V1) to get season IDs
+- `/seasonsV2` is broken (all null fields) — use `/seasons` (V1) to get season IDs. Still broken 2026-09-11: 143 items,
+  every field null.
 - `seasonId` format is `YYYY-MM` (e.g. `2025-01`). Seasons go back to `2016-02`. Early seasons (2016-2017) have
   duplicate entries.
 - Trophy rankings (`/rankings/players`) and Path of Legend rankings (`/pathoflegend/players`) are separate leaderboards
