@@ -96,6 +96,12 @@ Get trophy leaderboard for players in a location.
 
 Note: May return empty `items` array if no ranking data is available for the current season yet.
 
+Observed 2026-09-10 (day 3 of S136, which rolled 2026-09-07 10:00Z): `global` and `57000249` (United States) both
+returned `items: []` with no paging cursors, while `/pathoflegend/players` for the same two locations returned 836 and
+97 ranked players. Consistent with the seasonal trophy ranking endpoint being documented as broken below: treat the
+trophy leaderboard as unavailable and use Path of Legend rankings for competitive standing. Do not write an empty
+response through as "nobody is ranked".
+
 ---
 
 ### GET /locations/{locationId}/rankings/clans

@@ -59,39 +59,32 @@ Verified fields:
 
 ### `participants` is seeded from members seen since the race began
 
-**`participants.length` is not a member count.** Observed 2026-09-09 on a
-single clan, comparing `/clans/{tag}` against
-`/clans/{tag}/currentriverrace` in the same minute: `memberList` held 49
-members while `clan.participants` held 44. The same 44 appeared under both
-`clan.participants` and the clan's own entry in `clans[]`, so it is not a
-difference between the two copies, and none of the five had left the clan.
+**`participants.length` is not a member count.** Observed 2026-09-09 on a single clan, comparing `/clans/{tag}` against
+`/clans/{tag}/currentriverrace` in the same minute: `memberList` held 49 members while `clan.participants` held 44. The
+same 44 appeared under both `clan.participants` and the clan's own entry in `clans[]`, so it is not a difference between
+the two copies, and none of the five had left the clan.
 
-**The five omitted members were exactly the five whose `memberList.lastSeen`
-predated the start of the race.** The race began at the section's first
-period boundary (2026-09-07T10:00Z); the omitted members were last seen
-2026-08-29, 08-31, 09-02, 09-03 and 09-05. Every one of the 44 included
-members had a `lastSeen` after the race start.
+**The five omitted members were exactly the five whose `memberList.lastSeen` predated the start of the race.** The race
+began at the section's first period boundary (2026-09-07T10:00Z); the omitted members were last seen 2026-08-29, 08-31,
+09-02, 09-03 and 09-05. Every one of the 44 included members had a `lastSeen` after the race start.
 
 Two cases that look like counter-examples and are not:
 
-- A member who **joined after the race started** was present (joined
-  2026-09-09, `lastSeen` 2026-09-09). Joining late does not exclude you.
-- A member who **had not battled since before the race started** was present
-  (`lastSeen` 2026-09-07T20:07Z, no war battle since 09-03). The predicate is
-  `lastSeen`, i.e. presence, **not** battling and not war participation.
-  Every participant in that payload had `decksUsed: 0` and `fame: 0`.
+- A member who **joined after the race started** was present (joined 2026-09-09, `lastSeen` 2026-09-09). Joining late
+  does not exclude you.
+- A member who **had not battled since before the race started** was present (`lastSeen` 2026-09-07T20:07Z, no war
+  battle since 09-03). The predicate is `lastSeen`, i.e. presence, **not** battling and not war participation. Every
+  participant in that payload had `decksUsed: 0` and `fame: 0`.
 
-Caveat on precision: no member in this sample had a `lastSeen` between
-2026-09-07T00:00Z and the 10:00Z race start, so this observation cannot
-distinguish "since the race start instant" from "since the race start date".
-It also comes from one clan in one training period, and whether a member who
-becomes active mid-race is added to `participants` later was not observed.
+Caveat on precision: no member in this sample had a `lastSeen` between 2026-09-07T00:00Z and the 10:00Z race start, so
+this observation cannot distinguish "since the race start instant" from "since the race start date". It also comes from
+one clan in one training period, and whether a member who becomes active mid-race is added to `participants` later was
+not observed.
 
-**Consequence for callers:** reconcile `participants` against `memberList`
-explicitly if you need "who in the clan is eligible to score this week".
-Treating `participants` as the roster silently loses members, and it loses
-precisely the dormant ones a clan-management tool most wants to notice.
-A shortfall here is upstream behaviour, not a gap in your own recording.
+**Consequence for callers:** reconcile `participants` against `memberList` explicitly if you need "who in the clan is
+eligible to score this week". Treating `participants` as the roster silently loses members, and it loses precisely the
+dormant ones a clan-management tool most wants to notice. A shortfall here is upstream behaviour, not a gap in your own
+recording.
 
 ## Scoring: fame vs period points (and boat defenses)
 
