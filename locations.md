@@ -273,13 +273,19 @@ Get top Path of Legend player rankings for a specific season.
 }
 ```
 
-Observed 2026-09-11, probing with **numeric season ids** (the ordinal the game clock counts — S136 is September 2026):
-the endpoint accepts them, and returns the season's FINAL standings at full depth — `9999` items, no paging cursor, `#1`
-for S135 at `eloRating` 3914 and `#9999` at 2222. That is a different view from the current-season
-`/locations/{id}/pathoflegend/players`, which lists only players above a rating floor (869 rated on day 4 of S136, the
-last at 1212) and whose ratings are still climbing. **S97 is the earliest season with a board**; S96 and below return
-`items: []` — consistent with Path of Legend's mid-2023 launch. Thirty-nine final boards were being served on the probe
-date; nothing says how long they will be.
+Observed 2026-09-11, probing with **numeric season ids**: the endpoint accepts them, and returns the season's FINAL
+standings at full depth — `9999` items, no paging cursor. **A numeric id is the 1-based position in the
+`/locations/global/seasons` list, NOT the clan-war `seasonId`** from river races, and not the in-game "Season N" shown
+on the Pass — three different numbering namespaces that happen to share monthly boundaries. Verified by matching `#1`
+players across the two forms: `136` = `2026-01`, `135` = `2025-12` (`eloRating` 3914, `#9999` at 2222), `97` =
+`2022-10`. The clan-war season running on the probe date was also numbered 136, which made the numeric form look like
+the clan-war id; it is a coincidence. The V1 list carries duplicate early entries, so derive the month from the list
+position, never from date arithmetic on the number — or just use the `YYYY-MM` form, which is unambiguous. `87` (the
+in-game season number for September 2026) returns `notFound`. That is a different view from the current-season
+`/locations/{id}/pathoflegend/players`, which lists only players above a rating floor (869 rated on day 4 of the
+September 2026 season, the last at 1212) and whose ratings are still climbing. **`2022-10` (position 97) is the earliest
+season with a board**; earlier positions return `items: []` — Path of Legend's launch month. Forty-seven final boards
+(`2022-10` through `2026-08`) were being served on the probe date; nothing says how long they will be.
 
 ---
 
