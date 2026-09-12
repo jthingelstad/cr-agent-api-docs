@@ -503,6 +503,15 @@ Observed error bodies are usually `{ reason, message? }`. `message` may be absen
 - `currentDeck` (8 cards) vs `cards` (full collection) vs battle-log card arrays: all three carry `evolutionLevel` but
   with **different semantics** (ownership vs deployment vs played-as-in-battle — see the evolutionLevel section above).
   `cards[]` also includes `count` of copies currently in stash.
+- **`currentDeck` is a client-synced snapshot, not live state (observed 2026-09-12).** Selecting a different deck slot
+  in the game did NOT change `currentDeck` for over an hour: probed `GET /players/{tag}` once a minute from 13:53Z to
+  14:54Z after the slot was selected at 13:44Z, with the game client closed from 13:56Z and no battle played, and every
+  response carried the previous deck (byte-identical `currentDeck`, `battleCount` unchanged). The field changed at
+  14:56:23Z, ~90 s after a battle ended at 14:54:58Z, and then showed the deck in the *selected slot*, which was not
+  the deck the battle was played with (the battle was played from another slot). So: the profile updates when the game
+  client pushes state (a battle does; idling, closing the app, and editing slots did not), and `currentDeck` reports
+  the selected slot at that push. Do not use `currentDeck` for anything time-sensitive; the battle log's per-participant
+  `cards` array is fresh within about a minute of a battle and names the deck actually played.
 - `role` values: `member`, `elder`, `coLeader`, `leader`
 - Path of Legend `rank` field is null when the player hasn't achieved a rank yet
 - **Path of Legend arena IDs:** both `72000450 Ranked1v1_NewArena` and `72000464 Ranked1v1_NewArena2` appear on live
