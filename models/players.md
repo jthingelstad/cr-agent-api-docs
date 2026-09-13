@@ -203,11 +203,13 @@ Badge categories observed:
 Two badges are load-bearing for account progression:
 
 - `CollectionLevel` — since the game's 2026 Collection Level update, its `progress` is the player's current Collection
-  Level (the progression number the game now shows), while `level`/`maxLevel` are the badge's own tier. Read progression
-  from this badge — not from the deprecated `expLevel`, and not from the top-level `collectionLevel` profile key, which
-  is a stub observed to read `0`. Collection Level is the SUM of the levels of every card the player owns, plus 5 for
-  each Evolution and each Hero form unlocked, so it is a four-digit number (observed 1673) and only ever rises. It is
-  independent of King Tower Level, which is a separate ~1-16 value earned by upgrading required counts of cards.
+  Level (the progression number the game shows), while `level`/`maxLevel` are the badge's own tier. The top-level
+  `collectionLevel` field was previously a zero-valued stub, but player `#VGY28ULUG` returned `2036` on 2026-09-13,
+  exactly matching this badge's `progress`; use the top-level field on current profiles and this badge as a cross-check.
+  Treat an older zero or an absent field as legacy payload shape, never as a real level. Collection Level is the SUM of
+  the levels of every card the player owns, plus 5 for each Evolution and each Hero form unlocked, so it is a four-digit
+  number (observed 1673) and only ever rises. It is independent of King Tower Level, which is a separate ~1-16 value
+  earned by upgrading required counts of cards.
 - `YearsPlayed` — its `level` is the number of completed years the account has existed, and its `progress` is the
   account age in days (observed live: level 4 / progress 1648 / target 1825 — targets are 365-day tiers). The badge
   first appears at one year, so absence USUALLY means a sub-1-year account — but not always: a 74-profile sweep
