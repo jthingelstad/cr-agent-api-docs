@@ -1,6 +1,6 @@
 # Leaderboard Models
 
-Leaderboard field shapes verified against live API responses (March 2026).
+Leaderboard field shapes verified against live API responses (March 2026; metadata nullability September 14, 2026).
 
 ## Leaderboard Metadata
 
@@ -13,7 +13,11 @@ Used by `GET /leaderboards`.
 Fields:
 
 - `id` - integer
-- `name` - string
+- `name` - string or `null`
+
+Observed September 14, 2026: `GET /leaderboards` returned 30 metadata objects, including 15 explicit null names. Every
+object contained the `name` key. A null name is different from an absent field; preserve the numeric `id` for discovery
+and do not infer that the board is disabled or that its battle history is exposed from its name alone.
 
 Multiple leaderboards can share the same name with different IDs.
 

@@ -40,6 +40,8 @@ const OBSERVED_GAME_MODES = [
 
 // Free-text claims that must survive a rewrite, keyed to the file that owns them.
 const OBSERVED_CLAIMS = [
+  ["models/leaderboards.md", "`name` - string or `null`", "leaderboard metadata name nullability observed 2026-09-14"],
+  ["models/leaderboards.md", "15 explicit null names", "the 30-board metadata survey observed 2026-09-14"],
   [
     "index.md",
     "123 standard + 4 Tower Troops",

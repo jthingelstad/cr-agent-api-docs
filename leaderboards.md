@@ -44,6 +44,10 @@ List all available leaderboards (game modes / trophy roads).
 Note: Multiple leaderboards can share the same `name` (e.g. "Merge Tactics" appears multiple times with different IDs —
 likely different seasons or variants). The March 2026 response contained 15 items.
 
+Observed September 14, 2026: the response contained 30 items, 15 with `name: null`; none omitted the `name` key. The
+metadata name is nullable. Keep nameless entries and use their numeric `id` as identity. A missing display name does not
+establish whether a board is disabled or whether the mode appears in player battle logs.
+
 ---
 
 ### GET /leaderboard/{leaderboardId}
