@@ -242,15 +242,26 @@ Observed: returns ~30-40 battles (most commonly 30).
 | `prevTowersDestroyed` | integer | Optional — boat battles only                                                                      |
 | `remainingTowers`     | integer | Optional — boat battles only                                                                      |
 
-**`arena` on a battle is the match's arena, not the requesting player's.** Observed 2026-09-15 across three Trophy Road
-pairs that straddled the 6,000-trophy gate: a player at 5,969-5,999 (below the gate, so not yet in that arena) facing an
-opponent standing on 6,000 sees the higher arena (Royal Crypt, `54000014`) on their **own** battlelog entry for that
-battle, and the same entry from the opponent's log shows the same arena. It is stamped at battle time: the same player's
-earlier battles still show the lower arena after they later cross. So, for any player, a battlelog entry's `arena` names
-their own arena only when their `startingTrophies` was at least the opponent's. Do not derive a player's arena or an
-arena promotion from their battle log alone; `/players/{tag}` `arena` is the authority. Related: trophy gates are
-visible in `startingTrophies` - a player who cannot lose trophies below an arena's floor appears at exactly that value
-(6,000 in the sample) across consecutive losses.
+**`arena` on a battle is the match's arena (the higher side's), and Trophy Road arenas have floors.** Observed
+2026-09-15 on six crossings of the 6,000-trophy floor (Executioner's Kitchen `54000013` to Royal Crypt `54000014`):
+
+- A battle's `arena` is stamped at battle time and is the higher side's arena: a player at 5,969-5,999 matched with
+  someone standing on 6,000 sees Royal Crypt on their **own** log for that battle, and the same entry from the
+  opponent's log shows the same arena. So a battlelog entry names the requesting player's own arena only when their
+  `startingTrophies` was at least the opponent's.
+- Once a player reaches an arena's floor they are in it and cannot fall below the floor again. A loss ON the floor comes
+  back with **no `trophyChange` field at all** (seven cases at exactly 6,000); a loss just above it is clamped to the
+  floor (`-3` from 6,003, `-7` from 6,007, `-17` from 6,017, `-19` from 6,019). The top floor, 14,000, ends Trophy Road:
+  a player there stays there whatever they lose (the seasonal road beyond it resets each season).
+- The promotion is therefore the win whose result first reaches the floor, whoever it was against. Five of the six
+  crossings were wins over an opponent standing on 6,000 (matchmaking near a floor pairs a climber with the players
+  sitting on it); the sixth was a 5,970 +30 win over a 5,976 opponent still in the old arena, and a `/players/{tag}`
+  read fourteen minutes later showed Royal Crypt at exactly 6,000, before any win over a Royal Crypt player. A
+  higher-arena-labelled win that does not reach the floor promotes nobody (three cases: 5,956 +33, 5,963 +33, 5,965
+  +33).
+- Consequences: do not derive a player's arena from their battle log alone (`/players/{tag}` `arena` is the authority);
+  an arena's floor can be read from data as the lowest trophies any player is ever observed holding in it; a
+  `trophyChange` that is absent on a Trophy Road loss means a loss on the floor, not a missing field.
 
 **Battle types observed:**
 
