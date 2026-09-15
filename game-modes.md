@@ -123,6 +123,9 @@ API implications:
 - Use `decksUsed` and `decksUsedToday` on participants for participation tracking.
 - Do not expect `trophyChange` on live `currentriverrace`; use `/riverracelog` for standings trophy movement.
 - Use battle-log river race types to observe individual play, and clan endpoints to observe clan progress.
+- `gameMode.id=72000060`, `gameMode.name=Overtime_Ladder` was observed in five `riverRacePvP` battles on 2026-09-14
+  with `deckSelection=collection`. Treat it as a rotating River Race mode label; the name alone does not establish its
+  exact overtime rules.
 
 ---
 

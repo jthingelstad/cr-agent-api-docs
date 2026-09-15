@@ -27,6 +27,7 @@ const OBSERVED_GAME_MODES = [
   [72000011, "DoubleElixir_Friendly"],
   [72000033, "RampUpElixir_Friendly"],
   [72000051, "TeamVsTeam_Touchdown_Draft"],
+  [72000060, "Overtime_Ladder"],
   [72000286, "TeamVsTeam_TripleElixir_Friendly"],
   [72000376, "Event_RestlessDead"],
   [72000501, "All_Random_Princess"],

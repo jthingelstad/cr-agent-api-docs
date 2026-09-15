@@ -290,7 +290,7 @@ Observed: returns ~30-40 battles (most commonly 30).
 | 72000042 | PickMode                                                                           |
 | 72000050 | Touchdown_Draft                                                                    |
 | 72000051 | TeamVsTeam_Touchdown_Draft (observed August 2026)                                  |
-| 72000060 | Overtime_Ladder                                                                    |
+| 72000060 | Overtime_Ladder (observed in River Race PvP September 2026)                        |
 | 72000062 | TripleElixir_Ladder                                                                |
 | 72000065 | Showdown_Friendly                                                                  |
 | 72000070 | RampUpElixir_Ladder                                                                |
