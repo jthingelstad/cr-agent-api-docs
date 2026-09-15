@@ -242,6 +242,16 @@ Observed: returns ~30-40 battles (most commonly 30).
 | `prevTowersDestroyed` | integer | Optional — boat battles only                                                                      |
 | `remainingTowers`     | integer | Optional — boat battles only                                                                      |
 
+**`arena` on a battle is the match's arena, not the requesting player's.** Observed 2026-09-15 across three Trophy Road
+pairs that straddled the 6,000-trophy gate: a player at 5,969-5,999 (below the gate, so not yet in that arena) facing an
+opponent standing on 6,000 sees the higher arena (Royal Crypt, `54000014`) on their **own** battlelog entry for that
+battle, and the same entry from the opponent's log shows the same arena. It is stamped at battle time: the same player's
+earlier battles still show the lower arena after they later cross. So, for any player, a battlelog entry's `arena` names
+their own arena only when their `startingTrophies` was at least the opponent's. Do not derive a player's arena or an
+arena promotion from their battle log alone; `/players/{tag}` `arena` is the authority. Related: trophy gates are
+visible in `startingTrophies` - a player who cannot lose trophies below an arena's floor appears at exactly that value
+(6,000 in the sample) across consecutive losses.
+
 **Battle types observed:**
 
 | `type`                   | Description                                 | Game Modes                                                                                 |
