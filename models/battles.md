@@ -134,6 +134,11 @@ Conditional notes:
 - `trophyChange` appears only on PvP and Path of Legend battles.
 - `globalRank` is present on all battles and is null unless the player is globally ranked.
 - `supportCards` is always an array and may be empty.
+- `cards` can also be empty (`[]`) on `type=trail` event-challenge battles: the API discloses no deck for some event
+  formats. Observed 2026-09-15 on 1,976 recorded participants, all `trail`, June 2026. An empty list is not a deck
+  identity - do not hash or compare it as one.
+- On `type=boatBattle` entries the defending side's `cards` is the 12-card boat-defense list, not a played deck, and its
+  `evolutionLevel` is ownership-style (can be `3`). See [players.md](../players.md) on `evolutionLevel`.
 - `clan` is absent if the player has no clan.
 - `rounds` appears only on river race duel battles (`riverRaceDuel` and `riverRaceDuelColosseum`).
 

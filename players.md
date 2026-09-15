@@ -138,11 +138,11 @@ One-time badges **omit** `level`, `maxLevel`, and `target` entirely (they are no
 
 This field is **context-sensitive** across the three places it can appear:
 
-| Appears in                                       | Meaning                                                                                          | Use case                                            |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
-| `cards[]` (full collection)                      | **Ownership** — the player has this mode unlocked                                                | "Does X own Evo Archers?"                           |
-| `currentDeck[]` (active 8-card deck)             | **Deployment** — this card is currently slotted to play as the indicated mode                    | "What mode is X running Archers as right now?"      |
-| Battle log `team[*].cards` / `opponent[*].cards` | **Played-as in that battle** — this card was actually played as the indicated mode in this match | "Did X play Evo Archers in this particular battle?" |
+| Appears in                                       | Meaning                                                                                                                                                                                             | Use case                                            |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `cards[]` (full collection)                      | **Ownership** — the player has this mode unlocked                                                                                                                                                   | "Does X own Evo Archers?"                           |
+| `currentDeck[]` (active 8-card deck)             | **Deployment** — this card is currently slotted to play as the indicated mode                                                                                                                       | "What mode is X running Archers as right now?"      |
+| Battle log `team[*].cards` / `opponent[*].cards` | **Played-as in that battle** — this card was actually played as the indicated mode in this match. Exception: a boat-defense list (`type=boatBattle`, 12 cards) is ownership-style and can carry `3` | "Did X play Evo Archers in this particular battle?" |
 
 Evidence for deployment semantics in `currentDeck` and battle-log arrays (verified against 15,442 live battles, April
 2026):
@@ -153,8 +153,12 @@ Evidence for deployment semantics in `currentDeck` and battle-log arrays (verifi
   slots that are actually evo/hero slots
 - `evolutionLevel=1` appears in slots 1-2 (evo slot positions), `evolutionLevel=2` appears in slots 2-4 (hero slot
   positions) — consistent with slot-mechanics behavior
-- `evolutionLevel=3` is **never** observed on any deck/battle array (a slot plays as either evo OR hero, never both at
-  once); it can only appear in `cards[]` to denote "both modes unlocked"
+- `evolutionLevel=3` is **never** observed on a played deck (a slot plays as either evo OR hero, never both at once).
+  The one battle-log array where it does appear is the **boat-defense card list**: in `type=boatBattle` entries the
+  defending side's `cards[]` holds 12 cards (the placed defenses, not a played deck) and its `evolutionLevel` carries
+  the ownership-style bit field, including `3`. Observed 2026-09-15 across 454,654 recorded participants: 852
+  boat-defense card entries with `3` on exactly four cards (Knight, Musketeer, Valkyrie, Wizard - the cards with both
+  forms), zero on any 8-card played deck. Treat a 12-card `cards[]` as a defense list, not deck identity.
 
 **Value mapping (all three contexts):**
 
@@ -507,10 +511,10 @@ Observed error bodies are usually `{ reason, message? }`. `message` may be absen
   in the game did NOT change `currentDeck` for over an hour: probed `GET /players/{tag}` once a minute from 13:53Z to
   14:54Z after the slot was selected at 13:44Z, with the game client closed from 13:56Z and no battle played, and every
   response carried the previous deck (byte-identical `currentDeck`, `battleCount` unchanged). The field changed at
-  14:56:23Z, ~90 s after a battle ended at 14:54:58Z, and then showed the deck in the *selected slot*, which was not
-  the deck the battle was played with (the battle was played from another slot). So: the profile updates when the game
-  client pushes state (a battle does; idling, closing the app, and editing slots did not), and `currentDeck` reports
-  the selected slot at that push. Do not use `currentDeck` for anything time-sensitive; the battle log's per-participant
+  14:56:23Z, ~90 s after a battle ended at 14:54:58Z, and then showed the deck in the _selected slot_, which was not the
+  deck the battle was played with (the battle was played from another slot). So: the profile updates when the game
+  client pushes state (a battle does; idling, closing the app, and editing slots did not), and `currentDeck` reports the
+  selected slot at that push. Do not use `currentDeck` for anything time-sensitive; the battle log's per-participant
   `cards` array is fresh within about a minute of a battle and names the deck actually played.
 - `role` values: `member`, `elder`, `coLeader`, `leader`
 - Path of Legend `rank` field is null when the player hasn't achieved a rank yet
