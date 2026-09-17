@@ -207,10 +207,17 @@ hardcode specific key names beyond treating them as labels — May 2026 sampling
 profiles), `TripleDraftTrail` (~17%), and `AutoChess_2026_Mar` (~15%) alongside the always-present `""` bucket; new
 mode/season keys appear over time.
 
-Observed 2026-09-17: the keys embed the season in the game's own namespace per mode. `seasonal-trophy-road-202609`
-and `2v2League_202609` carry the `YYYYMM` league-season month (also in the arena `rawName`:
-`SeasonalArenas_202609_Arena1`, `2v2League_202609Arena1`); `AutoChess_2026_Season_11` carries Merge Tactics' own
-counter, which is not monthly. See [locations.md](locations.md#season-namespaces-what-is-canonical-and-what-is-derived).
+Observed 2026-09-17: the keys embed the season in the game's own namespace per mode. `seasonal-trophy-road-202609` and
+`2v2League_202609` carry the `YYYYMM` league-season month (also in the arena `rawName`: `SeasonalArenas_202609_Arena1`,
+`2v2League_202609Arena1`); `AutoChess_2026_Season_11` carries Merge Tactics' own counter, which is not monthly. See
+[locations.md](locations.md#season-namespaces-what-is-canonical-and-what-is-derived).
+
+Observed 2026-09-17 on three profiles (Trophy Road trophies 14,000, 817 and 724; none had entered a seasonal arena): the
+`seasonal-trophy-road-202609` bucket read `trophies: 14000`, `bestTrophies: 0` and `arena.name: "Seasonal Arena I"` on
+all three, so its `trophies` is not the player's Trophy Road count and is not a season best; treat it as the seasonal
+road's own scale (Trophy Road ends at 14,000, where the seasonal arenas begin) until a profile that has climbed it is
+observed. The `""` bucket on the same three profiles carried `rawName: "AutoChessArena1_2025_Oct"`, the Merge Tactics
+pre-season arena, with zero trophies: a legacy Merge Tactics bucket, not a mirror of any live mode.
 
 ---
 

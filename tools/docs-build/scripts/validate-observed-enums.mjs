@@ -65,6 +65,7 @@ const OBSERVED_CLAIMS = [
   ],
   ["players.md", "`kingTowerLevel`", "the profile field that replaced the expLevel-derived King Tower"],
   ["players.md", "`unknown`", "the deckSelection value seen on an event-tagged mode"],
+  ["players.md", "`trophies: 14000`, `bestTrophies: 0`", "the seasonal-trophy-road progress bucket is not the player's trophies (observed 2026-09-17)"],
   ["models/battles.md", "- `unknown`", "unknown as a battle type"],
   ["models/battles.md", "sum across rounds, up to 9", "duel crowns are a sum across rounds (observed 2026-09)"],
   ["models/battles.md", "describe the final round only", "duel tower hit points are final-round only (observed 2026-09)"],
