@@ -207,6 +207,11 @@ hardcode specific key names beyond treating them as labels — May 2026 sampling
 profiles), `TripleDraftTrail` (~17%), and `AutoChess_2026_Mar` (~15%) alongside the always-present `""` bucket; new
 mode/season keys appear over time.
 
+Observed 2026-09-17: the keys embed the season in the game's own namespace per mode. `seasonal-trophy-road-202609`
+and `2v2League_202609` carry the `YYYYMM` league-season month (also in the arena `rawName`:
+`SeasonalArenas_202609_Arena1`, `2v2League_202609Arena1`); `AutoChess_2026_Season_11` carries Merge Tactics' own
+counter, which is not monthly. See [locations.md](locations.md#season-namespaces-what-is-canonical-and-what-is-derived).
+
 ---
 
 ### GET /players/{playerTag}/battlelog

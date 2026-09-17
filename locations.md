@@ -287,6 +287,43 @@ September 2026 season, the last at 1212) and whose ratings are still climbing. *
 season with a board**; earlier positions return `items: []` — Path of Legend's launch month. Forty-seven final boards
 (`2022-10` through `2026-08`) were being served on the probe date; nothing says how long they will be.
 
+### Season namespaces: what is canonical and what is derived
+
+Observed 2026-09-17 (probing `/locations/global/seasons`, `/players/{tag}`, `/clans/{tag}/riverracelog`,
+`/leaderboards`, and the PoL finals by both id forms). The API names a season by the **month it starts in,
+`YYYY-MM`**, and every other season number is a derived label for the same monthly season:
+
+| Where the key appears | Form | Example (September 2026) |
+| --- | --- | --- |
+| `/locations/global/seasons` items, `leagueStatistics.previousSeason.id` / `bestSeason.id`, PoL finals path | `YYYY-MM` | `2026-09` (absent from the list until it completes; `2026-08` was the last item on 2026-09-17) |
+| `Player.progress` keys and their arena `rawName` | `YYYYMM` inside a mode key | `seasonal-trophy-road-202609`, `2v2League_202609`, `SeasonalArenas_202609_Arena1`, `2v2League_202609Arena1` |
+| Badge names | `YYYYMM` | `SeasonalBadge_202509`, `MergeTacticsBadge_202506` |
+| River race log `seasonId` | integer | `136` (week created `20260914T093805.000Z`); `135` for the week closed `20260907T093404.000Z` |
+| PoL finals numeric path id | 1-based position in the seasons list | `143` = `2026-08`; `144` is `notFound` while the season runs |
+| Merge Tactics | its own per-year counter | `AutoChess_2026_Season_11` (eleven seasons by September, so not monthly) |
+| Game-mode leaderboards (`/leaderboards`) | one numeric board id per run | 2v2 League has appeared as `170000003`, `170000004`, `170000007`, `170000014`, `743144` |
+| In-game Pass "Season N" | not in the API | 87 |
+
+**The seasons list is one entry per season, not per month.** Its 143 items on 2026-09-17 cover 127 months
+(`2016-02`..`2026-08`) because fourteen months in `2016-02`..`2017-03` carry two entries and `2016-05` and `2016-10`
+carry three: seasons were shorter then. From `2017-04` on, one entry per month.
+
+**The river-race `seasonId` is the seasons-list position minus 8**, checked at six points against a recorder's
+`riverracelog` history: `2025-03` (position 126) = `118`, `2025-04` = `119`, `2025-05` = `120`, `2026-02` = `129`,
+`2026-08` (143) = `135`, `2026-09` (would be 144) = `136`. What the eight early positions are is not recoverable
+from the API; the relation has held for every monthly season since `2017-04`. A live `currentriverrace` never
+carries the id, so the only way to learn the current war season number from the API is the previous week's log
+entry plus one at the month boundary, or this derivation from the month.
+
+**Path of Legends carries no season id anywhere on the player** (`currentPathOfLegendSeasonResult` and friends are
+`{ leagueNumber, trophies, rank }`); the season is the current month, and its settled standing is the finals board
+addressed by `YYYY-MM`.
+
+For a recorder: key seasons by `YYYY-MM`, derive the war integer from the list position (and verify it against
+the next `riverracelog` entry), take mode keys such as `AutoChess_2026_Season_11` verbatim from `progress` as their
+own identifiers, and treat the Pass number as display-only calendar arithmetic (`2019-07` = 1) that the API cannot
+confirm.
+
 ---
 
 ## Error Codes
