@@ -401,6 +401,15 @@ Consequences worth designing for:
   aliases, not documented values. The `colosseum` value only appears once battle days begin; practice days of colosseum
   week still report `training`, so a "this is colosseum week" determination cannot be made from `periodType` alone
   during practice days.
+- **Practice war battles are indistinguishable in the battlelog.** A member's river-race battles past the four
+  scoring decks of a war day, and any river-race battle on a training day, come back with the same `type`
+  (`riverRacePvP` / `riverRaceDuel`), `gameMode` (`CW_Battle_1v1` 72000268 / `CW_Duel_1v1` 72000267),
+  `deckSelection` and `leagueNumber` as the scoring ones, no `trophyChange` on either, and no flag (checked on
+  2026-09-17 against a member's log holding eleven war battles across four days; a recorder saw 388 river-race-typed
+  battles on the three training days of one week and one member with 12 recorded war battles on one war day). The
+  only count of SCORING battles the API gives is `currentriverrace.clan.participants[].decksUsedToday` (max 4, reset
+  daily) and the week's `decksUsed`; a battlelog count for a day is therefore a ceiling on scoring battles, and
+  `decksUsedToday` the floor of what was actually played.
 - **Colosseum-week behavior:** The colosseum week has no boat battles and no boat defenses — only Colosseum duels and
   1v1s. Participant fields like `boatAttacks` and `numOfDefensesRemaining` will not advance, and battlelog `boatBattle`
   entries do not occur during colosseum week. Avoid surfacing boat-defense or repair-point copy when
