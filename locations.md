@@ -302,7 +302,7 @@ Observed 2026-09-17 (probing `/locations/global/seasons`, `/players/{tag}`, `/cl
 | PoL finals numeric path id | 1-based position in the seasons list | `143` = `2026-08`; `144` is `notFound` while the season runs |
 | Merge Tactics | its own per-year counter | `AutoChess_2026_Season_11` (eleven seasons by September, so not monthly) |
 | Game-mode leaderboards (`/leaderboards`) | one numeric board id per run | 2v2 League has appeared as `170000003`, `170000004`, `170000007`, `170000014`, `743144` |
-| In-game Pass "Season N" | not in the API | 87 |
+| In-game Pass season | not in the API, neither the number nor the name | "Season 87", "Minion Academy" (September 2026); `/events`, `/players`, `/clans/{tag}/currentriverrace`, `/globaltournaments` and the seasons list carry neither (2026-09-17) |
 
 **The seasons list is one entry per season, not per month.** Its 143 items on 2026-09-17 cover 127 months
 (`2016-02`..`2026-08`) because fourteen months in `2016-02`..`2017-03` carry two entries and `2016-05` and `2016-10`
@@ -321,8 +321,8 @@ addressed by `YYYY-MM`.
 
 For a recorder: key seasons by `YYYY-MM`, derive the war integer from the list position (and verify it against
 the next `riverracelog` entry), take mode keys such as `AutoChess_2026_Season_11` verbatim from `progress` as their
-own identifiers, and treat the Pass number as display-only calendar arithmetic (`2019-07` = 1) that the API cannot
-confirm.
+own identifiers, and do not try to name the Pass season: neither its number nor its name ("Minion Academy") is
+exposed anywhere, so a recorder cannot derive it.
 
 ---
 
