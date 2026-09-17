@@ -112,6 +112,12 @@ to the season start. Anything aggregating it must scope to the current section (
 it silently inflates per-week totals for every week after the first. It is also empty (`[]`) on a freshly created race,
 before the first day has closed.
 
+Every entry's `items[]` names the CURRENT race's clans, including the entries for earlier sections when those clans
+were in other brackets (observed 2026-08-31 and 2026-09-17: a section-1 war-day-1 payload carried entries for periods
+3-6 and all four listed the same five clans as `clans[]`). So an earlier section's entry is each current rival's own
+result on that day, in whatever bracket it raced then, not the current bracket's history; a recorder keying rows by
+bracket must scope to the current section for that reason too, not only to avoid double counting.
+
 **Boat defenses.** Each clan's boat has defenses; `numOfDefensesRemaining` tracks how many are still standing, and
 `progressEarnedFromDefenses` is the portion of that day's `progressEarned` contributed by surviving defenses (as opposed
 to offensive attacks). Defensive contribution is part of the clan's daily progress, so a clan can gain fame at day close
