@@ -1,6 +1,6 @@
 # Cards, Events, And Challenge Models
 
-Card and event field shapes verified against live API responses (March-April 2026).
+Card and event field shapes verified against live API responses (March-September 2026).
 
 ## Items
 
@@ -13,8 +13,8 @@ Fields:
 
 Observed counts:
 
-- `items`: 121 standard cards
-- `supportItems`: 4 Tower Troops
+- `items`: 123 standard cards (observed 2026-09-17)
+- `supportItems`: 4 Tower Troops (observed 2026-09-17)
 
 ## Item
 

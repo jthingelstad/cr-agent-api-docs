@@ -53,6 +53,16 @@ const OBSERVED_CLAIMS = [
     "55/123 standard cards",
     "the alternate-form capability count observed 2026-09-08",
   ],
+  [
+    "models/cards-events.md",
+    "123 standard cards (observed 2026-09-17)",
+    "the model catalog size re-observed 2026-09-17",
+  ],
+  [
+    "models/cards-events.md",
+    "4 Tower Troops (observed 2026-09-17)",
+    "the model support catalog size re-observed 2026-09-17",
+  ],
   ["players.md", "`kingTowerLevel`", "the profile field that replaced the expLevel-derived King Tower"],
   ["players.md", "`unknown`", "the deckSelection value seen on an event-tagged mode"],
   ["models/battles.md", "- `unknown`", "unknown as a battle type"],
