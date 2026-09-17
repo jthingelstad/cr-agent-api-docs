@@ -207,14 +207,32 @@ across 40 log entries sampled April 2026.
   weeks depending only on how many Mondays fall between. Verified against the client's own "Season Ends In" countdown on
   2026-09-07: 24m46s remaining at 09:35:14Z and 19m58s at 09:40:02Z, both resolving to exactly 10:00:00Z.
 - **The week close and the season roll are TWO different events ~26 minutes apart. Do not conflate them.** The race
-  closes first (`riverracelog[0].createdDate`, ~09:34Z in Season 135), the client then shows "Week N ending... Please
+  closes first (`riverracelog[0].createdDate`, ~09:34Z in Season 135 for the sampled clan; the slot is per race, see
+  below), the client then shows "Week N ending... Please
   stand by..." while already counting down to the season, and the season rolls at 10:00Z. Deriving the season from the
   race-close stamp dates it ~26 minutes early, so live payloads captured in that gap — which still describe the FINISHED
   race, at the OLD section index — get stamped with the NEXT season id. That produces impossible
   `(season N+1, last section)` rows.
-- **The race-close time drifts season to season, the 10:00Z season hour does not.** Observed closes: `093005Z` for every
-  week of Season 134, `093404Z`-`093406Z` for every week of Season 135. Stable within a season, moved between them — so
-  anchor week math on the observed close and season math on the fixed hour.
+- **The race-close time is per race, drawn at the season roll; the 10:00Z season hour is global.** Observed closes for
+  one clan: `093005Z` for every week of Season 134, `093404Z`-`093406Z` for every week of Season 135. Stable within a
+  season, moved between them. Confirmed across clans 2026-09-17 (six clans, five countries, `riverracelog[].createdDate`
+  for the same weeks): the week KEY `(seasonId, sectionIndex)` is identical everywhere, the close INSTANT is not.
+
+  | clan (country)              | S134 weeks | S135 weeks          | S136 week 0 |
+  | --------------------------- | ---------- | ------------------- | ----------- |
+  | `#J2RGCRVG` (US)            | `093005Z`  | `093404Z`-`093406Z` | `093805Z`   |
+  | `#9U82JJ0Y` (US)            | -          | `094404Z`-`094407Z` | `093906Z`   |
+  | `#8PLQ9JCP` (Japan)         | `094304Z`  | `094803Z`-`094843Z` | `094706Z`   |
+  | `#L9VRJ` (Spain)            | `095404Z`  | `095404Z`-`095604Z` | `094406Z`   |
+  | `#YUJUG0QL` (Japan)         | -          | `095504Z`-`095506Z` | `094725Z`   |
+  | `#8UJ2UUJ8` (Italy)         | -          | `095505Z`-`095844Z` | `094637Z`   |
+
+  Every observed slot falls in the `09:30Z`-`10:00Z` band before the policy hour. A multi-clan consumer therefore has
+  two honest choices: follow the policy grid (10:00Z) for every clan and accept that a battle in a clan's own
+  slot-to-10:00Z band is attributed to the previous day, or carry each clan's slot from its own log and attribute by
+  it. Do not read one clan's slot as the game's clock. `currentriverrace` also answers `404 notFound` for a clan that
+  has never been in a race (a one-member clan with `clanWarTrophies: 0`, 2026-09-17), and its `riverracelog` is
+  `items: []`; that is the same "no active race" state as the season-roll gap, not an error.
 - `sectionIndex` = week within the season. Most seasons are 4 weeks (sections 0-3) but some are 5 weeks (sections 0-4).
   Supercell varies the war season length to keep it roughly aligned with Pass Royale seasons.
 - `standings` contains all 5 clans ranked by finish position
