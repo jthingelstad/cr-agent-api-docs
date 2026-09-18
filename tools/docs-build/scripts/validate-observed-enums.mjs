@@ -75,6 +75,11 @@ const OBSERVED_CLAIMS = [
   ["clans.md", "19691231T235959.000Z", "the epoch-zero finishTime sentinel"],
   ["clans.md", "Waiting for Clan War to start", "the 404 window between races"],
   ["models/river-race.md", "category error", "fame vs periodPoints are not interchangeable"],
+  [
+    "locations.md",
+    "`eloRating` is the player's `currentPathOfLegendSeasonResult.trophies`",
+    "the board rating equals the profile's PoL trophies (observed 2026-09-18)",
+  ],
 ];
 
 const failures = [];

@@ -181,6 +181,13 @@ Get Path of Legend player rankings for a location (current season).
 | `rank`      | integer |                                                                                                       |
 | `clan`      | object  | Optional — absent if not in a clan                                                                    |
 
+**`eloRating` is the player's `currentPathOfLegendSeasonResult.trophies`, and the board `rank` is its `rank`.**
+Observed 2026-09-18 on the global board's #1 and #3: board `eloRating` 2711 / `rank` 1 against the same player's
+profile `currentPathOfLegendSeasonResult { leagueNumber: 7, trophies: 2711, rank: 1 }`, and 2694 / 3 against
+`{ leagueNumber: 7, trophies: 2694, rank: 3 }`, read within a minute of each other. The two endpoints name one number
+two ways; a recorder can join a profile's Path of Legends standing to the board without a conversion. (The profile's
+`trophies` is Trophy Road and unrelated: 10,714 and 14,000 for the same two players.)
+
 ---
 
 ## Global Tournament Rankings
