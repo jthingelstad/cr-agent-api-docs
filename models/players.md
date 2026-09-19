@@ -200,6 +200,33 @@ Badge categories observed:
 - Event badges, such as `CrlSpectator2022` and `EasterEgg`
 - Career badges, such as `YearsPlayed`, `BattleWins`, `ClanWarsVeteran`, `LadderTop1000`
 
+**`name` is an internal identifier, not a display name.** A badge carries no player-facing name anywhere in the API;
+only `iconUrls` is what the game shows. Anything that prints a badge to a person has to translate. Observed across
+1,773 recorded profiles (survey 2026-09-19, 200 distinct badge names):
+
+- **Mastery badges are `Mastery` + the card's INTERNAL name**, which is the card's shown name with spaces removed for
+  most cards (`MasteryHogRider`, `MasteryThreeMusketeers`, `MasteryGoblinstein`) and an older codename for the rest.
+  Codenames observed, cross-checked against community card data (`sc_key`): `SkeletonWarriors` = Guards, `Archer` =
+  Archers, `IceSpirits` = Ice Spirit, `FireSpirits` = Fire Spirit, `ZapMachine` = Sparky, `MiniSparkys` = Zappies,
+  `RageBarbarian` = Lumberjack, `AxeMan` = Executioner, `IceGolemite` = Ice Golem, `BlowdartGoblin` = Dart Goblin,
+  `AngryBarbarians` = Elite Barbarians, `Assassin` = Bandit, `DarkWitch` = Night Witch, `WitchMother` = Mother Witch,
+  `Ghost` = Royal Ghost, `MovingCannon` = Cannon Cart, `SkeletonBalloon` = Skeleton Barrel, `DartBarrell` = Flying
+  Machine, `EliteArcher` = Magic Archer, `FirespiritHut` = Furnace, `BarbLog` = Barbarian Barrel, `Heal` = Heal Spirit,
+  `Snowball` = Giant Snowball, `Xbow` = X-Bow, `Log` = The Log, `Pekka` / `MiniPekka` = P.E.K.K.A / Mini P.E.K.K.A,
+  `Wallbreakers` = Wall Breakers. Three newer codenames are inferred by elimination (the only three Mastery badges with
+  no matching card, against the only three cards with no Mastery badge), not confirmed: `GiantBuffer` = Rune Giant,
+  `DarkMagic` = Void, `MergeMaiden` = Spirit Empress.
+- **One Mastery name carries a literal space:** `MasteryElixir Collector` (observed 2026-09-19, 1,460 holders). Do not
+  assume badge names are single tokens.
+- **Dated badges suffix `_YYYYMM`**, sometimes with a revision: `SeasonalBadge_202509`, `SeasonalBadge_202507_v2`,
+  `MergeTacticsBadge_202506`. A `_v2` twin of an undated badge also occurs (`RoyalTournamentRank` and
+  `RoyalTournamentRank_v2` both observed, each tiered to 10) - treat them as distinct badges, not one renamed.
+- **Yearly and numbered badges:** `2025YearBadge` (one-off) and `2026YearBadge` (tiered, max 6) differ in shape across
+  years; `CrazyArenaBadge1/2/3` are three one-off badges, not levels of one.
+- **CRL badges** pin a year: `Crl20Wins2019`..`Crl20Wins2025` plus an undated `Crl20Wins`; `CrlSpectator2022/2024/2025`;
+  `CrlFinalist2024/2025`; `CrlChampion2024/2025`; `CrlCompetitor2022`. Rare one-offs observed once each:
+  `SupercellEmployee`, `Creator`, `SupercellPancake`.
+
 Two badges are load-bearing for account progression:
 
 - `CollectionLevel` — since the game's 2026 Collection Level update, its `progress` is the player's current Collection

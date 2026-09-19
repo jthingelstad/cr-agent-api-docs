@@ -41,6 +41,9 @@ const OBSERVED_GAME_MODES = [
 
 // Free-text claims that must survive a rewrite, keyed to the file that owns them.
 const OBSERVED_CLAIMS = [
+  ["models/players.md", "`MasteryElixir Collector`", "a badge name with a literal space, observed 2026-09-19"],
+  ["models/players.md", "`SkeletonWarriors` = Guards", "the Mastery badge codename that reads as code, observed 2026-09-19"],
+  ["models/players.md", "`RoyalTournamentRank_v2`", "the _v2 twin of an undated badge, observed 2026-09-19"],
   ["models/leaderboards.md", "`name` - string or `null`", "leaderboard metadata name nullability observed 2026-09-14"],
   ["models/leaderboards.md", "15 explicit null names", "the 30-board metadata survey observed 2026-09-14"],
   [
