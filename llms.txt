@@ -15,6 +15,9 @@ Supercell. For more information see Supercell's Fan Content Policy: <www.superce
 - [Wiki/API Crosswalk Data](data/wiki-api-crosswalk.json): machine-readable wiki/API concept mapping
 - [Gameplay Modes](game-modes.md): mode context for Trophy Road, Ranked / Path of Legend, Clan Wars, events, and side
   modes
+- [Deck Archetypes](deck-archetypes.md): how players name decks - families, the name grammar, disagreements
+- [Card Roles](data/card-roles.json): machine-readable win conditions, bait units, bridge partners, with sources
+- [Deck Aliases](data/deck-aliases.json): machine-readable community deck names and what they resolve to
 - [Wiki/API Crosswalk](wiki-api-crosswalk.md): connect wiki gameplay concepts to endpoint/model docs
 - [Models](models.md): model reference router
 

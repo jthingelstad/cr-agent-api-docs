@@ -1,0 +1,257 @@
+{
+  "retrievedAt": "2026-09-20",
+  "scope": "Community names for deck shapes that the <win condition> <family> grammar does not produce, and the shape each resolves to. Read when a person names a deck; never used to label one.",
+  "aliases": [
+    {
+      "alias": "LavaLoon",
+      "cards": [
+        26000029,
+        26000006
+      ],
+      "family": "beatdown",
+      "source": "https://royaletracker.gg/best-decks/archetypes; https://clashroyale.fandom.com/wiki/Deck:LavaLoon",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Lava Loon",
+      "cards": [
+        26000029,
+        26000006
+      ],
+      "family": "beatdown",
+      "source": "https://clashroyale.fandom.com/wiki/Deck:LavaLoon",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "LumberLoon",
+      "cards": [
+        26000006,
+        26000035
+      ],
+      "family": "beatdown",
+      "source": "https://royaletracker.gg/best-decks/archetypes (Balloon with Lumberjack)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Log Bait",
+      "cards": [
+        28000004
+      ],
+      "family": "bait",
+      "source": "https://royaletracker.gg/best-decks/archetypes; https://trophycoach.com/tools/deck-finder",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Logbait",
+      "cards": [
+        28000004
+      ],
+      "family": "bait",
+      "source": "https://royaletracker.gg/best-decks/archetypes",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Splashyard",
+      "cards": [
+        28000010
+      ],
+      "family": "control",
+      "source": "https://royaletracker.gg/best-decks/archetypes (Graveyard with splash defense)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Miner Poison",
+      "cards": [
+        26000032,
+        28000009
+      ],
+      "family": "control",
+      "source": "https://royaletracker.gg/best-decks/archetypes (chip damage with Miner)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Hog EQ",
+      "cards": [
+        26000021,
+        28000014
+      ],
+      "family": null,
+      "source": "https://royaletracker.gg/best-decks/archetypes (Hog Rider with Earthquake)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Hog Earthquake",
+      "cards": [
+        26000021,
+        28000014
+      ],
+      "family": null,
+      "source": "https://royaletracker.gg/best-decks/archetypes",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "2.6 Hog",
+      "cards": [
+        26000021
+      ],
+      "family": "cycle",
+      "source": "https://royaletracker.gg/best-decks/archetypes (Hog Cycle: fast cycle, 2.6 avg elixir); https://clashroyale.fandom.com/wiki/Deck:Modern_Hog_Cycle",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Hog 2.6",
+      "cards": [
+        26000021
+      ],
+      "family": "cycle",
+      "source": "https://trophycoach.com/tools/deck-finder (Hog 2.6)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Hog Cycle",
+      "cards": [
+        26000021
+      ],
+      "family": "cycle",
+      "source": "https://royaletracker.gg/best-decks/archetypes; https://clashroyale.fandom.com/wiki/Deck:Modern_Hog_Cycle",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Giant Graveyard",
+      "cards": [
+        26000003,
+        28000010
+      ],
+      "family": "beatdown",
+      "source": "https://royaletracker.gg/best-decks/archetypes (tank with Graveyard)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "PEKKA Bridge Spam",
+      "cards": [
+        26000004
+      ],
+      "family": "bridge_spam",
+      "source": "https://royaletracker.gg/best-decks/archetypes; https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Pekka BS",
+      "cards": [
+        26000004
+      ],
+      "family": "bridge_spam",
+      "source": "https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (community shorthand)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Rocket Cycle",
+      "cards": [
+        28000003
+      ],
+      "family": "cycle",
+      "source": "https://royaletracker.gg/best-decks/archetypes (fast cycle with Rocket)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "RG Cycle",
+      "cards": [
+        26000024
+      ],
+      "family": "cycle",
+      "source": "https://trophycoach.com/tools/deck-finder (Royal Giant cycle); https://clashroyale.fandom.com/wiki/Deck:3.1_Royal_Giant_Cycle",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Royal Giant Cycle",
+      "cards": [
+        26000024
+      ],
+      "family": "cycle",
+      "source": "https://clashroyale.fandom.com/wiki/Deck:3.1_Royal_Giant_Cycle",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Mortar Cycle",
+      "cards": [
+        27000002
+      ],
+      "family": "siege",
+      "source": "https://clashroyale.fandom.com/wiki/Deck:2.9_Mortar_Cycle ('2.9 Mortar Cycle'); Elixir's family for a Mortar deck is siege",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "X-Bow Cycle",
+      "cards": [
+        27000008
+      ],
+      "family": "siege",
+      "source": "'3.0 X-Bow cycle' in community usage (e.g. https://deckmelon.com/best-decks/ronin-bridge-spam names X-Bow Cycle); Elixir's family for an X-Bow deck is siege",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Xbow",
+      "cards": [
+        27000008
+      ],
+      "family": "siege",
+      "source": "https://gamingonphone.com/guides/clash-royale-deck-archetypes/",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Wall Breakers Cycle",
+      "cards": [
+        26000058
+      ],
+      "family": "cycle",
+      "source": "https://clashroyale.fandom.com/wiki/Deck:2.0_Wall_Breaker_Cycle_Insanity",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Miner Wall Breakers",
+      "cards": [
+        26000032,
+        26000058
+      ],
+      "family": "cycle",
+      "source": "https://clashroyale.fandom.com/wiki/Deck:2.9_Miner_Wall_Breakers",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Drill Cycle",
+      "cards": [
+        27000013
+      ],
+      "family": "cycle",
+      "source": "https://clashroyale.fandom.com/wiki/Deck:Goblin_Drill_Cycle",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "eBarbs Bridge Spam",
+      "cards": [
+        26000043
+      ],
+      "family": "bridge_spam",
+      "source": "https://www.deckshop.pro/deck/detail/elite-barbarians,cannon-cart,royal-ghost,bandit,magic-archer,hunter,heal-spirit,barbarian-barrel",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Ram Rider Control",
+      "cards": [
+        26000051
+      ],
+      "family": "control",
+      "source": "https://deckmelon.com/best-decks/ram-rider-control",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Archer Queen Royal Hogs",
+      "cards": [
+        26000059
+      ],
+      "family": "bridge_spam",
+      "source": "https://royaletracker.gg/best-decks/archetypes (a Royal Hogs deck with Archer Queen; the win condition is Royal Hogs)",
+      "attested_at": "2026-09-20"
+    }
+  ]
+}

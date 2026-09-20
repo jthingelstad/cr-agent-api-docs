@@ -268,6 +268,21 @@ side-mode progress.
 
 Machine-readable mode families, API signals, event variants, and source URLs.
 
+### Deck Archetypes — [deck-archetypes.md](deck-archetypes.md)
+
+How players name decks: the six families, the `<win condition> <family>` grammar, where sites disagree, and the
+maintenance rule. Community usage with a source per fact; the API carries no archetype.
+
+### Card Roles — [data/card-roles.json](data/card-roles.json)
+
+Machine-readable: which cards are win conditions (tier, implied family, cycle-cost alternative, partner rule), bait
+units and bridge partners, each with a public source; the unattested list.
+
+### Deck Aliases — [data/deck-aliases.json](data/deck-aliases.json)
+
+Machine-readable: community names the grammar does not produce ("LavaLoon", "Log Bait", "Hog EQ") and the cards and
+family each resolves to.
+
 ### Wiki/API Crosswalk — [wiki-api-crosswalk.md](wiki-api-crosswalk.md)
 
 Scan-backed mapping between Clash Royale Wiki concepts and this repo's endpoint/model docs. Use this when an API field
