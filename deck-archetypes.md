@@ -52,6 +52,14 @@ cycle and beatdown bounds — are the consuming program's, not this reference's.
 - **The cycle bound**: "under 3.5" in guides, tuned lower by some tools. A consumer should measure it on its own data
   and say what it used.
 
+## A card that names a deck without being its win condition
+
+Some decks have no building-targeter at all - the tower damage is chip from support troops behind a tank - and the deck
+sites still lead the name with the tank: "Rune Giant beatdown". The wiki's reading of Rune Giant is exactly that ("she
+will tank for them while giving them bonus damage ... allowing them to chip a lot more damage from Crown Towers"), and
+the guides say it is not a win condition. The data file marks such a card `names_deck` instead of giving it a tier: a
+consumer names the deck by it only when no win condition is present, and never lists it as one.
+
 ## Unattested cards
 
 Cards in the catalog for which no public archetype attestation was found on the retrieval date are listed under

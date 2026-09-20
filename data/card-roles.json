@@ -18,14 +18,10 @@
     "pairs_with": "cards that join as a second win condition when present, optionally moving the family",
     "bait_tiers": "minimum bait units in the deck -> tier",
     "bait_unit": "a spell-vulnerable swarm card (the bait package test)",
-    "bridge_partner": "a fast bridge unit (the P.E.K.K.A / Mega Knight / Ram Rider test)"
+    "bridge_partner": "a fast bridge unit (the P.E.K.K.A / Mega Knight / Ram Rider test)",
+    "names_deck": "the card names a deck that has no win condition (a tank of an enchanted or support push, as the deck sites lead with it); it is not a win condition and never anchors over one"
   },
   "unattested": [
-    {
-      "id": 26000101,
-      "name": "Rune Giant",
-      "reason": "Declined 2026-09-20: 'doesn't have enough hitpoints to make it a full-blown win condition ... better suited as a buffing support troop' (https://gamingonphone.com/guides/clash-royale-rune-giant-best-decks-guide/); the named decks carry Goblin Giant or Hog Rider."
-    },
     {
       "id": 26000096,
       "name": "Goblin Machine"
@@ -360,6 +356,13 @@
       "family": "control",
       "at_cycle_cost": "cycle",
       "source": "https://gamerant.com/clash-royale-best-goblinstein-decks/ ('the Goblinstein as your primary win condition'; 'a secondary win condition' beside Royal Hogs); https://deckmelon.com/best-decks/with/goblinstein ('Goblinstein Control', 'Goblinstein Bridge Spam', 'Goblinstein Hog Cycle'). Tier 9.7: beside Royal Hogs, Hog Rider, Graveyard or Mortar those anchor, as the sources name them.",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "id": 26000101,
+      "name": "Rune Giant",
+      "names_deck": true,
+      "source": "https://clashroyale.fandom.com/wiki/Rune_Giant ('She will tank for them while giving them bonus damage every third hit, allowing them to chip a lot more damage from Crown Towers'; the enchantment 'works with Golden Knight's Dashing Dash'); https://gamingonphone.com/guides/clash-royale-rune-giant-best-decks-guide/ ('better suited as a buffing support troop' - not a win condition); https://deckmelon.com/best-decks/with/rune-giant ('Rune Giant Ronin'); https://bestclashdecks.com/rune-giant/ ('Evo Rune Giant Spirit Empress Beatdown', 'Rune Giant Elite Barbarians Furnace'). Names a deck that has no win condition - the tank of an enchanted chip push - and never one that has.",
       "attested_at": "2026-09-20"
     },
     {

@@ -44,10 +44,11 @@ for (const r of roles.roles ?? []) {
       if (!Number.isInteger(p.id)) fail(`${where}: pairs_with entry without an id`);
       if (p.family !== undefined && !FAMILIES.has(p.family)) fail(`${where}: pairs_with family is not a family`);
     }
-  } else if (r.bait_unit !== true && r.bridge_partner !== true) {
-    fail(`${where}: an entry is a win condition, a bait unit or a bridge partner`);
+  } else if (r.bait_unit !== true && r.bridge_partner !== true && r.names_deck !== true) {
+    fail(`${where}: an entry is a win condition, a bait unit, a bridge partner, or names a deck`);
   }
-  for (const flag of ["bait_unit", "bridge_partner", "needs_partner"])
+  if (r.names_deck === true && isWinCon) fail(`${where}: a card that names a deck is not also a win condition`);
+  for (const flag of ["bait_unit", "bridge_partner", "needs_partner", "names_deck"])
     if (r[flag] !== undefined && r[flag] !== true) fail(`${where}: ${flag} is true or absent`);
 }
 for (const u of roles.unattested ?? []) {
