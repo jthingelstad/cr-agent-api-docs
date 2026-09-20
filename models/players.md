@@ -201,8 +201,8 @@ Badge categories observed:
 - Career badges, such as `YearsPlayed`, `BattleWins`, `ClanWarsVeteran`, `LadderTop1000`
 
 **`name` is an internal identifier, not a display name.** A badge carries no player-facing name anywhere in the API;
-only `iconUrls` is what the game shows. Anything that prints a badge to a person has to translate. Observed across
-1,773 recorded profiles (survey 2026-09-19, 200 distinct badge names):
+only `iconUrls` is what the game shows. Anything that prints a badge to a person has to translate. Observed across 1,773
+recorded profiles (survey 2026-09-19, 200 distinct badge names):
 
 - **Mastery badges are `Mastery` + the card's INTERNAL name**, which is the card's shown name with spaces removed for
   most cards (`MasteryHogRider`, `MasteryThreeMusketeers`, `MasteryGoblinstein`) and an older codename for the rest.

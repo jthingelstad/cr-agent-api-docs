@@ -181,9 +181,22 @@ Get Path of Legend player rankings for a location (current season).
 | `rank`      | integer |                                                                                                       |
 | `clan`      | object  | Optional — absent if not in a clan                                                                    |
 
-**`eloRating` is the player's `currentPathOfLegendSeasonResult.trophies`, and the board `rank` is its `rank`.**
-Observed 2026-09-18 on the global board's #1 and #3: board `eloRating` 2711 / `rank` 1 against the same player's
-profile `currentPathOfLegendSeasonResult { leagueNumber: 7, trophies: 2711, rank: 1 }`, and 2694 / 3 against
+**The board is capped at 1,000 places by the API, and the cap is a cut, not a floor.** Observed 2026-09-20 on
+`/locations/global/pathoflegend/players`: `limit=5` returns 5 items and `paging.cursors.after`; `limit=1000` returns
+exactly 1,000 items and `paging: { cursors: {} }` (no `after`); `limit=2000` also returns 1,000 with no cursor; and a
+cursor placed at position 1000 (`after=eyJwb3MiOjEwMDB9`, `{"pos":1000}`) returns `items: []` with only a `before`
+cursor. The list stops mid-tie: the last eight places all carried 2153–2155 that day, and on 2026-09-19 ranks 995–1000
+all read 2111. So while fewer than 1,000 players are rated (the first days of a season, or a small country — Iceland
+returned 2 items on 2026-09-20) the endpoint is everyone above the rating floor; once 1,000 are, the last place's
+`eloRating` is a rank cutoff that rises through the season as the field plays (global: 1404 on 2026-09-10 when the board
+first filled, 2111 on 2026-09-19), and a player whose rating did not move can drop hundreds of places or off the board.
+Country boards cap the same way (United States and Japan both returned 1,000 with no cursor, tails at 1791 and 1737), so
+a country's full board reaches far below the global cutoff. The population above the true floor is not observable from
+this endpoint; a per-location sweep is a lower bound only.
+
+**`eloRating` is the player's `currentPathOfLegendSeasonResult.trophies`, and the board `rank` is its `rank`.** Observed
+2026-09-18 on the global board's #1 and #3: board `eloRating` 2711 / `rank` 1 against the same player's profile
+`currentPathOfLegendSeasonResult { leagueNumber: 7, trophies: 2711, rank: 1 }`, and 2694 / 3 against
 `{ leagueNumber: 7, trophies: 2694, rank: 3 }`, read within a minute of each other. The two endpoints name one number
 two ways; a recorder can join a profile's Path of Legends standing to the board without a conversion. (The profile's
 `trophies` is Trophy Road and unrelated: 10,714 and 14,000 for the same two players.)
@@ -281,18 +294,20 @@ Get top Path of Legend player rankings for a specific season.
 ```
 
 Observed 2026-09-11, probing with **numeric season ids**: the endpoint accepts them, and returns the season's FINAL
-standings at full depth — `9999` items, no paging cursor. **A numeric id is the 1-based position in the
-`/locations/global/seasons` list, NOT the clan-war `seasonId`** from river races, and not the in-game "Season N" shown
-on the Pass — three different numbering namespaces that happen to share monthly boundaries. Verified by matching `#1`
-players across the two forms: `136` = `2026-01`, `135` = `2025-12` (`eloRating` 3914, `#9999` at 2222), `97` =
-`2022-10`. The clan-war season running on the probe date was also numbered 136, which made the numeric form look like
-the clan-war id; it is a coincidence. The V1 list carries duplicate early entries, so derive the month from the list
-position, never from date arithmetic on the number — or just use the `YYYY-MM` form, which is unambiguous. `87` (the
-in-game season number for September 2026) returns `notFound`. That is a different view from the current-season
-`/locations/{id}/pathoflegend/players`, which lists only players above a rating floor (869 rated on day 4 of the
-September 2026 season, the last at 1212) and whose ratings are still climbing. **`2022-10` (position 97) is the earliest
-season with a board**; earlier positions return `items: []` — Path of Legend's launch month. Forty-seven final boards
-(`2022-10` through `2026-08`) were being served on the probe date; nothing says how long they will be.
+standings to a depth of `9999` items, no paging cursor. That depth is a cut, not the field: the `2026-08` board read on
+2026-09-20 ends with ranks 9991–9999 all at `eloRating` 2342, so more players finished at that rating than the board
+shows. **A numeric id is the 1-based position in the `/locations/global/seasons` list, NOT the clan-war `seasonId`**
+from river races, and not the in-game "Season N" shown on the Pass — three different numbering namespaces that happen to
+share monthly boundaries. Verified by matching `#1` players across the two forms: `136` = `2026-01`, `135` = `2025-12`
+(`eloRating` 3914, `#9999` at 2222), `97` = `2022-10`. The clan-war season running on the probe date was also numbered
+136, which made the numeric form look like the clan-war id; it is a coincidence. The V1 list carries duplicate early
+entries, so derive the month from the list position, never from date arithmetic on the number — or just use the
+`YYYY-MM` form, which is unambiguous. `87` (the in-game season number for September 2026) returns `notFound`. That is a
+different view from the current-season `/locations/{id}/pathoflegend/players`, which lists only players above a rating
+floor (869 rated on day 4 of the September 2026 season, the last at 1212) and whose ratings are still climbing.
+**`2022-10` (position 97) is the earliest season with a board**; earlier positions return `items: []` — Path of Legend's
+launch month. Forty-seven final boards (`2022-10` through `2026-08`) were being served on the probe date; nothing says
+how long they will be.
 
 ### Season namespaces: what is canonical and what is derived
 

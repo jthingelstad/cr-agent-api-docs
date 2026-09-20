@@ -83,6 +83,16 @@ const OBSERVED_CLAIMS = [
     "`eloRating` is the player's `currentPathOfLegendSeasonResult.trophies`",
     "the board rating equals the profile's PoL trophies (observed 2026-09-18)",
   ],
+  [
+    "locations.md",
+    "capped at 1,000 places by the API, and the cap is a cut, not a floor",
+    "the live PoL board's depth and the cursor probe past position 1000 (observed 2026-09-20)",
+  ],
+  [
+    "locations.md",
+    "ranks 9991–9999 all at `eloRating` 2342",
+    "the season final's 9,999-place cut lands mid-tie (observed 2026-09-20)",
+  ],
 ];
 
 const failures = [];
