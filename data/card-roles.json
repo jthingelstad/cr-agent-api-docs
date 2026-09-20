@@ -409,8 +409,14 @@
       "name": "Graveyard",
       "tier": 3,
       "family": "control",
-      "source": "https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (control: PEKKA, Mega Knight, Miner, Graveyard); https://trophycoach.com/tools/deck-finder (Graveyard Poison wins on chip and defense); https://royaletracker.gg/best-decks/archetypes (Splashyard, Giant Graveyard)",
-      "attested_at": "2026-09-20"
+      "source": "https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (control: PEKKA, Mega Knight, Miner, Graveyard); https://trophycoach.com/tools/deck-finder (Graveyard Poison wins on chip and defense); https://royaletracker.gg/best-decks/archetypes (Splashyard, Giant Graveyard); with Giant the community says 'Giant Graveyard' (RoyaleTracker: tank with Graveyard), a beatdown shape carrying both cards",
+      "attested_at": "2026-09-20",
+      "pairs_with": [
+        {
+          "id": 26000003,
+          "family": "beatdown"
+        }
+      ]
     }
   ]
 }
