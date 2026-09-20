@@ -23,15 +23,12 @@
   "unattested": [
     {
       "id": 26000101,
-      "name": "Rune Giant"
+      "name": "Rune Giant",
+      "reason": "Declined 2026-09-20: 'doesn't have enough hitpoints to make it a full-blown win condition ... better suited as a buffing support troop' (https://gamingonphone.com/guides/clash-royale-rune-giant-best-decks-guide/); the named decks carry Goblin Giant or Hog Rider."
     },
     {
       "id": 26000096,
       "name": "Goblin Machine"
-    },
-    {
-      "id": 26000099,
-      "name": "Goblinstein"
     },
     {
       "id": 28000025,
@@ -42,8 +39,9 @@
       "name": "Goblin Demolisher"
     },
     {
-      "id": 26000107,
-      "name": "Minion Giant"
+      "id": 26000020,
+      "name": "Giant Skeleton",
+      "reason": "Support/tank in the named decks (they carry Battle Ram, Sparky or Royal Hogs); no source names decks by it."
     }
   ],
   "unattestedNote": "Cards in the catalog with no public archetype attestation found on 2026-09-20; a deck built around one lands in the bare-family fallback until a source names it. The queue for Understand Clash Royale.",
@@ -60,8 +58,13 @@
       "name": "Giant",
       "tier": 4,
       "family": "beatdown",
-      "source": "https://trophycoach.com/tools/deck-finder; https://gamingonphone.com/guides/clash-royale-deck-archetypes/",
-      "attested_at": "2026-09-20"
+      "source": "https://trophycoach.com/tools/deck-finder; https://gamingonphone.com/guides/clash-royale-deck-archetypes/; with Sparky the community says 'Giant Sparky' (https://deckmelon.com/best-decks/with/sparky: 'Giant Sparky Beatdown'), both cards in the name",
+      "attested_at": "2026-09-20",
+      "pairs_with": [
+        {
+          "id": 26000033
+        }
+      ]
     },
     {
       "id": 26000004,
@@ -228,8 +231,9 @@
       "name": "Elite Barbarians",
       "tier": 9.5,
       "family": "bridge_spam",
-      "source": "https://www.deckshop.pro/deck/detail/elite-barbarians,cannon-cart,royal-ghost,bandit,magic-archer,hunter,heal-spirit,barbarian-barrel ('eBarbs bridge spam')",
-      "attested_at": "2026-09-20"
+      "source": "https://www.deckshop.pro/deck/detail/elite-barbarians,cannon-cart,royal-ghost,bandit,magic-archer,hunter,heal-spirit,barbarian-barrel ('eBarbs bridge spam'); bridge spam only with a bridge partner beside it, else control (the named bridge-spam decks all carry a partner; a Ronin or Elite Barbarians deck behind huts and a horde is not bridge spam)",
+      "attested_at": "2026-09-20",
+      "needs_partner": true
     },
     {
       "id": 26000046,
@@ -283,10 +287,11 @@
       "id": 26000058,
       "name": "Wall Breakers",
       "tier": 9,
-      "family": "cycle",
-      "source": "https://clashroyale.fandom.com/wiki/Deck:2.0_Wall_Breaker_Cycle_Insanity ('2.0 Wall Breaker Cycle'); https://clashroyale.fandom.com/wiki/Deck:2.9_Miner_Wall_Breakers; bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'",
+      "family": "control",
+      "source": "https://clashroyale.fandom.com/wiki/Deck:2.0_Wall_Breaker_Cycle_Insanity ('2.0 Wall Breaker Cycle'); https://clashroyale.fandom.com/wiki/Deck:2.9_Miner_Wall_Breakers; bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'; control above the cycle bound: the named decks are all cycle-cost, and a heavier Wall Breakers deck is not one of them",
       "attested_at": "2026-09-20",
-      "bridge_partner": true
+      "bridge_partner": true,
+      "at_cycle_cost": "cycle"
     },
     {
       "id": 26000059,
@@ -349,22 +354,42 @@
       "attested_at": "2026-09-20"
     },
     {
+      "id": 26000099,
+      "name": "Goblinstein",
+      "tier": 9.7,
+      "family": "control",
+      "at_cycle_cost": "cycle",
+      "source": "https://gamerant.com/clash-royale-best-goblinstein-decks/ ('the Goblinstein as your primary win condition'; 'a secondary win condition' beside Royal Hogs); https://deckmelon.com/best-decks/with/goblinstein ('Goblinstein Control', 'Goblinstein Bridge Spam', 'Goblinstein Hog Cycle'). Tier 9.7: beside Royal Hogs, Hog Rider, Graveyard or Mortar those anchor, as the sources name them.",
+      "attested_at": "2026-09-20"
+    },
+    {
       "id": 26000103,
       "name": "Boss Bandit",
       "tier": 9.5,
       "family": "bridge_spam",
-      "source": "https://www.sportskeeda.com/mobile-games/best-boss-bandit-decks-clash-royale; bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'",
+      "source": "https://www.sportskeeda.com/mobile-games/best-boss-bandit-decks-clash-royale; bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'; bridge spam only with a bridge partner beside it, else control (the named bridge-spam decks all carry a partner; a Ronin or Elite Barbarians deck behind huts and a horde is not bridge spam)",
       "attested_at": "2026-09-20",
-      "bridge_partner": true
+      "bridge_partner": true,
+      "needs_partner": true
     },
     {
       "id": 26000106,
       "name": "Ronin",
       "tier": 9.5,
       "family": "bridge_spam",
-      "source": "https://deckmelon.com/best-decks/ronin-bridge-spam ('Ronin Bridge Spam'); bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'",
+      "source": "https://deckmelon.com/best-decks/ronin-bridge-spam ('Ronin Bridge Spam'); bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'; bridge spam only with a bridge partner beside it, else control (the named bridge-spam decks all carry a partner; a Ronin or Elite Barbarians deck behind huts and a horde is not bridge spam)",
       "attested_at": "2026-09-20",
-      "bridge_partner": true
+      "bridge_partner": true,
+      "needs_partner": true
+    },
+    {
+      "id": 26000107,
+      "name": "Minion Giant",
+      "tier": 9,
+      "family": "control",
+      "at_cycle_cost": "cycle",
+      "source": "https://gamingonphone.com/guides/clash-royale-minion-giant-best-decks-guide ('a building-targeting win condition'); https://deckmelon.com/best-decks/with/minion-giant ('Minion Giant Cycle', 'Minion Giant Lightning Control'). Elixir's record on 2026-09-20: the most-played nameless deck of the season was 2.6 Hog's eight with Minion Giant in the Hog slot.",
+      "attested_at": "2026-09-20"
     },
     {
       "id": 27000002,

@@ -252,6 +252,25 @@
       "family": "bridge_spam",
       "source": "https://royaletracker.gg/best-decks/archetypes (a Royal Hogs deck with Archer Queen; the win condition is Royal Hogs)",
       "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Giant Sparky",
+      "cards": [
+        26000003,
+        26000033
+      ],
+      "family": "beatdown",
+      "source": "https://deckmelon.com/best-decks/with/sparky ('Giant Sparky Beatdown')",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "alias": "Mortar Bait",
+      "cards": [
+        27000002
+      ],
+      "family": "siege",
+      "source": "community usage for a Mortar deck with a bait package (e.g. https://deckmelon.com/best-decks/with/mortar); Elixir's family for a Mortar deck is siege",
+      "attested_at": "2026-09-20"
     }
   ]
 }
