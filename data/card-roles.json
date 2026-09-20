@@ -11,7 +11,7 @@
     "siege"
   ],
   "fields": {
-    "tier": "priority when the card anchors a deck's name (lower first); null for a bait win condition whose tier depends on bait_tiers; heavy tanks are ordered 2.0-2.5 (Golem, Lava Hound, Electro Giant, Goblin Giant, Elixir Golem, Three Musketeers) so a deck with two names by the bigger tank",
+    "tier": "priority when the card anchors a deck's name (lower first); null for a bait win condition whose tier depends on bait_tiers; heavy tanks are ordered 2.0-2.5 (Golem, Lava Hound, Electro Giant, Goblin Giant, Elixir Golem, Three Musketeers) so a deck with two names by the bigger tank; 10 is the spell-only anchor (Rocket), below every troop and building win condition",
     "family": "the family the win condition implies",
     "at_cycle_cost": "the family instead when the deck's average elixir is at or under the cycle bound",
     "needs_partner": "the family applies only with a bridge_partner in the deck, else control",
@@ -389,6 +389,15 @@
       "family": "control",
       "at_cycle_cost": "cycle",
       "source": "https://clashroyale.fandom.com/wiki/Deck:Goblin_Drill_Cycle (Goblin Drill Cycle, 3.0)",
+      "attested_at": "2026-09-20"
+    },
+    {
+      "id": 28000003,
+      "name": "Rocket",
+      "tier": 10,
+      "family": "control",
+      "at_cycle_cost": "cycle",
+      "source": "https://royaletracker.gg/best-decks/archetypes (Rocket Cycle: fast cycle with Rocket, listed as a cycle archetype); https://deckmelon.com/best-decks/with/rocket ('Rocket Cycle', 'Rocket Control'). Tier 10: Rocket anchors a name only when no troop or building win condition is in the deck - a Rocket beside Mortar or Hog Rider is their spell, not the deck's name.",
       "attested_at": "2026-09-20"
     },
     {
