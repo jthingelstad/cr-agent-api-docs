@@ -11,7 +11,7 @@
     "siege"
   ],
   "fields": {
-    "tier": "priority when the card anchors a deck's name (lower first); null for a bait win condition whose tier depends on bait_tiers; heavy tanks are ordered 2.0-2.5 (Golem, Lava Hound, Electro Giant, Goblin Giant, Elixir Golem, Three Musketeers) so a deck with two names by the bigger tank; 10 is the spell-only anchor (Rocket), below every troop and building win condition",
+    "tier": "priority when the card anchors a deck's name (lower first); null for a bait win condition whose tier depends on bait_tiers; heavy tanks are ordered 2.0-2.5 (Golem, Lava Hound, Electro Giant, Goblin Giant, Elixir Golem, Three Musketeers) so a deck with two names by the bigger tank; 10 is the spell-only anchor (Rocket), below every troop and building win condition; the chip and bridge win conditions are ordered 9.0-9.35 (Hog Rider, Ram Rider, Royal Hogs, Battle Ram, Miner, Goblin Drill, Wall Breakers, Minion Giant) so a deck with two names by the one the community leads with, never by card id",
     "family": "the family the win condition implies",
     "at_cycle_cost": "the family instead when the deck's average elixir is at or under the cycle bound",
     "needs_partner": "the family applies only with a bridge_partner in the deck, else control",
@@ -116,7 +116,7 @@
     {
       "id": 26000021,
       "name": "Hog Rider",
-      "tier": 9,
+      "tier": 9.0,
       "family": "control",
       "at_cycle_cost": "cycle",
       "source": "https://royaletracker.gg/best-decks/archetypes (Hog Cycle: fast cycle, 2.6 avg elixir; Hog EQ); https://clashroyale.fandom.com/wiki/Deck:Modern_Hog_Cycle; https://gamingonphone.com/guides/clash-royale-deck-archetypes/",
@@ -176,7 +176,7 @@
     {
       "id": 26000032,
       "name": "Miner",
-      "tier": 9,
+      "tier": 9.2,
       "family": "control",
       "at_cycle_cost": "cycle",
       "pairs_with": [
@@ -206,7 +206,7 @@
     {
       "id": 26000036,
       "name": "Battle Ram",
-      "tier": 9,
+      "tier": 9.15,
       "family": "bridge_spam",
       "source": "https://trophycoach.com/tools/deck-finder; https://clashroyale.fandom.com/wiki/Deck:Battle_Ram_Bridge_Spam; https://gamingonphone.com/guides/clash-royale-deck-archetypes/; bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'",
       "attested_at": "2026-09-20",
@@ -252,7 +252,7 @@
     {
       "id": 26000051,
       "name": "Ram Rider",
-      "tier": 9,
+      "tier": 9.05,
       "family": "bridge_spam",
       "needs_partner": true,
       "source": "https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Ram Rider LumberJack Bridge Spam); https://deckmelon.com/best-decks/ram-rider-control (Ram Rider Control); bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'",
@@ -286,7 +286,7 @@
     {
       "id": 26000058,
       "name": "Wall Breakers",
-      "tier": 9,
+      "tier": 9.3,
       "family": "control",
       "source": "https://clashroyale.fandom.com/wiki/Deck:2.0_Wall_Breaker_Cycle_Insanity ('2.0 Wall Breaker Cycle'); https://clashroyale.fandom.com/wiki/Deck:2.9_Miner_Wall_Breakers; bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'; control above the cycle bound: the named decks are all cycle-cost, and a heavier Wall Breakers deck is not one of them",
       "attested_at": "2026-09-20",
@@ -296,7 +296,7 @@
     {
       "id": 26000059,
       "name": "Royal Hogs",
-      "tier": 9,
+      "tier": 9.1,
       "family": "bridge_spam",
       "at_cycle_cost": "cycle",
       "source": "https://trophycoach.com/tools/deck-finder (bridge spam: Bandit, Battle Ram, and Royal Hogs decks that pressure both lanes); https://royaletracker.gg/best-decks/archetypes (Archer Queen Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ files Royal Hogs under bait - Elixir follows the deck sites; bridge partner: https://trophycoach.com/tools/deck-finder (Bandit, Battle Ram, Royal Hogs); https://gamingonphone.com/guides/clash-royale-deck-archetypes/ (Bandit, Battle Ram, Royal Ghost); https://www.deckshop.pro/deck/detail/battle-ram,pekka,royal-ghost,bandit,electro-wizard,magic-archer,poison,zap (Royal Ghost, Bandit, Battle Ram beside P.E.K.K.A); https://clashroyale.fandom.com/wiki/Deck:Ram_Rider_LumberJack_Bridge_Spam (Lumberjack); Deck Shop titles 'Golden Knight PEKKA bridge spam', 'Mighty Miner PEKKA bridge spam'",
@@ -385,7 +385,7 @@
     {
       "id": 26000107,
       "name": "Minion Giant",
-      "tier": 9,
+      "tier": 9.35,
       "family": "control",
       "at_cycle_cost": "cycle",
       "source": "https://gamingonphone.com/guides/clash-royale-minion-giant-best-decks-guide ('a building-targeting win condition'); https://deckmelon.com/best-decks/with/minion-giant ('Minion Giant Cycle', 'Minion Giant Lightning Control'). Elixir's record on 2026-09-20: the most-played nameless deck of the season was 2.6 Hog's eight with Minion Giant in the Hog slot.",
@@ -410,7 +410,7 @@
     {
       "id": 27000013,
       "name": "Goblin Drill",
-      "tier": 9,
+      "tier": 9.25,
       "family": "control",
       "at_cycle_cost": "cycle",
       "source": "https://clashroyale.fandom.com/wiki/Deck:Goblin_Drill_Cycle (Goblin Drill Cycle, 3.0)",
