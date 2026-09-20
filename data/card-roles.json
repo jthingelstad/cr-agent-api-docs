@@ -11,7 +11,7 @@
     "siege"
   ],
   "fields": {
-    "tier": "priority when the card anchors a deck's name (lower first); null for a bait win condition whose tier depends on bait_tiers",
+    "tier": "priority when the card anchors a deck's name (lower first); null for a bait win condition whose tier depends on bait_tiers; heavy tanks are ordered 2.0-2.5 (Golem, Lava Hound, Electro Giant, Goblin Giant, Elixir Golem, Three Musketeers) so a deck with two names by the bigger tank",
     "family": "the family the win condition implies",
     "at_cycle_cost": "the family instead when the deck's average elixir is at or under the cycle bound",
     "needs_partner": "the family applies only with a bridge_partner in the deck, else control",
@@ -84,7 +84,7 @@
     {
       "id": 26000009,
       "name": "Golem",
-      "tier": 2,
+      "tier": 2.0,
       "family": "beatdown",
       "source": "https://trophycoach.com/tools/deck-finder (beatdown: Golem, Lava Hound, Giant); https://royaleapi.com/decks/popular?lang=en&type=Archetype_BeatdownAny&time=7d",
       "attested_at": "2026-09-20"
@@ -152,7 +152,7 @@
     {
       "id": 26000028,
       "name": "Three Musketeers",
-      "tier": 2,
+      "tier": 2.5,
       "family": "beatdown",
       "source": "https://clashfordummies.com/2018/04/04/best-deck-in-clash-royale-three-musketeers-beatdown-deck/ (Three Musketeers beatdown); https://clashroyale.fandom.com/wiki/Deck:RR_3m_Split_Lane_Deck",
       "attested_at": "2026-09-20"
@@ -160,7 +160,7 @@
     {
       "id": 26000029,
       "name": "Lava Hound",
-      "tier": 2,
+      "tier": 2.1,
       "family": "beatdown",
       "pairs_with": [
         {
@@ -301,7 +301,7 @@
     {
       "id": 26000060,
       "name": "Goblin Giant",
-      "tier": 2,
+      "tier": 2.3,
       "family": "beatdown",
       "pairs_with": [
         {
@@ -328,7 +328,7 @@
     {
       "id": 26000067,
       "name": "Elixir Golem",
-      "tier": 2,
+      "tier": 2.4,
       "family": "beatdown",
       "source": "https://www.deckshop.pro/deck/detail/elixir-golem,electro-giant,sparky,wizard,electro-wizard,zappies,electro-dragon,tesla",
       "attested_at": "2026-09-20"
@@ -343,7 +343,7 @@
     {
       "id": 26000085,
       "name": "Electro Giant",
-      "tier": 2,
+      "tier": 2.2,
       "family": "beatdown",
       "source": "https://royaleapi.com/card/electro-giant?lang=en; https://www.deckshop.pro/deck/detail/elixir-golem,electro-giant,sparky,wizard,electro-wizard,zappies,electro-dragon,tesla ('Elixir Golem Electro Giant Sparky Beatdown')",
       "attested_at": "2026-09-20"
