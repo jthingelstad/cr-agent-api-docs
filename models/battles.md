@@ -143,6 +143,51 @@ Duel rows (`riverRaceDuel`, `riverRaceDuelColosseum`) sum crowns across up to th
 to them; `boatBattle` is an attack on a static defense with no overtime. Restrict any duration inference to head-to-head
 types.
 
+## `trail` means "this battle belongs to an event", and `eventTag` says which
+
+This is the cleanest rule in the battle log, and it is exact. Over 370k recorded battles (2026-09-22):
+
+| type                                                      | battles | carry `eventTag`                      |
+| --------------------------------------------------------- | ------- | ------------------------------------- |
+| `trail`                                                   | 123,562 | **100.0%**                            |
+| `pathOfLegend`                                            | 186,948 | 0.0%                                  |
+| `PvP`                                                     | 36,742  | 0.0%                                  |
+| `riverRacePvP`                                            | 12,198  | 0.0%                                  |
+| `friendly`                                                | 6,022   | 0.0%                                  |
+| `riverRaceDuel` / `riverRaceDuelColosseum` / `boatBattle` | 6,444   | 0.0%                                  |
+| `tournament`                                              | 2,144   | 0.0% (but 100% carry `tournamentTag`) |
+| `clanMate`                                                | 2,581   | 62.2%                                 |
+| `clanMate2v2`                                             | 366     | 71.0%                                 |
+| `unknown`                                                 | 1,900   | 91.6%                                 |
+
+So `type: "trail"` is not a game mode and not a format: it is **the marker that a battle was played inside a time-bound
+event**, and the permanent formats never carry one. `tournament` is the same pattern with `tournamentTag`. A `clanMate`
+battle carries an `eventTag` when the friendly was played under an event's ruleset.
+
+**The event, not the mode, is the population.** Supercell slots an event into a `gameMode` for a date window, and REUSES
+the pair later for a different event:
+
+| type · gameMode · eventTag       | battles | window                  | active days |
+| -------------------------------- | ------- | ----------------------- | ----------- |
+| trail · TeamVsTeam · `#2C9J990U` | 67,475  | 2026-09-07 → 2026-09-21 | 15          |
+| trail · TeamVsTeam · `#2RC8CL00` | 1,690   | 2026-08-03 → 2026-09-07 | 36          |
+| trail · TeamVsTeam · `#2PRCGVPP` | 1,180   | 2026-06-01 → 2026-07-06 | 36          |
+| trail · TeamVsTeam · `#2928CY0P` | 952     | 2026-05-04 → 2026-06-01 | 29          |
+| trail · Ladder · `#2C9JG9GP`     | 10,719  | 2026-09-07 → 2026-09-22 | 16          |
+| trail · Ladder · `#2RC8C0JU`     | 1,920   | 2026-08-03 → 2026-09-07 | 36          |
+
+`trail`+`TeamVsTeam` alone carries **ten** distinct event tags, `trail`+`Showdown_Friendly` twelve. So a pair like
+"trail, TeamVsTeam" is a slot, not an identity - the September burst above (68-680 battles a day until 09-06, 3,976 on
+09-07, a 40,680 peak on 09-20, 372 on 09-22) is one 2v2 tournament, `#2C9J990U`, not a property of the pair.
+
+Two window shapes recur. The **36-day** ones land exactly on season boundaries (`#2RC8C0JU` runs 2026-08-03 to
+2026-09-07, which is season 135 to the day; `#2PRCGVPP` runs 2026-06-01 to 2026-07-06, season 133) - a recurring format
+re-tagged each season. The shorter ones are one-off events. An `eventTag` can also span more than one (type, gameMode):
+`#2C9JG9GP` appears on both `trail`+`Ladder` and `clanMate`+`Friendly`, one event offering several ways to play it.
+
+**For a consumer:** never pool an `eventTag`-bearing battle with a permanent format, and never pool two event tags
+because they share a mode name. `eventTag` is date-bound by construction, which is what makes it the right key.
+
 ## `trail` is the Seasonal Trophy Road, and its card levels are not the player's
 
 `type: "trail"` is not a legacy value and not a party-mode bucket, though it collects those too. Since the **June 2026
