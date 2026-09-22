@@ -149,18 +149,23 @@ types.
 update** it is overwhelmingly the reworked **Seasonal Trophy Road** - the Seasonal Road, with Seasonal Arena I (your own
 deck) and Seasonal Arena II (your eight most-won-with cards banned, and low cards boosted to a minimum Level 15).
 
-Observed in a 370k-battle record (2026-09-22), counting battles whose `gameMode.name` is `Ladder`:
+Observed in a 370k-battle record (2026-09-22), counting battles whose `gameMode.name` is `Ladder`, the `trail`-typed
+ones begin in **June 2026** and are absent before it:
 
-| month   | `type: PvP` | `type: trail` | trail share |
-| ------- | ----------- | ------------- | ----------- |
-| 2026-03 | 4,377       | 0             | 0%          |
-| 2026-05 | 4,909       | 0             | 0%          |
-| 2026-06 | 4,678       | 323           | 6.5%        |
-| 2026-07 | 5,322       | 555           | 9.4%        |
-| 2026-08 | 5,269       | 1,049         | 16.6%       |
-| 2026-09 | 5,458       | **11,651**    | **68.1%**   |
+| month              | `type: PvP`           | `type: trail` |
+| ------------------ | --------------------- | ------------- |
+| 2026-03 to 2026-05 | 4,377 / 6,407 / 4,909 | 0             |
+| 2026-06            | 4,678                 | 323           |
+| 2026-07            | 5,322                 | 555           |
+| 2026-08            | 5,269                 | 1,049         |
+| 2026-09            | 5,458                 | 11,653        |
 
-It appears in June 2026 and takes over. Two consequences for any consumer:
+**Do not read a game-wide migration from those monthly totals.** They are one recorder's corpus, and its population
+changed by six times in September (23,895 distinct players in August, 140,943 in September) toward players who play Path
+of Legends and the Seasonal Road rather than Trophy Road. The reliable claim is the START DATE - nothing before June
+2026 - and the per-battle evidence below, which is measured within a population rather than across months.
+
+Two consequences for any consumer:
 
 1. **It behaves like Trophy Road on trophies.** A `trail` Ladder loss deducts (12,993 of 13,578 losses carry a negative
    `trophyChange`, against 35,033 of 36,716 for `PvP`), and wins award. So trophy mechanics will NOT tell these apart,
@@ -169,6 +174,12 @@ It appears in June 2026 and takes over. Two consequences for any consumer:
    13.67 on `PvP` Ladder**; the median is exactly **16.00**, and **99.9%** of `trail` decks sit at 14.5 or above against
    52.8% for `PvP`. That is Seasonal Arena II's Level 15 floor. Pooling the two populations for a card-level, level-gap
    or deck-strength comparison measures the arena, not the player.
+
+**The same bucket holds permanent formats and two-week events, which is the strongest argument for keying on the pair.**
+Inside `type: trail`, `gameMode: Ladder` is a permanent seasonal format running at a steady 1,000-2,700 battles a day,
+while `gameMode: TeamVsTeam` was a time-boxed 2v2 tournament: 68-680 battles a day through 2026-09-06, then 3,976 on
+09-07, climbing to a peak of 40,680 on 09-20, 24,948 on 09-21, and **372 on 09-22** - back to baseline the day it ended.
+A consumer that groups on `type` alone pools a permanent ladder with a fortnight's tournament and sees neither.
 
 So `gameMode.name` alone does not identify a population, and neither does `type`: the pair does. The same ruleset name
 recurs under several types (24 of 62 observed modes do), because `gameMode` is the RULESET and `type` is the CONTEXT it
