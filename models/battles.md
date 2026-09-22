@@ -105,22 +105,39 @@ Two victory gates decide when the clock stops:
 
 Crowns are towers destroyed, so the crown pair bounds the duration:
 
-| Observed                             | What it means                           | Duration        |
-| ------------------------------------ | --------------------------------------- | --------------- |
-| Either side has 3 crowns             | A King Tower fell; the match ended then | Unknown, ≤ 5:00 |
-| Crowns unequal, neither side 3       | No King Tower fell, so regulation ran   | ≥ 3:00, ≤ 5:00  |
-| Crowns EQUAL, with a decided outcome | Overtime expired; resolved on tower HP  | Exactly 5:00    |
+| Observed                       | What it means                            | Duration         |
+| ------------------------------ | ---------------------------------------- | ---------------- |
+| Either side has 3 crowns       | A King Tower fell; the match ended then  | Unknown, ≤ 5:00  |
+| Crowns unequal, neither side 3 | No King Tower fell, so regulation ran    | ≥ 3:00, ≤ 5:00   |
+| Crowns EQUAL (level)           | Overtime expired without a tower falling | **Exactly 5:00** |
 
-The equal-crown row is the only case that pins a battle's length exactly, and it is the rarest: in a 90-day sample of
-**2,607 recorded head-to-head battles** (`PvP`, `pathOfLegend`, `riverRacePvP` across seven players at roughly
-12,000-12,500 trophies, 2026-09-22) **every single battle ended on unequal crowns** - no 0-0, 1-1 or 2-2 appeared at
-all. Three-crown finishes were 26.4% of that sample, so about three quarters of battles are known to have run at least
-three minutes, and none were provably 5:00. Treat the exact-duration case as real but vanishingly rare at this skill
-level, not as a signal you can build a rate on.
+The level-crown row is the only case that pins a battle's length exactly, and it is rare: **125 of 229,390 recorded 1v1
+battles (0.05%)**, measured across the whole corpus 2026-09-22. Every one of the 125 is a **draw** - not one was
+resolved for a winner. That is the tiebreaker's own logic closing the loop: level crowns almost always means neither
+side damaged a tower, so the tower hitpoints it compares are exactly equal and it cannot separate them either. Expect
+the exactly-5:00 case to be a draw; a tiebreaker-decided battle is theoretically reachable (level crowns, unequal tower
+hitpoints, a win/loss outcome) but did not occur once in this corpus.
+
+Three-crown finishes were 17.3% of Path of Legends battles, 33.4% of ladder and 43.1% of river race, and inside Path of
+Legends the rate falls monotonically with rating (19.0% at the 1000 band down to 10.5% at 3500). So the useful signal is
+the FLOOR, not the exact case: 82.7% of ranked battles, 66.6% of ladder and 56.9% of war are provably three minutes or
+longer, and better opponents push that share up.
 
 **No crown is awarded for winning the tiebreaker.** Checked on 221 head-to-head rows with tower data (2026-09-22): the
 crowns a side scored equalled the towers its opponent actually lost on every row, with no case of a crown without a
-fallen tower. So a 5:00 tiebreaker win reads as an equal-crown row with a win/loss outcome, never as `1-0`.
+fallen tower.
+
+### `elixirLeaked` bounds the duration from below
+
+`elixirLeaked` is elixir generated while the bar was already full, so it cannot exceed what the match had time to
+generate - which makes it a genuine lower bound on elapsed time, and the only per-battle one the payload carries. Two
+level-crown battles read 166.18 / 173.18 and 168.29 / 179.54 with every tower untouched: both players idle for the whole
+match, leaking nearly everything a full five minutes can produce. A `crowns 3-3` row from the same class read 0.0 /
+0.82 - a match that never ran. The exact 1x generation rate is not verified in this repo, so treat the bound
+qualitatively (a leak in the hundreds cannot come from a short battle) rather than inverting it to a number.
+
+Do NOT read `elixirLeaked` as skill on an ordinary battle: holding elixir to make the opponent commit first raises it by
+design, and the payload has no placement timestamps to separate that from waste.
 
 Duel rows (`riverRaceDuel`, `riverRaceDuelColosseum`) sum crowns across up to three games, so none of the above applies
 to them; `boatBattle` is an attack on a static defense with no overtime. Restrict any duration inference to head-to-head
@@ -131,9 +148,24 @@ types.
 There is no explicit `winner` field. Use this order:
 
 1. If `boatBattleWon` exists, use it.
-2. Else if `team[0].trophyChange` exists, positive means win, negative means loss, zero means unresolved/draw.
+2. Else if `team[0].trophyChange` exists and is non-zero **and the two sides moved in OPPOSITE directions**, positive
+   means win and negative means loss. Zero means unresolved/draw.
 3. Else if both sides have crowns, compare `team[0].crowns` and `opponent[0].crowns`.
 4. Else treat the outcome as unresolved.
+
+**Both sides can lose rating in the same battle.** Path of Legends penalises BOTH players for a draw, so a sign read per
+side in isolation reports two losses - a result the game cannot produce. Observed in the raw payload 2026-09-22 for
+`20260914T130806.000Z`:
+
+```json
+"team":     [{ "crowns": 3, "kingTowerHitPoints": 0, "trophyChange": -15 }],
+"opponent": [{ "crowns": 3, "kingTowerHitPoints": 0, "trophyChange": -14 }]
+```
+
+Both sides at three crowns with both King Towers destroyed is not a battle state; the two changes summed to -29, as they
+did on every instance of this shape. Check the OTHER side's sign before trusting your own, and fall through to the
+crowns when they agree - the crowns say `draw`, which is correct. This shape was 0.020% of recorded Path of Legends
+battles and never appeared in ladder or river race, which carry no such double penalty.
 
 For 2v2 battles, use the first team entry because teammates share the same result.
 
