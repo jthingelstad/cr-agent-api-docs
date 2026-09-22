@@ -143,6 +143,38 @@ Duel rows (`riverRaceDuel`, `riverRaceDuelColosseum`) sum crowns across up to th
 to them; `boatBattle` is an attack on a static defense with no overtime. Restrict any duration inference to head-to-head
 types.
 
+## `trail` is the Seasonal Trophy Road, and its card levels are not the player's
+
+`type: "trail"` is not a legacy value and not a party-mode bucket, though it collects those too. Since the **June 2026
+update** it is overwhelmingly the reworked **Seasonal Trophy Road** - the Seasonal Road, with Seasonal Arena I (your own
+deck) and Seasonal Arena II (your eight most-won-with cards banned, and low cards boosted to a minimum Level 15).
+
+Observed in a 370k-battle record (2026-09-22), counting battles whose `gameMode.name` is `Ladder`:
+
+| month   | `type: PvP` | `type: trail` | trail share |
+| ------- | ----------- | ------------- | ----------- |
+| 2026-03 | 4,377       | 0             | 0%          |
+| 2026-05 | 4,909       | 0             | 0%          |
+| 2026-06 | 4,678       | 323           | 6.5%        |
+| 2026-07 | 5,322       | 555           | 9.4%        |
+| 2026-08 | 5,269       | 1,049         | 16.6%       |
+| 2026-09 | 5,458       | **11,651**    | **68.1%**   |
+
+It appears in June 2026 and takes over. Two consequences for any consumer:
+
+1. **It behaves like Trophy Road on trophies.** A `trail` Ladder loss deducts (12,993 of 13,578 losses carry a negative
+   `trophyChange`, against 35,033 of 36,716 for `PvP`), and wins award. So trophy mechanics will NOT tell these apart,
+   and a "seasonal trophies do not deduct" rule from an older limited-time Trail event does not hold here.
+2. **The card levels are the format's, not the player's.** Mean recorded deck level is **15.87 on `trail` Ladder against
+   13.67 on `PvP` Ladder**; the median is exactly **16.00**, and **99.9%** of `trail` decks sit at 14.5 or above against
+   52.8% for `PvP`. That is Seasonal Arena II's Level 15 floor. Pooling the two populations for a card-level, level-gap
+   or deck-strength comparison measures the arena, not the player.
+
+So `gameMode.name` alone does not identify a population, and neither does `type`: the pair does. The same ruleset name
+recurs under several types (24 of 62 observed modes do), because `gameMode` is the RULESET and `type` is the CONTEXT it
+was played in - `Crazy_Arena` appears under `trail`, `friendly`, `unknown` and `clanMate`; `TeamVsTeam` under `trail`
+and `clanMate2v2`; `CW_Duel_1v1` under both river-race duel types.
+
 ## Winner Inference
 
 There is no explicit `winner` field. Use this order:
