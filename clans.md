@@ -427,15 +427,15 @@ Consequences worth designing for:
   completion condition. Don't treat the sentinel as a real time.
 - **`finishTime` is a war-day close, and fame is capped at the line in the log but not in the live race.** Probed
   2026-09-21 on `#J2RGCRVG`: every finished week's `finishTime` in `/riverracelog` sits exactly one day before that
-  entry's `createdDate` (S136 sec1: finish `20260920T093805`, created `20260921T093805`; S136 sec0: `20260913T093804`
-  / `20260914T093805`) - the close of war day 3, in the race's own close slot, with war day 4 still to run. In
+  entry's `createdDate` (S136 sec1: finish `20260920T093805`, created `20260921T093805`; S136 sec0: `20260913T093804` /
+  `20260914T093805`) - the close of war day 3, in the race's own close slot, with war day 4 still to run. In
   `currentriverrace.periodLogs` the finishing day's `progressEndOfDay` reads exactly `10000` and the NEXT day's
   `progressStartOfDay` reads the boat's real progress past the line (`10134`; `10146` the week after), with
-  `pointsEarned: 0` and `endOfDayRank: -1` on that last day. The log's `standings[].clan.fame` is capped at `10000`
-  for every finished week back to S134, while the live `clans[].fame` reports the overshoot. So: progress is banked
-  at day close and the finish is decided then (never mid-day); "reached 10,000" is `fame >= 10000`, never `=== 10000`
-  (a record that merges live and log values holds both); and decks played on the days after the finish earn nothing -
-  the participants' own `fame` (points) stops moving while `decksUsed` keeps counting.
+  `pointsEarned: 0` and `endOfDayRank: -1` on that last day. The log's `standings[].clan.fame` is capped at `10000` for
+  every finished week back to S134, while the live `clans[].fame` reports the overshoot. So: progress is banked at day
+  close and the finish is decided then (never mid-day); "reached 10,000" is `fame >= 10000`, never `=== 10000` (a record
+  that merges live and log values holds both); and decks played on the days after the finish earn nothing - the
+  participants' own `fame` (points) stops moving while `decksUsed` keeps counting.
 - **In a Colosseum week EVERY clan carries the sentinel, rank 1 included.** Colosseum has no finish line — it scores war
   points across all four battle days with no completion condition to hit — so no entry in that week's standings has a
   real `finishTime`. Code that reads "the rank-1 `finishTime`" as the race-close anchor gets epoch zero on exactly the

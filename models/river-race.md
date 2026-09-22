@@ -124,6 +124,22 @@ to offensive attacks). Defensive contribution is part of the clan's daily progre
 from defenses even beyond its members' attack points. `numOfDefensesRemaining` appears only in CLOSED-day `periodLogs`,
 so there is no live count of defenses standing during a practice day.
 
+**The day-row identity, and the one row where it breaks.** On a closed-day entry
+`progressEndOfDay == progressStartOfDay + progressEarned + progressEarnedFromDefenses` (so `progressEarned` is the
+attack share and the defenses figure sits beside it, not inside it): checked on every clan-day of two full weeks
+(2026-09-22, 19 of 20 rows) and on a fixture week. The one row where it does not hold is a clan's finishing day, where
+`progressEndOfDay` is clamped to exactly `10000` (6811 + 3000 + 323 = 10134 served as 10000) while the next day's
+`progressStartOfDay` carries the sum. A consumer walking `progressEndOfDay` sees the overshoot arrive on the day after
+the finish, a day with `pointsEarned: 0`; recompute the finishing day from its own parts instead. Rival rows that never
+reach the line are never clamped.
+
+**`boatAttacks` are inside `decksUsed`.** A boat battle spends one of the member's four daily war decks: a participant
+with `decksUsed: 4, boatAttacks: 4` had exactly four `boatBattle` entries and no PvP in the battlelog for that day
+(2026-09-22), and one with `decksUsed: 12, boatAttacks: 8` had 8 `boatBattle` + 2 `riverRacePvP` + 1 two-round
+`riverRaceDuel` = 12 decks. A boat deck also scores on a different scale (roughly half of a 1v1 deck in the same week:
+350 for four boat decks beside 700-800 for four PvP decks), so a per-deck rate over `fame / decksUsed` is not comparable
+between participants with and without boat attacks.
+
 **Finish line / Colosseum.** A standard River Race week runs until a clan reaches the end of the river (a
 cumulative-fame threshold — commonly 10,000 in a normal week). **Colosseum** (the season's final section,
 `periodType: "colosseum"`) is a multi-day period-point contest rather than a weekly fame race, and uses ±100 trophy
