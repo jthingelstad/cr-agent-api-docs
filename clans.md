@@ -61,6 +61,10 @@ Get full clan info including member list, scores, description, badge.
   [players.md](players.md)); the sample above predates the change. Fetch each member's profile and read the
   `CollectionLevel` badge for real progression.
 - `lastSeen` uses the same `YYYYMMDDTHHmmss.sssZ` format as battlelog
+- `donations` and `donationsReceived` are weekly counters, reset once a week on **Monday at about 00:00 UTC**. On two
+  weeks in September 2026 (Monday 2026-09-14 and 2026-09-21), members' counters read non-zero at Sunday 23:38Z and zero
+  by Monday 00:03Z. So a week's total has to be read before Monday 00:00Z: a read in the first minutes of Monday already
+  belongs to the new week. The reset is not the 10:00 UTC game-day and season boundary.
 - `arena` is an Arena object with `id`, `name`, `rawName`
 
 ---
