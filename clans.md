@@ -157,6 +157,12 @@ Observed in live payloads after a clan finishes:
 - `endOfDayRank` is **0-indexed** — `0` = 1st place, up to `4` for the 5th clan. A value of `-1` is a sentinel for "not
   yet ranked / day not finished" (observed across all period types in May 2026 sampling, ~2-3% of entries). Add 1 before
   showing players a 1-based placement, and treat `-1` as "pending", not as a placement.
+- **`progressEarned` is paid for the day's placement, not for `pointsEarned`.** On 28 of 28 scoring rows (four weeks,
+  two brackets, September 2026), a war day paid `3000` to the clan with the most `pointsEarned` that day (`endOfDayRank`
+  `0`), `1800` to the second and `1000` to the third, whatever the points. First place alone spanned 400 to 11,750
+  points. `progressEndOfDay - progressStartOfDay` adds `progressEarnedFromDefenses` on top. So fame measures placement,
+  and `pointsEarned` measures how much a clan played; an average of `progressEarned` compares placements, not effort.
+  Payouts below third place were not observed.
 
 ---
 
