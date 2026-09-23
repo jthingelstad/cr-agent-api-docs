@@ -57,6 +57,17 @@ Verified fields:
 `finishTime` can appear in live current-river-race payloads after a clan finishes. The sentinel value
 `19691231T235959.000Z` should not be treated as a usable completion timestamp.
 
+**`clanScore` on a race payload is WAR TROPHIES, not the clan score.** A clan object carries BOTH keys - observed live
+2026-09-23 on `#J2RGCRVG`: `clanScore` 129512 and `clanWarTrophies` 1200 - and the race reports the war-trophy figure
+under the `clanScore` name. So the number here is about a hundredth of the score the same clan's profile shows, and
+joining a race standing to a clan profile or to a clan-score time series on this key is wrong by two orders of
+magnitude. It is the same overload the war LEADERBOARD carries (see [locations.md](../locations.md)), which makes the
+race payload the second place the key does not mean what it says.
+
+Confirmed a second way, without a profile read: a recorded clan's per-week figure moves by exactly that week's
+`trophyChange` - 980, 1000, 1020, 1040, 1060, then 1160 across six consecutive weeks (+20 per regular week, +100 for the
+Colosseum). A clan score does not move in trophy steps.
+
 ### `participants` is seeded from members seen since the race began
 
 **`participants.length` is not a member count.** Observed 2026-09-09 on a single clan, comparing `/clans/{tag}` against
