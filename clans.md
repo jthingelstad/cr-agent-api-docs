@@ -418,8 +418,8 @@ Consequences worth designing for:
 - **`decksUsedToday` counts on training days too.** During `periodType=training` it counts the member's practice
   river-race decks for the day (capped at 4, reset at the day roll) while `decksUsed` and `fame` stay 0: on 2026-09-24
   (training, periodIndex 16) seven participants of one clan read `decksUsedToday` 1 to 4 with `decksUsed` 0 and
-  `fame` 0. So `decksUsedToday` is scoring decks only on battle days; on a training day it is practice, and nothing
-  from it reaches the week's totals.
+  `fame` 0. So `decksUsedToday` is scoring decks only on battle days; on a training day it is practice, and nothing from
+  it reaches the week's totals.
 - **Colosseum-week behavior:** The colosseum week has no boat battles and no boat defenses — only Colosseum duels and
   1v1s. Participant fields like `boatAttacks` and `numOfDefensesRemaining` will not advance, and battlelog `boatBattle`
   entries do not occur during colosseum week. Avoid surfacing boat-defense or repair-point copy when
