@@ -436,8 +436,13 @@ For 2v2 battles, the outcome is still determined from the first team entry becau
 
 **Conditional PlayerBattleData fields:**
 
-- `startingTrophies` — present on PvP, pathOfLegend, riverRacePvP, riverRaceDuel, friendly, clanMate
-- `trophyChange` — only on PvP and pathOfLegend (positive=win, negative=loss)
+- `startingTrophies` — present on PvP, riverRacePvP, riverRaceDuel, friendly, clanMate. On pathOfLegend only in league
+  7, the rated top league: on all 397,202 league-7 participants and none of the 95,148 in leagues 1-6 (archived battles,
+  March-September 2026).
+- `trophyChange` — on PvP (positive=win, negative=loss; absent on a loss taken on an arena floor) and on `trail` battles
+  of the Ladder ruleset (Seasonal Trophy Road: all 15,476 wins positive, 14,835 of 15,476 losses negative). On
+  pathOfLegend in leagues 1-6 only on a win, always `+30` (47,571 wins, no loss), and in league 7 on every win (`+17` to
+  `+42`) and loss (`-42` to `-17`) and on 122 of 134 draws. Its absence is not a result: fall through the winner order.
 - `globalRank` — present on all battles, null unless player is in top global rankings (then integer)
 - `elixirLeaked` — float, present on all battles
 - `supportCards` — array (may be empty `[]`)

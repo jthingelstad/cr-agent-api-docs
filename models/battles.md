@@ -292,8 +292,8 @@ Verified fields:
 - `supportCards`
 - `elixirLeaked`
 - `globalRank`
-- `startingTrophies?`
-- `trophyChange?`
+- `startingTrophies?` (on pathOfLegend only in league 7; see [players.md](../players.md))
+- `trophyChange?` (on pathOfLegend leagues 1-6 only on a win, always `+30`; see [players.md](../players.md))
 - `rounds?`
 
 Conditional notes:

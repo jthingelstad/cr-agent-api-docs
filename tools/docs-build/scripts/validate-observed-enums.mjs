@@ -150,6 +150,8 @@ const OBSERVED_CLAIMS = [
   ["leaderboards.md", "472 of 480 reads", "game-mode boards return an after cursor at limit=1000 (2026-09-11..09-25)"],
   ["locations.md", "Both clan boards stop at 1,000 with no cursor", "48 reads per board, 3 locations, 2026-09-11..09-25"],
   ["clans.md", "Ten is the whole log the endpoint serves", "riverracelog limit=20 returned the same ten weeks (observed 2026-09-25)"],
+  ["players.md", "only on a win, always `+30`", "Ranked leagues 1-6 carry trophyChange on wins only (47,571 archived wins, 2026-03..09)"],
+  ["players.md", "on all 397,202 league-7 participants", "startingTrophies only in Ranked league 7 (397,202 archived participants, 2026-03..09)"],
   // The in-game chat filter, from real clan-chat lines that came out masked.
   ["wiki-api-crosswalk.md", "the `&` and both flanking words are masked", "the & trigger (observed 2026-07-17)"],
   ["wiki-api-crosswalk.md", "`+821` was masked", "the +digits trigger (observed 2026-07-17)"],
