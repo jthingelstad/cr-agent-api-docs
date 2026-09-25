@@ -169,10 +169,22 @@ Agent context:
   is a title and a message that a leader or co-leader (only) sends to the clan; it lands in every member's in-game Inbox
   and stays there, unlike chat. Observed in the game on 2026-09-25 by typing to the limit: the title takes at most 24
   characters and the message about 180 (bounded by typing, not read from a spec).
-- The in-game chat filter masks some innocent text. Found 2026-07-17 by comparing composed clan-chat lines with the
-  masked result in the game and by controlled tests: `&` between two words (the `&` and both flanking words are masked;
-  "and" passes), `+` directly before digits (read as a phone-number prefix; bare numbers pass), and words on its slang
-  list even when meant innocently. Whether the Leader Message applies the same filter has not been observed.
+- The in-game chat filter masks some innocent text with asterisks, often taking a neighbouring word with it. Found by
+  comparing composed clan-chat lines with the masked result in the game, and by controlled tests:
+  - `&` between two words (observed 2026-07-17): the `&` and both flanking words are masked; the same words joined by
+    "and" pass, so the names around it were innocent.
+  - `+` directly before digits (observed 2026-07-17): `+821` was masked, read as a phone-number prefix. Bare numbers
+    (`5,718`), `#1`, parentheses and a space-flanked dash (`week -`) passed in the same tests.
+  - A hyphen joining two word-parts (observed 2026-07-20): a member name of the form `Ab-Cdef` was masked whole, the way
+    a handle or link is. Writing the name with a space has been the workaround since. The same shape in ordinary words
+    (`ranked-play`) is avoided on the assumption that it trips the same rule; that was not separately observed.
+  - `phone` (observed 2026-08-03): `…in seasons 133 and 134. Phone trouble is pulling them…` came out as
+    `…seasons 133 and **** ***** trouble is pulling them…`: the word and the one before it masked, as contact-sharing
+    would be.
+  - Words on its slang list, whatever the meaning (observed 2026-07-17): `edging`, as in "edging ahead".
+  - Not explained (observed 2026-08-03): `Season 135 is underway.` came out as `Season *** ** ********` while `134`
+    passed unmasked in the same message. No trigger has been identified, and one sample is not enough to name one.
+  - Whether the Leader Message applies the same filter has not been observed.
 
 ### Events, Challenges, And Temporary Modes
 
