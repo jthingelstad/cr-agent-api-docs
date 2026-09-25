@@ -149,6 +149,7 @@ const OBSERVED_CLAIMS = [
   ["clans.md", "`collectionEndTime` and `warEndTime` are not sent", "never observed in 7,140 race payloads 2026-03..09"],
   ["leaderboards.md", "472 of 480 reads", "game-mode boards return an after cursor at limit=1000 (2026-09-11..09-25)"],
   ["locations.md", "Both clan boards stop at 1,000 with no cursor", "48 reads per board, 3 locations, 2026-09-11..09-25"],
+  ["clans.md", "Ten is the whole log the endpoint serves", "riverracelog limit=20 returned the same ten weeks (observed 2026-09-25)"],
   // The in-game chat filter, from real clan-chat lines that came out masked.
   ["wiki-api-crosswalk.md", "the `&` and both flanking words are masked", "the & trigger (observed 2026-07-17)"],
   ["wiki-api-crosswalk.md", "`+821` was masked", "the +digits trigger (observed 2026-07-17)"],

@@ -435,8 +435,9 @@ Consequences worth designing for:
   (see [models/river-race.md](models/river-race.md)).
 - **River race default limit:** `/riverracelog` returns 10 entries by default, and at the default it has not offered a
   next page: 97 reads across 40 clans (March-September 2026) all came back with `paging: { cursors: {} }` (6 of them
-  `items: []`), while `limit=1` does return `after` (2026-09-07). Whether the log holds anything past ten entries is not
-  established.
+  `items: []`), while `limit=1` does return `after` (2026-09-07). Ten is the whole log the endpoint serves: on
+  2026-09-25 `limit=20` on a clan with six months of river races returned the same ten weeks (Season 134 section 1
+  through Season 136 section 1) with empty `cursors`. Older weeks exist only where a caller recorded them.
 - **`finishTime` is not a clock, and one clan's close is not the game's.** The rank-1 `finishTime` in a `/riverracelog`
   entry is the war-day close at which that race's boat reached the line (see "`finishTime` is a war-day close" below),
   not the moment the week closed and not a mid-day crossing. Its time of day is the race's own close slot: per race,
