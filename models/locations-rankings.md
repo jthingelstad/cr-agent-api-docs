@@ -79,8 +79,8 @@ Fields:
 
 Used by trophy-ranking endpoints.
 
-Exact field availability varies by endpoint and season state. Current global trophy rankings may return an empty `items`
-array early in a season.
+Exact field availability varies by endpoint and season state. The trophy board has returned an empty `items` array both
+early in a season (2026-09-10) and in a season's last week (2026-09-05).
 
 ## LeagueSeason
 

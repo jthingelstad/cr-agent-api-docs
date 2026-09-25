@@ -15,7 +15,7 @@ Verified fields:
 - `periodType`
 - `clan`
 - `clans`
-- `periodLogs`
+- `periodLogs?`
 
 Observed `state`: `full`.
 
@@ -54,8 +54,10 @@ Verified fields:
 - `clanScore`
 - `finishTime?`
 
-`finishTime` can appear in live current-river-race payloads after a clan finishes. The sentinel value
-`19691231T235959.000Z` should not be treated as a usable completion timestamp.
+In the live race `finishTime` is present only on a clan that has finished. Every other clan omits the key: no sentinel,
+no null. Across 7,139 live payloads (March-September 2026) it appeared on at most one of the five `clans[]` entries. The
+log is the opposite: every standings entry carries it, with the epoch-zero sentinel `19691231T235959.000Z` for clans
+that did not finish. So "has the key" is the live finished test, and "is not the sentinel" is the log's.
 
 **`clanScore` on a race payload is WAR TROPHIES, not the clan score.** A clan object carries BOTH keys - observed live
 2026-09-23 on `#J2RGCRVG`: `clanScore` 129512 and `clanWarTrophies` 1200 - and the race reports the war-trophy figure
@@ -120,8 +122,14 @@ clan:
 
 `periodLogs` spans the WHOLE SEASON so far, not just the current week: a section-4 payload carries every battle day back
 to the season start. Anything aggregating it must scope to the current section (`periodIndex // 7 == sectionIndex`) or
-it silently inflates per-week totals for every week after the first. It is also empty (`[]`) on a freshly created race,
-before the first day has closed.
+it silently inflates per-week totals for every week after the first. It is absent (no key, never `[]`) on a freshly
+created race, until the first war day closes.
+
+**A Colosseum battle day is not logged, in the five-week seasons observed.** In archived payloads March-September 2026,
+including the section-4 Colosseum weeks that closed Seasons 130 and 135, `periodLogs[].periodIndex` held only regular
+war days (3-6, 10-13, 17-20, 24-27) and never 31-34. During those Colosseum weeks the newest entry was still the
+previous week's last war day; read the Colosseum score from the live `clans[].fame` instead. Whether a four-week
+season's Colosseum days (section 3, `periodIndex` 24-27) are logged is not yet observed.
 
 Every entry's `items[]` names the CURRENT race's clans, including the entries for earlier sections when those clans were
 in other brackets (observed 2026-08-31 and 2026-09-17: a section-1 war-day-1 payload carried entries for periods 3-6 and
@@ -251,7 +259,9 @@ The embedded `clan` object uses the `RiverRaceClan` shape and includes `finishTi
 
 Season and section notes:
 
-- Races always have 5 clans.
+- A live race lists 5 clans: `clans[]` held exactly 5 in all 7,139 archived payloads (March-September 2026). The log
+  usually does, but not always: 821 archived log entries held 4,101 standings rather than 4,105, so at least one week
+  was logged with fewer than five. Do not index `standings[4]` without a length check.
 - Most seasons are 4 weeks, but some are 5 weeks.
 - Colosseum is always the final section, but do not infer it from `sectionIndex` alone.
 - Use `trophyChange` from the log or `periodType` from current river race to identify colosseum context.

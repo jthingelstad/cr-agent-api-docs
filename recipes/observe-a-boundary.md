@@ -141,10 +141,11 @@ baked and these prompts can retire (or become a scheduled job).
 - [ ] Does `periodIndex` step cleanly (6 → 7) across a week boundary, or reset?
 - [ ] Does the new `riverracelog` entry appear before, with, or after the race itself changes?
 - [ ] Does `clan.fame` reset to 0 at the boundary, or lag by a poll?
-- [ ] `periodLogs` is documented as spanning the whole SEASON. Confirm it is NOT cleared at a week boundary.
 - [ ] Is a race's close slot stable within a season to the second? The watched race held 09:34:04-09:34:06 across S135's
       five weeks, while some other races in clans.md spread over minutes; confirm the pattern in S136.
 - [ ] Does `clanWarTrophies` update at the week close or at the next race?
+- [ ] Are a four-week season's Colosseum battle days logged in `periodLogs`? A five-week season's were not (Seasons 130
+      and 135). Check one live read after S136's first Colosseum day closes (2026-10-02).
 
 ### Season roll
 
@@ -168,6 +169,8 @@ baked and these prompts can retire (or become a scheduled job).
       (2026-09-07).
 - [x] Colosseum weeks carry the epoch-zero `finishTime` sentinel on EVERY standings entry, rank 1 included (2026-09-07,
       10 weeks, 3 seasons).
+- [x] `periodLogs` is not cleared at a week boundary: the season's first war day (`periodIndex` 3) was still present in
+      6,357 of 6,455 archived payloads carrying `periodLogs`, through section 2 of S136 (2026-09-25).
 
 ## What "baked" looks like
 

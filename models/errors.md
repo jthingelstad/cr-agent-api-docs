@@ -57,7 +57,8 @@ Paginated endpoints return:
 Notes:
 
 - `after` and `before` are mutually exclusive.
-- Empty `cursors: {}` means no more pages.
+- Empty `cursors: {}` means no more pages, except on the location ranking boards, which return `{}` at their 1,000-place
+  cap (see [locations.md](../locations.md)).
 - Cursors are base64-encoded JSON, such as `{"pos":5}`.
 - Do not assume every response with `items` is paginated. Presence of `paging` is the reliable signal.
 

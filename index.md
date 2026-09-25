@@ -147,7 +147,8 @@ These are countdown timers — the actual value returned decreases as the cache 
   - `/events?limit=5` still returns the full bare array
 - No explicit maximum for `limit` — the API will return all results if no limit is set (observed 10,000 items from
   `/leaderboard/{id}`)
-- When no more pages exist, `paging.cursors` is an empty object `{}`
+- When no more pages exist, `paging.cursors` is an empty object `{}` (except that the location ranking boards also
+  return `{}` at their 1,000-place cap; see [locations.md](locations.md))
 - When more pages exist, `paging.cursors.after` contains the next cursor
 - HEAD requests are not supported (return 404)
 
@@ -316,7 +317,8 @@ activities, and monetization guidelines.
   IDs
 - **Bare array responses:** `/events` and `/battlelog` return bare JSON arrays, not the standard `{ items: [...] }`
   wrapper
-- **Events ↔ Battles:** `Battle.eventTag` maps to `TrailEvent.eventTag` from `/events`
+- **Events ↔ Battles:** `Battle.eventTag` maps to `TrailEvent.eventTag` from `/events`. A tag names one run of an event,
+  not the event; track an event over time by `title` (see [events.md](events.md))
 - **Challenges ↔ Events:** While `/challenges` is currently undocumented and returning `notFound`, active challenge-like
   events still appear in `/events` (e.g. "Classic Challenge", "Grand Challenge")
 - **Gameplay-mode context:** Use [game-modes.md](game-modes.md) before assuming `PvP`/Trophy Road activity is the only

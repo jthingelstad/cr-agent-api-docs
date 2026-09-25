@@ -15,6 +15,10 @@ Observed ID ranges:
 - Main arena IDs: `54000xxx`
 - Side-mode arena IDs: `168000xxx`
 
+Observed `rawName` values on clan members (65,084 clan payloads, March-September 2026): `Arena_L1`-`Arena_L18` (99% of
+members), `Arena1`-`Arena9`, `Arena13`, `Arena14`, `Arena_T`, `Arena_L`, `Arena_Electric` and `TrainingCamp` (first seen
+2026-09-14). `Arena_L5` and `Arena5` are different names; key on `id` and treat `rawName` as a label.
+
 ## Location
 
 ```json

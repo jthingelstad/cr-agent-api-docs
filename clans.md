@@ -93,10 +93,11 @@ Get the clan's active river race state.
 | `periodType`   | string        | Observed: `training`, `warDay`, `colosseum` (see notes)                                                                                                           |
 | `clan`         | RiverRaceClan | This clan's data (see below)                                                                                                                                      |
 | `clans`        | array         | All 5 clans in the race                                                                                                                                           |
-| `periodLogs`   | array         | Historical period data for current race                                                                                                                           |
+| `periodLogs`   | array         | Historical period data for current race; no key at all on a fresh race (never `[]`), until the first war day closes                                               |
 
-Note: `collectionEndTime` and `warEndTime` may not always be present (not observed in testing — may only appear during
-active war periods).
+Note: `collectionEndTime` and `warEndTime` are not sent. None of 7,139 live payloads from 33 clans, March-September
+2026, carried either, across every period type (4,768 `warDay`, 872 `colosseum`, 1,499 `training`). The API gives no
+day-end instant; use the 10:00Z policy hour and the race's own close slot (below).
 
 **RiverRaceClan shape:**
 
@@ -113,10 +114,12 @@ active war periods).
 }
 ```
 
-Observed in live payloads after a clan finishes:
+Observed in live payloads (7,139 reads, 33 clans, March-September 2026):
 
-- `clan.finishTime` can appear on `GET /clans/{clanTag}/currentriverrace` and is usable as a live "race already
-  finished" signal
+- `finishTime` is present only on a clan that has finished (`clan.finishTime` on
+  `GET /clans/{clanTag}/currentriverrace`, or that clan's entry in `clans[]`). Every other clan omits the key: no
+  sentinel, no null. So "has the key" is the live "race already finished" signal; see
+  [models/river-race.md](models/river-race.md)
 - the sentinel value `19691231T235959.000Z` should not be treated as a usable live completion timestamp
 - `trophyChange` is **not** present in the live `currentriverrace` payload; it appears in `/riverracelog` standings
 
@@ -241,7 +244,9 @@ across 40 log entries sampled April 2026.
 
 - `sectionIndex` = week within the season. Most seasons are 4 weeks (sections 0-3) but some are 5 weeks (sections 0-4).
   Supercell varies the war season length to keep it roughly aligned with Pass Royale seasons.
-- `standings` contains all 5 clans ranked by finish position
+- `standings` lists the race's clans ranked by finish position: usually 5, but not always. 821 archived log entries
+  (March-September 2026) held 4,101 standings rather than 4,105, so at least one week was logged with fewer than five.
+  Do not index `standings[4]` without a length check.
 - `trophyChange`: regular weeks = ±20, final week (colosseum) = ±100. Colosseum is always the last section of a season —
   section 3 in a 4-week season, section 4 in a 5-week season.
 - `finishTime`: normal value for clans that finished; sentinel value `19691231T235959.000Z` (epoch 0) for the final
@@ -359,13 +364,13 @@ therefore fires up to well over an hour AFTER the season itself rolls. Do not tr
 Watched end to end on the S135 -> S136 roll, 2026-09-07, against `#J2RGCRVG`. Nearly every rollover bug comes from
 assuming this is ONE instant. It is a sequence, and the API says different things at each stage.
 
-| UTC           | What happens     | `currentriverrace`                                                                         | Client says                        |
-| ------------- | ---------------- | ------------------------------------------------------------------------------------------ | ---------------------------------- |
-| `09:34:04`    | Race closes      | `200`, still the FINISHED race: old `sectionIndex`, final fame                             | "Week N ending... Please stand by" |
-| `09:34-10:00` | Stand-by         | unchanged - still the finished race                                                        | season countdown running           |
-| `10:00:00`    | **Season rolls** | unchanged - still the finished race                                                        | countdown hits zero                |
-| `10:00-10:09` | No race exists   | **`404 notFound`** (`GET /clans/{tag}` still `200`)                                        | "Waiting for Clan War to start..." |
-| `~10:09`      | New race created | `200`, `sectionIndex 0`, `periodIndex 0`, `periodType training`, `fame 0`, `periodLogs []` | "Training Days Started! Week 1"    |
+| UTC           | What happens     | `currentriverrace`                                                                             | Client says                        |
+| ------------- | ---------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `09:34:04`    | Race closes      | `200`, still the FINISHED race: old `sectionIndex`, final fame                                 | "Week N ending... Please stand by" |
+| `09:34-10:00` | Stand-by         | unchanged - still the finished race                                                            | season countdown running           |
+| `10:00:00`    | **Season rolls** | unchanged - still the finished race                                                            | countdown hits zero                |
+| `10:00-10:09` | No race exists   | **`404 notFound`** (`GET /clans/{tag}` still `200`)                                            | "Waiting for Clan War to start..." |
+| `~10:09`      | New race created | `200`, `sectionIndex 0`, `periodIndex 0`, `periodType training`, `fame 0`, no `periodLogs` key | "Training Days Started! Week 1"    |
 
 Consequences worth designing for:
 
@@ -376,8 +381,9 @@ Consequences worth designing for:
   to ~30 for another, since slots are per race) the API returns a payload that describes the OLD race while the calendar
   has (or is about to) move on. Deriving the season from wall-clock during that window stamps the old race's final
   section with the NEW season id.
-- **`periodLogs` is `[]` on a fresh race.** Anything that reads "the most recent closed day" must handle empty, not
-  assume at least one entry.
+- **`periodLogs` is absent on a fresh race, not `[]`.** No archived race payload (7,139, March-September 2026) carried
+  an empty array; 685 had no key. Anything that reads "the most recent closed day" must handle a missing key, not only
+  an empty list.
 - **`fame` is `0` on a fresh race** even though the previous race ended with a large value. Do not read `fame: 0` as a
   failed capture.
 - **The 404 is normal.** It recurs monthly. It is not a deleted clan, not an auth failure (that is `403 invalidIp`), and
@@ -390,7 +396,8 @@ Consequences worth designing for:
 - **Classic war endpoints are dead:** `currentwar` is permanently removed; `warlog` is disabled. Only river race
   endpoints are functional.
 - Pagination: use `paging.cursors` from response to get `after`/`before` values. Empty `cursors: {}` means no more
-  pages.
+  pages, except on the location ranking boards, which return `{}` at their 1,000-place cap (see
+  [locations.md](locations.md)).
 - `clanChestStatus`, `clanChestLevel`, `clanChestMaxLevel` are legacy fields — clan chests no longer exist in-game
 - The full clan response (`/clans/{tag}`) includes `memberList` with all members; the `/members` endpoint offers the
   same data with pagination
@@ -424,8 +431,12 @@ Consequences worth designing for:
 - **Colosseum-week behavior:** The colosseum week has no boat battles and no boat defenses — only Colosseum duels and
   1v1s. Participant fields like `boatAttacks` and `numOfDefensesRemaining` will not advance, and battlelog `boatBattle`
   entries do not occur during colosseum week. Avoid surfacing boat-defense or repair-point copy when
-  `periodType=colosseum`.
-- **River race default limit:** `/riverracelog` returns 10 entries by default.
+  `periodType=colosseum`. In the five-week seasons observed, Colosseum battle days were not added to `periodLogs` at all
+  (see [models/river-race.md](models/river-race.md)).
+- **River race default limit:** `/riverracelog` returns 10 entries by default, and at the default it has not offered a
+  next page: 97 reads across 40 clans (March-September 2026) all came back with `paging: { cursors: {} }` (6 of them
+  `items: []`), while `limit=1` does return `after` (2026-09-07). Whether the log holds anything past ten entries is not
+  established.
 - **`finishTime` is not a clock, and one clan's close is not the game's.** The rank-1 `finishTime` in a `/riverracelog`
   entry is the war-day close at which that race's boat reached the line (see "`finishTime` is a war-day close" below),
   not the moment the week closed and not a mid-day crossing. Its time of day is the race's own close slot: per race,

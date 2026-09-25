@@ -89,8 +89,9 @@ All five rows are one rule, and the rarity-independent form is what to implement
 `normalized = level + (16 - maxLevel)`
 
 It uses the card's own `maxLevel` rather than a rarity lookup, so it survives a new rarity or a cap change without a
-code edit, and it applies unchanged to `supportCards` / `supportItems` (Tower Troops, `maxLevel: 16`). The offset is the
-same for `level` and `maxLevel`, so "N levels from max" is invariant under the conversion.
+code edit, and it applies unchanged to `supportCards` / `supportItems`. Tower Troop caps are rarity-relative too: all
+nine catalog captures, May-September 2026, held one common at `maxLevel` 16, one epic at 11 and two legendary at 8. The
+offset is the same for `level` and `maxLevel`, so "N levels from max" is invariant under the conversion.
 
 **iconUrls variants:**
 

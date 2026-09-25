@@ -20,14 +20,14 @@ Get full player profile.
 
 | Field                             | Type          | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | --------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tag`                             | string        | e.g. `#PU9RCVYUG`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `tag`                             | string        | e.g. `#PLAYER1`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `name`                            | string        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `expLevel`                        | integer       | **Deprecated.** The game retired Experience Level / King's Journey in the 2026 "New Collection Levels and Mastery Changes" update, and this field no longer tracks progression — clan-roster responses report `expLevel: 0` for every member, and a high-trophy profile can report a low value here. Do NOT derive King Tower as `min(expLevel, 16)`: King Tower Level (still capped at 16) is now earned by upgrading a required count of cards to required levels and must be computed from the card collection. Read current progression from the `CollectionLevel` badge instead — see [models/players.md](models/players.md#badges). |
 | `expPoints`                       | integer       | **Deprecated.** Legacy XP within the current level; the 2026 update removed XP from the game                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `kingTowerLevel`                  | integer       | Current King Tower Level (still capped at 16). First observed 2026-09-02; retained profile payloads reported 12-16 through 2026-09-03. Where an independent card-upgrade calculation was available it matched this field on every sampled current profile, so it is trustworthy — but it appeared only recently, so treat its ABSENCE on older payloads as normal rather than as an error.                                                                                                                                                                                                                                                |
 | `totalExpPoints`                  | integer       | **Deprecated.** Legacy lifetime XP; the 2026 update removed XP from the game                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `starPoints`                      | integer       | Star points for card cosmetics                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `collectionLevel`                 | integer       | Current Collection Level. The field was previously observed as a zero-valued stub, but on 2026-09-13 player `#VGY28ULUG` returned `2036`, exactly matching the `CollectionLevel` badge's `progress`. Use this field for current profiles; retain the badge as a cross-check, and treat historical zero or absent values as legacy payload shape rather than a real level. See [models/players.md](models/players.md#badges).                                                                                                                                                                                                              |
+| `collectionLevel`                 | integer       | Current Collection Level. The field first appears on 2026-07-31; absent on every earlier archived profile (present on 40,463 of 57,185 archived profile payloads, March-September 2026). It was at first a zero-valued stub, but on 2026-09-13 a sampled current profile returned `2036`, exactly matching its `CollectionLevel` badge's `progress`. Use this field for current profiles; retain the badge as a cross-check, and treat historical zero or absent values as legacy payload shape rather than a real level. See [models/players.md](models/players.md#badges).                                                              |
 | `trophies`                        | integer       | Current trophy count                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `bestTrophies`                    | integer       | All-time best trophies                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `arena`                           | Arena         | `{ id, name, rawName }`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
@@ -45,11 +45,11 @@ Get full player profile.
 | `tournamentBattleCount`           | integer       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `warDayWins`                      | integer       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `clanCardsCollected`              | integer       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `currentWinLoseStreak`            | integer       | Optional — signed streak counter (positive = consecutive wins, negative = consecutive losses, 0 = last battle was a draw or the streak just reset). Absent for some players (~14% of payloads observed).                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `currentWinLoseStreak`            | integer       | Optional — signed streak counter (positive = consecutive wins, negative = consecutive losses, 0 = last battle was a draw or the streak just reset). First present 2026-04-29 (absent on every earlier archived profile); absent on 9.0% of profile payloads, March-September 2026.                                                                                                                                                                                                                                                                                                                                                        |
 | `clan`                            | PlayerClan    | `{ tag, name, badgeId }` — **absent** if not in a clan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `leagueStatistics`                | object        | See below — **absent** for some players (not all players have this)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `currentDeck`                     | array         | 8 cards — each is a PlayerItemLevel (see below)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| `currentDeckSupportCards`         | array         | Tower Troops in current deck                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `currentDeck`                     | array         | Up to 8 cards — each is a PlayerItemLevel (see below). 7-card decks are common (8.4% of one clan's profile payloads, July-September 2026) and `[]` occurs (194 of 57,185 archived payloads, March-September 2026); do not assume length 8.                                                                                                                                                                                                                                                                                                                                                                                                |
+| `currentDeckSupportCards`         | array         | The one Tower Troop in the current deck; `[]` on about 1% of payloads (620 of 57,185 archived, March-September 2026)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `cards`                           | array         | Full card collection with levels                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | `supportCards`                    | array         | Tower Troops collection with levels                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `currentFavouriteCard`            | Item          | Full card object for favourite card. NOT reliably player-settable in-game — unusable as a liveness/ownership challenge (tried 2026-09-03; players could not change it on demand)                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
@@ -105,6 +105,9 @@ Get full player profile.
 One-time badges **omit** `level`, `maxLevel`, and `target` entirely (they are not present as `null`). Only `name`,
 `progress`, and `iconUrls` are guaranteed. Example names observed April 2026: `CrazyArenaBadge1/2/3`, `EasterEgg`,
 `2025YearBadge`, `BeatingDeathBadge`, `CrlSpectator2024`, `CrlSpectator2022`.
+
+A tiered badge at its top tier also omits `target` while keeping `level` and `maxLevel` (8.5% of archived tiered badge
+entries, March-September 2026). So `target` absence does not identify a one-time badge; `level` absence does.
 
 **achievement shape:**
 
@@ -202,15 +205,22 @@ all 123 standard cards matched (`maxEvolutionLevel & 1` ⇔ `iconUrls.evolutionM
 }
 ```
 
-Keys are opaque mode-season identifiers. The empty string key `""` is a legacy/default bucket. Clients should not
-hardcode specific key names beyond treating them as labels — May 2026 sampling shows `AutoChess_2026_Season_8` (~90% of
-profiles), `TripleDraftTrail` (~17%), and `AutoChess_2026_Mar` (~15%) alongside the always-present `""` bucket; new
-mode/season keys appear over time.
+Keys are opaque mode-season identifiers. The empty string key `""` is Merge Tactics' October 2025 season (see below).
+Clients should not hardcode specific key names beyond treating them as labels — May 2026 sampling shows
+`AutoChess_2026_Season_8` (~90% of profiles), `TripleDraftTrail` (~17%), and `AutoChess_2026_Mar` (~15%) alongside the
+near-universal `""` bucket; new mode/season keys appear over time.
 
 Observed 2026-09-17: the keys embed the season in the game's own namespace per mode. `seasonal-trophy-road-202609` and
 `2v2League_202609` carry the `YYYYMM` league-season month (also in the arena `rawName`: `SeasonalArenas_202609_Arena1`,
 `2v2League_202609Arena1`); `AutoChess_2026_Season_11` carries Merge Tactics' own counter, which is not monthly. See
 [locations.md](locations.md#season-namespaces-what-is-canonical-and-what-is-derived).
+
+A bucket's `arena.rawName` always belongs to the bucket's own mode and season (`AutoChess_2026_Season_11` →
+`AutoChessArena<N>_2026_Season_11`, `TripleDraftTrail` → `TripleDraftArena<N>`), across 206,926 archived buckets,
+March-September 2026. The `""` bucket always carries `AutoChessArena<N>_2025_Oct`: it is Merge Tactics' October 2025
+season under an empty key, present on all but 6 of 57,185 profile payloads. Event-league buckets (`CrazyArena`,
+`TripleDraftTrail`, `SuddenDeathTrail`, `AnarchyLeague`) were each seen for three weeks or less; the map is not a
+permanent history.
 
 Observed 2026-09-17 on three profiles (Trophy Road trophies 14,000, 817 and 724; none had entered a seasonal arena): the
 `seasonal-trophy-road-202609` bucket read `trophies: 14000`, `bestTrophies: 0` and `arena.name: "Seasonal Arena I"` on
@@ -233,26 +243,26 @@ Observed: returns ~30-40 battles (most commonly 30).
 
 **Battle object fields:**
 
-| Field                 | Type    | Notes                                                                                             |
-| --------------------- | ------- | ------------------------------------------------------------------------------------------------- |
-| `type`                | string  | See battle types below                                                                            |
-| `battleTime`          | string  | Format: `20260309T135844.000Z`                                                                    |
-| `isLadderTournament`  | boolean |                                                                                                   |
-| `tournamentTag`       | string  | Optional — present on `type=tournament` battles; links to the tournament via `/tournaments/{tag}` |
-| `eventTag`            | string  | Optional — links to event from `/events`                                                          |
-| `arena`               | Arena   | `{ id, name, rawName }`                                                                           |
-| `gameMode`            | object  | `{ id, name }` — see game modes below                                                             |
-| `deckSelection`       | string  | See deck selections below                                                                         |
-| `team`                | array   | Array of PlayerBattleData (1 entry for 1v1, 2 for 2v2)                                            |
-| `opponent`            | array   | Same structure                                                                                    |
-| `modifiers`           | array   | Optional — CHAOS mode modifiers, see below                                                        |
-| `isHostedMatch`       | boolean |                                                                                                   |
-| `leagueNumber`        | integer | Path of Legend league number                                                                      |
-| `boatBattleSide`      | string  | Optional — `defender` or `attacker` (boat battles only)                                           |
-| `boatBattleWon`       | boolean | Optional — boat battles only                                                                      |
-| `newTowersDestroyed`  | integer | Optional — boat battles only                                                                      |
-| `prevTowersDestroyed` | integer | Optional — boat battles only                                                                      |
-| `remainingTowers`     | integer | Optional — boat battles only                                                                      |
+| Field                 | Type    | Notes                                                                                                                                                                                                                                                                                 |
+| --------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`                | string  | See battle types below                                                                                                                                                                                                                                                                |
+| `battleTime`          | string  | Format: `20260309T135844.000Z`                                                                                                                                                                                                                                                        |
+| `isLadderTournament`  | boolean |                                                                                                                                                                                                                                                                                       |
+| `tournamentTag`       | string  | Optional — present on `type=tournament` battles; links to the tournament via `/tournaments/{tag}`                                                                                                                                                                                     |
+| `eventTag`            | string  | Optional — links to event from `/events`                                                                                                                                                                                                                                              |
+| `arena`               | Arena   | `{ id, name, rawName }`                                                                                                                                                                                                                                                               |
+| `gameMode`            | object  | `{ id, name }` — see game modes below                                                                                                                                                                                                                                                 |
+| `deckSelection`       | string  | See deck selections below                                                                                                                                                                                                                                                             |
+| `team`                | array   | Array of PlayerBattleData (1 entry for 1v1, 2 for 2v2)                                                                                                                                                                                                                                |
+| `opponent`            | array   | Same structure                                                                                                                                                                                                                                                                        |
+| `modifiers`           | array   | Optional — present on every battle of the seven CHAOS rulesets, whatever the `type`; see below                                                                                                                                                                                        |
+| `isHostedMatch`       | boolean |                                                                                                                                                                                                                                                                                       |
+| `leagueNumber`        | integer | Path of Legend league, 1-7 (7 is the rated top league). Present on every battle of every type (1,062,672 archived entries, March-September 2026). Outside `pathOfLegend` it read `1` on every battle in a one-clan sample (July-September 2026), so it does not mark a Ranked battle. |
+| `boatBattleSide`      | string  | Optional — `defender` or `attacker` (boat battles only)                                                                                                                                                                                                                               |
+| `boatBattleWon`       | boolean | Optional — boat battles only                                                                                                                                                                                                                                                          |
+| `newTowersDestroyed`  | integer | Optional — boat battles only                                                                                                                                                                                                                                                          |
+| `prevTowersDestroyed` | integer | Optional — boat battles only                                                                                                                                                                                                                                                          |
+| `remainingTowers`     | integer | Optional — boat battles only                                                                                                                                                                                                                                                          |
 
 **`arena` on a battle is the match's arena (the higher side's), and Trophy Road arenas have floors.** Observed
 2026-09-15 on six crossings of the 6,000-trophy floor (Executioner's Kitchen `54000013` to Royal Crypt `54000014`):
@@ -275,88 +285,122 @@ Observed: returns ~30-40 battles (most commonly 30).
   an arena's floor can be read from data as the lowest trophies any player is ever observed holding in it; a
   `trophyChange` that is absent on a Trophy Road loss means a loss on the floor, not a missing field.
 
+**Outside Trophy Road the battle `arena` is the format's stage, not a progression arena.** Observed March-September 2026
+on 1,062,672 archived battle-log entries, each arena's count equal to its format's:
+
+- boat battles read `Arena_Clanboat` (54000046);
+- Touchdown rulesets read `Arena_TouchdownTest` (54000023);
+- the All Random Princess modes read `Arena_AllRandom_Princess` (54000139);
+- league events read their own `168000xxx` arenas (`2v2League_202609Arena1`/`Arena2`,
+  `ChaosDraftLeagueArena1`/`Arena2`);
+- Ranked battles read the season's themed arena, which changes at the season roll (`Arena_ronintemple`, `Arena_viking`
+  and `Arena_minionacademy` for the seasons starting 2026-07-06, 2026-08-03 and 2026-09-07; one-clan sample,
+  July-September 2026).
+
+Read a battle's arena as context for the battle, never as the player's arena.
+
 **Battle types observed:**
 
-| `type`                   | Description                                 | Game Modes                                                                                 |
-| ------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `PvP`                    | Ladder / trophy battles                     | `Ladder`                                                                                   |
-| `pathOfLegend`           | Ranked Path of Legend                       | `Ranked1v1_NewArena`, `Ranked1v1_NewArena2`                                                |
-| `trail`                  | Event/challenge battles                     | `Crazy_Arena`, `Challenge_AllCards_EventDeck_NoSet`                                        |
-| `clanMate`               | Friendly battle within clan (1v1)           | `Friendly`                                                                                 |
-| `clanMate2v2`            | 2v2 with clanmate                           | `TeamVsTeam`                                                                               |
-| `friendly`               | Friendly battle (not clanmate)              | `Crazy_Arena`, `7xElixir_Friendly`                                                         |
-| `riverRacePvP`           | River race 1v1 battle                       | `CW_Battle_1v1`                                                                            |
-| `riverRaceDuel`          | River race duel (best-of-3)                 | `CW_Duel_1v1`                                                                              |
-| `riverRaceDuelColosseum` | Colosseum duel variant                      | `CW_Duel_1v1`                                                                              |
-| `tournament`             | Player-created tournament battle            | `Tournament` (72000009, bring-your-own-deck), `Draft_Competitive` (72000194, Triple Draft) |
-| `boatBattle`             | River race boat attack/defense              | `ClanWar_BoatBattle`                                                                       |
-| `unknown`                | Rare fallback value seen on some friendlies | `Friendly`                                                                                 |
+| `type`                   | Description                                                                                      | Game Modes                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `PvP`                    | Ladder / trophy battles                                                                          | `Ladder`                                                                                   |
+| `pathOfLegend`           | Ranked Path of Legend                                                                            | `Ranked1v1_NewArena`, `Ranked1v1_NewArena2`                                                |
+| `trail`                  | Event/challenge battles                                                                          | `Crazy_Arena`, `Challenge_AllCards_EventDeck_NoSet`                                        |
+| `clanMate`               | Friendly battle within clan (1v1)                                                                | `Friendly`                                                                                 |
+| `clanMate2v2`            | 2v2 with clanmate                                                                                | `TeamVsTeam`                                                                               |
+| `friendly`               | Friendly battle (not clanmate)                                                                   | `Crazy_Arena`, `7xElixir_Friendly`                                                         |
+| `riverRacePvP`           | River race 1v1 battle                                                                            | `CW_Battle_1v1`                                                                            |
+| `riverRaceDuel`          | River race duel (best-of-3)                                                                      | `CW_Duel_1v1`                                                                              |
+| `riverRaceDuelColosseum` | Colosseum duel variant                                                                           | `CW_Duel_1v1`                                                                              |
+| `tournament`             | Player-created tournament battle                                                                 | `Tournament` (72000009, bring-your-own-deck), `Draft_Competitive` (72000194, Triple Draft) |
+| `boatBattle`             | River race boat attack/defense                                                                   | `ClanWar_BoatBattle`                                                                       |
+| `unknown`                | Rare fallback on some friendlies; since 2026-09-21 also every battle of the `RR_` event rulesets | `Friendly`, `RR_*` (72000520-72000531)                                                     |
 
 **Deck selection values:**
 
-| `deckSelection`    | Used in                                                                                     |
-| ------------------ | ------------------------------------------------------------------------------------------- |
-| `collection`       | PvP, pathOfLegend, riverRacePvP, clanMate, friendly                                         |
-| `eventDeck`        | trail, some friendlies                                                                      |
-| `draft`            | clanMate2v2 (draft modes)                                                                   |
-| `warDeckPick`      | riverRaceDuel                                                                               |
-| `pick`             | pick-mode friendlies                                                                        |
-| `draftCompetitive` | competitive draft friendlies, Triple Draft tournaments                                      |
-| `predefined`       | preset-deck friendlies (e.g. Mirror Deck)                                                   |
-| `unknown`          | Observed on an event-tagged mode (`All_Random_Princess`, 72000501); do not infer deck rules |
-| `quadDeckPick`     | 1v1 Duel friendlies (`72000314 Duel_1v1_Friendly`) — 4 decks brought per match              |
+| `deckSelection`    | Used in                                                                                                                                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `collection`       | PvP, pathOfLegend, riverRacePvP, clanMate, friendly                                                                                                                                                      |
+| `eventDeck`        | trail, some friendlies                                                                                                                                                                                   |
+| `draft`            | Draft rulesets in any context: `DraftMode`, `DraftMode_Princess`, `DraftModeInsane`, `Touchdown_Draft`, `TeamVsTeam_Touchdown_Draft`, `FloodHounds_Draft`, and `Chaos_1v1_Draft` (a 1v1 `trail` mode)    |
+| `warDeckPick`      | riverRaceDuel                                                                                                                                                                                            |
+| `pick`             | `PickMode` friendlies and tournaments; `Chaos_1v1_MegaDraft_All`                                                                                                                                         |
+| `draftCompetitive` | `Draft_Competitive` friendlies and tournaments; `Chaos_1v1_TripleDraft`                                                                                                                                  |
+| `predefined`       | preset-deck friendlies (`MirrorDeck_Friendly`, `ClassicDecks_Friendly`)                                                                                                                                  |
+| `unknown`          | Both All Random Princess modes (`All_Random_Princess` 72000501, `All_Random_Princess_Friendly` 72000519; 14,130 archived entries, June-September 2026). These battles disclose no deck: `cards` is `[]`. |
+| `quadDeckPick`     | 1v1 Duel friendlies (`72000314 Duel_1v1_Friendly`) — 4 decks brought per match                                                                                                                           |
 
 **Known game mode IDs:**
 
-| ID       | Name                                                                               |
-| -------- | ---------------------------------------------------------------------------------- |
-| 72000005 | DraftMode                                                                          |
-| 72000006 | Ladder                                                                             |
-| 72000007 | Friendly                                                                           |
-| 72000009 | Tournament                                                                         |
-| 72000011 | DoubleElixir_Friendly                                                              |
-| 72000013 | (tournament mode — listed by Supercell, not observed on the wire March–April 2026) |
-| 72000014 | TeamVsTeam                                                                         |
-| 72000031 | Overtime_Friendly                                                                  |
-| 72000032 | TripleElixir_Friendly                                                              |
-| 72000033 | RampUpElixir_Friendly                                                              |
-| 72000042 | PickMode                                                                           |
-| 72000050 | Touchdown_Draft                                                                    |
-| 72000051 | TeamVsTeam_Touchdown_Draft (observed August 2026)                                  |
-| 72000060 | Overtime_Ladder (observed in River Race PvP September 2026)                        |
-| 72000062 | TripleElixir_Ladder                                                                |
-| 72000065 | Showdown_Friendly                                                                  |
-| 72000070 | RampUpElixir_Ladder                                                                |
-| 72000071 | Rage_Friendly                                                                      |
-| 72000073 | Rage_Ladder                                                                        |
-| 72000087 | ClassicDecks_Friendly                                                              |
-| 72000091 | Heist_Friendly                                                                     |
-| 72000194 | Draft_Competitive                                                                  |
-| 72000232 | 7xElixir_Friendly                                                                  |
-| 72000254 | MirrorDeck_Friendly                                                                |
-| 72000261 | 7xElixir_Ladder                                                                    |
-| 72000266 | ClanWar_BoatBattle                                                                 |
-| 72000267 | CW_Duel_1v1                                                                        |
-| 72000268 | CW_Battle_1v1                                                                      |
-| 72000286 | TeamVsTeam_TripleElixir_Friendly                                                   |
-| 72000314 | Duel_1v1_Friendly                                                                  |
-| 72000321 | Touchdown_ClanWar                                                                  |
-| 72000376 | Event_RestlessDead                                                                 |
-| 72000450 | Ranked1v1_NewArena                                                                 |
-| 72000464 | Ranked1v1_NewArena2                                                                |
-| 72000469 | DraftMode_Princess                                                                 |
-| 72000474 | Challenge_AllCards_EventDeck_NoSet                                                 |
-| 72000486 | Touchdown_Event (listed, not observed April–May 2026)                              |
-| 72000500 | RampUp_Friendly_EventDeck_4Card (listed, not observed March–April 2026)            |
-| 72000501 | All_Random_Princess (observed on the wire; `deckSelection` reported `unknown`)     |
-| 72000502 | Crazy_Arena                                                                        |
-| 72000503 | FloodHounds_Draft                                                                  |
-| 72000504 | Crazy_Arena_EpicOnly                                                               |
-| 72000505 | Chaos_1v1_Draft                                                                    |
-| 72000506 | Chaos_1v1_TripleDraft                                                              |
-| 72000510 | Crazy_Arena_InfiniteElixir (observed August 2026)                                  |
-| 72000511 | Crazy_Arena_SuddenDeath (observed August 2026)                                     |
-| 72000512 | Chaos_1v1_MegaDraft_All (observed August 2026)                                     |
+| ID       | Name                                                                                        |
+| -------- | ------------------------------------------------------------------------------------------- |
+| 72000005 | DraftMode                                                                                   |
+| 72000006 | Ladder                                                                                      |
+| 72000007 | Friendly                                                                                    |
+| 72000009 | Tournament                                                                                  |
+| 72000011 | DoubleElixir_Friendly                                                                       |
+| 72000013 | DraftModeInsane (observed September 2026; earlier listed by Supercell as a tournament mode) |
+| 72000014 | TeamVsTeam                                                                                  |
+| 72000024 | Overtime_Tournament (observed September 2026)                                               |
+| 72000027 | TripleElixir_Tournament (observed September 2026)                                           |
+| 72000031 | Overtime_Friendly                                                                           |
+| 72000032 | TripleElixir_Friendly                                                                       |
+| 72000033 | RampUpElixir_Friendly                                                                       |
+| 72000042 | PickMode                                                                                    |
+| 72000050 | Touchdown_Draft                                                                             |
+| 72000051 | TeamVsTeam_Touchdown_Draft (observed August 2026)                                           |
+| 72000054 | Friendly_FixedDeckOrder (observed September 2026)                                           |
+| 72000060 | Overtime_Ladder (observed in River Race PvP September 2026)                                 |
+| 72000062 | TripleElixir_Ladder                                                                         |
+| 72000065 | Showdown_Friendly                                                                           |
+| 72000070 | RampUpElixir_Ladder                                                                         |
+| 72000071 | Rage_Friendly                                                                               |
+| 72000073 | Rage_Ladder                                                                                 |
+| 72000087 | ClassicDecks_Friendly                                                                       |
+| 72000091 | Heist_Friendly                                                                              |
+| 72000194 | Draft_Competitive                                                                           |
+| 72000232 | 7xElixir_Friendly                                                                           |
+| 72000254 | MirrorDeck_Friendly                                                                         |
+| 72000261 | 7xElixir_Ladder                                                                             |
+| 72000266 | ClanWar_BoatBattle                                                                          |
+| 72000267 | CW_Duel_1v1                                                                                 |
+| 72000268 | CW_Battle_1v1                                                                               |
+| 72000286 | TeamVsTeam_TripleElixir_Friendly                                                            |
+| 72000314 | Duel_1v1_Friendly                                                                           |
+| 72000321 | Touchdown_ClanWar                                                                           |
+| 72000376 | Event_RestlessDead                                                                          |
+| 72000450 | Ranked1v1_NewArena                                                                          |
+| 72000464 | Ranked1v1_NewArena2                                                                         |
+| 72000469 | DraftMode_Princess                                                                          |
+| 72000474 | Challenge_AllCards_EventDeck_NoSet                                                          |
+| 72000486 | Touchdown_Event (observed March 2026)                                                       |
+| 72000500 | RampUp_Friendly_EventDeck_4Card (observed March 2026)                                       |
+| 72000501 | All_Random_Princess (observed on the wire; `deckSelection` reported `unknown`)              |
+| 72000502 | Crazy_Arena                                                                                 |
+| 72000503 | FloodHounds_Draft                                                                           |
+| 72000504 | Crazy_Arena_EpicOnly                                                                        |
+| 72000505 | Chaos_1v1_Draft                                                                             |
+| 72000506 | Chaos_1v1_TripleDraft                                                                       |
+| 72000510 | Crazy_Arena_InfiniteElixir (observed August 2026)                                           |
+| 72000511 | Crazy_Arena_SuddenDeath (observed August 2026)                                              |
+| 72000512 | Chaos_1v1_MegaDraft_All (observed August 2026)                                              |
+| 72000519 | All_Random_Princess_Friendly (observed September 2026; `deckSelection` reported `unknown`)  |
+| 72000520 | RR_AllEvoBattle_Friendly (observed September 2026; one event, see below)                    |
+| 72000521 | RR_TripleElixir_Friendly (observed September 2026; one event, see below)                    |
+| 72000522 | RR_SuperTroopBattle_Friendly (observed September 2026; one event, see below)                |
+| 72000523 | RR_Overtime_Friendly (observed September 2026; one event, see below)                        |
+| 72000524 | RR_Rage_Friendly (observed September 2026; one event, see below)                            |
+| 72000525 | RR_Heist_Friendly (observed September 2026; one event, see below)                           |
+| 72000526 | RR_Snowball_bombardment (observed September 2026; one event, see below)                     |
+| 72000527 | RR_Event_Mega_Monk (observed September 2026; one event, see below)                          |
+| 72000528 | RR_Blackout_Friendly (observed September 2026; one event, see below)                        |
+| 72000529 | RR_FourCard_Friendly (observed September 2026; one event, see below)                        |
+| 72000530 | RR_MortarCapture_Friendly (observed September 2026; one event, see below)                   |
+| 72000531 | RR_CaptureTheEgg_Friendly (observed September 2026; one event, see below)                   |
+
+The twelve `RR_` modes (72000520-72000531) arrived together on 2026-09-21 as one event, `#2C9J8QUU`: their 3,720
+archived entries, 2026-09-21 to 2026-09-25, are exactly that event tag's. Every battle of them carries that `eventTag`,
+`type: unknown` and `deckSelection: collection`. Key on the event tag, not on twelve modes.
 
 Note: `gameMode.name` was observed on 100% of battles across March–April 2026 sampling (all tournament battles
 included). Earlier notes suggesting `name` might be absent on some tournament modes no longer apply — treat `name` as
@@ -375,12 +419,12 @@ For 2v2 battles, the outcome is still determined from the first team entry becau
 
 ```json
 {
-  "tag": "#PU9RCVYUG",
-  "name": "FJ21",
+  "tag": "#PLAYER1",
+  "name": "Player One",
   "crowns": 3,
   "kingTowerHitPoints": 9201,
   "princessTowersHitPoints": [6104, 6104],
-  "clan": { "tag": "#GP8292Y8", "name": "Miyake YT", "badgeId": 16000054 },
+  "clan": { "tag": "#CLAN1", "name": "Clan One", "badgeId": 16000054 },
   "cards": [/* 8 card objects */],
   "supportCards": [/* Tower Troop cards, may be empty array */],
   "elixirLeaked": 3.33,
@@ -397,7 +441,9 @@ For 2v2 battles, the outcome is still determined from the first team entry becau
 - `globalRank` — present on all battles, null unless player is in top global rankings (then integer)
 - `elixirLeaked` — float, present on all battles
 - `supportCards` — array (may be empty `[]`)
-- `rounds` — array, only on `riverRaceDuel` and `riverRaceDuelColosseum` (best-of-3 duel rounds)
+- `rounds` — array on every best-of-3 duel: `riverRaceDuel`, `riverRaceDuelColosseum` and the 1v1 Duel friendly
+  (`Duel_1v1_Friendly` 72000314, `deckSelection: quadDeckPick`). Observed March-September 2026 on 15,614 archived
+  entries, all of them duels.
 - `clan` — absent if player has no clan
 
 **`cards[*].evolutionLevel` on battle-log cards is played-as state, not ownership.** If
@@ -407,7 +453,8 @@ deployment-encoded — a player with Evo Archers unlocked who puts Archers in a 
 `evolutionLevel` set on the battle-log Archers entry. See the `evolutionLevel` section under the player-profile docs
 above for the full three-context semantics.
 
-**Duel rounds (riverRaceDuel):** Both `team[0]` and `opponent[0]` have a `rounds` array (typically 2-3 rounds):
+**Duel rounds (river race duels and `Duel_1v1_Friendly`):** Both `team[0]` and `opponent[0]` have a `rounds` array
+(typically 2-3 rounds):
 
 ```json
 {
@@ -438,19 +485,21 @@ duel rows across one clan's recorded members):**
   and length-1 arrays also occur, so array length is NOT a reliable tower count on duel rows. No head-to-head row was
   ever observed with a `0` entry, and no duel row was ever observed `null`.
 
-**CHAOS mode modifiers (type=trail with Crazy_Arena):**
+**CHAOS mode modifiers (the seven CHAOS rulesets, any `type`):**
 
 ```json
 [
-  { "tag": "#PU9RCVYUG", "modifiers": ["Pekka3", "Graveyard2", "Rage1"] },
-  {
-    "tag": "#2JVGV9CG9",
-    "modifiers": ["Fireball3", "GoblinHut2", "Berserker1"]
-  }
+  { "tag": "#PLAYER1", "modifiers": ["Pekka3", "Graveyard2", "Rage1", "AxeMan2"] },
+  { "tag": "#PLAYER2", "modifiers": ["Fireball3", "GoblinHut2", "Berserker1", "Assassin1"] }
 ]
 ```
 
-Each entry maps a player tag to their chosen modifiers. Only present in CHAOS mode battles.
+One entry per participant, mapping its player tag to 1-6 modifiers (4 most often, not a fixed three). Present on every
+battle of the seven CHAOS rulesets and on no other, whatever the `type` (`trail`, `friendly`, `unknown`): `Crazy_Arena`,
+`Crazy_Arena_EpicOnly`, `Crazy_Arena_InfiniteElixir`, `Crazy_Arena_SuddenDeath`, `Chaos_1v1_Draft`,
+`Chaos_1v1_TripleDraft` and `Chaos_1v1_MegaDraft_All` (66,914 archived entries, March-September 2026). A modifier is
+`<card codename><tier 1-3>` using the Mastery badge codenames: `AxeMan2` is Executioner at tier 2 (see
+[models/players.md](models/players.md#badges)).
 
 ---
 
@@ -537,9 +586,9 @@ Observed error bodies are usually `{ reason, message? }`. `message` may be absen
   clan / no league history. Always check for key existence. However, `currentPathOfLegendSeasonResult`,
   `lastPathOfLegendSeasonResult`, `bestPathOfLegendSeasonResult`, and `legacyTrophyRoadHighScore` are always present but
   use `null` when not applicable — check for both key existence and null.
-- `currentDeck` (8 cards) vs `cards` (full collection) vs battle-log card arrays: all three carry `evolutionLevel` but
-  with **different semantics** (ownership vs deployment vs played-as-in-battle — see the evolutionLevel section above).
-  `cards[]` also includes `count` of copies currently in stash.
+- `currentDeck` (up to 8 cards) vs `cards` (full collection) vs battle-log card arrays: all three carry `evolutionLevel`
+  but with **different semantics** (ownership vs deployment vs played-as-in-battle — see the evolutionLevel section
+  above). `cards[]` also includes `count` of copies currently in stash.
 - **`currentDeck` is a client-synced snapshot, not live state (observed 2026-09-12).** Selecting a different deck slot
   in the game did NOT change `currentDeck` for over an hour: probed `GET /players/{tag}` once a minute from 13:53Z to
   14:54Z after the slot was selected at 13:44Z, with the game client closed from 13:56Z and no battle played, and every
@@ -561,7 +610,7 @@ Observed error bodies are usually `{ reason, message? }`. `message` may be absen
 - Battlelog returns a bare array (like `/events`), not a paginated response — no `paging` object. Returns ~30-40 battles
   (most commonly 30).
 - `progress` is a map of side-mode season results (Merge Tactics / AutoChess) — keys are mode season identifiers. Empty
-  string key `""` = legacy/default season.
+  string key `""` = Merge Tactics' October 2025 season.
 - `progress` keys should be treated as opaque identifiers, not a stable enum. Parse the nested values, not the key
   naming pattern.
 - `battleTime` format is `YYYYMMDDTHHmmss.sssZ` — parse carefully, no dashes or colons
@@ -586,8 +635,10 @@ Observed error bodies are usually `{ reason, message? }`. `message` may be absen
   out as players play more games. To capture tournament battle data reliably, poll player battle logs shortly after the
   tournament ends. Battles from a 13-player tournament were partially lost within ~24h due to active players' logs
   rotating.
-- **Badges:** Two categories — progress badges (with `level`/`maxLevel`/`progress`/`target`) and one-time badges
-  (`level`, `maxLevel`, and `target` are **absent** — not present as `null` — only `name`, `progress`, and `iconUrls`
-  are guaranteed). Mastery badges are per-card (e.g. `MasteryKnight`).
+- **Badges:** Three shapes — progress badges (with `level`/`maxLevel`/`progress`/`target`), progress badges at their top
+  tier (`target` absent, `level` and `maxLevel` kept; 8.5% of archived tiered badge entries, March-September 2026) and
+  one-time badges (`level`, `maxLevel`, and `target` are **absent** — not present as `null` — only `name`, `progress`,
+  and `iconUrls` are guaranteed). Test `level`, not `target`, to tell tiered from one-time. Mastery badges are per-card
+  (e.g. `MasteryKnight`).
 - **Achievements:** Fixed set of 12 achievements. `stars` (0-3) indicates completion tier. `completionInfo` is typically
   null.

@@ -69,7 +69,9 @@ Notes:
 
 Fields:
 
-- `leagueNumber` - integer
+- `leagueNumber` - integer; 1-7 on current and last results. `bestPathOfLegendSeasonResult` can also carry 8-10 (29.9%
+  of non-null bests, March-September 2026) from an earlier season whose league scale ran higher. Current and last never
+  exceeded 7 on any archived profile. Never read a best against the current seven leagues.
 - `trophies` - integer
 - `rank` - integer or null
 
@@ -190,6 +192,10 @@ One-time badge:
 
 One-time badges omit `level`, `maxLevel`, and `target` entirely. They are not present as `null`.
 
+A tiered badge at its top tier also omits `target` while keeping `level` and `maxLevel` (8.5% of archived tiered badge
+entries, March-September 2026; in a one-clan sample, exactly the ones at `level == maxLevel`). So `target` absence does
+not identify a one-time badge; `level` absence does.
+
 Badge categories observed:
 
 - Mastery badges, such as `MasteryKnight` - tiered, with `maxLevel` 10 (all 68 Mastery badges on one recorded profile,
@@ -200,6 +206,11 @@ Badge categories observed:
 - Seasonal badges, such as `SeasonalBadge_202507_v2`
 - Event badges, such as `CrlSpectator2022` and `EasterEgg`
 - Career badges, such as `YearsPlayed`, `BattleWins`, `ClanWarsVeteran`, `LadderTop1000`
+- League and trail badges, in pairs: `<Mode>Completion` and `<Mode>Rank` for `CrazyArena`, `TripleDraftLeague`,
+  `SuddenDeathTrail`, `AnarchyLeague`, `ChaosDraftLeague`, `RoyalTournament`, `ClassicRoyaleTournament` and `2v2League`
+  (archived profiles, March-September 2026; the last pair, `2v2LeagueCompletion` / `2v2LeagueRank`, first seen
+  2026-09-21). For `RoyalTournament` and `ClassicRoyaleTournament` the Rank badge also occurs as a `_v2` twin. Also
+  seen: `RouletteAllModes` (first seen 2026-09-21) and `Chaos_S2`.
 
 **`name` is an internal identifier, not a display name.** A badge carries no player-facing name anywhere in the API;
 only `iconUrls` is what the game shows. Anything that prints a badge to a person has to translate. Observed across 1,773
@@ -232,12 +243,12 @@ Two badges are load-bearing for account progression:
 
 - `CollectionLevel` — since the game's 2026 Collection Level update, its `progress` is the player's current Collection
   Level (the progression number the game shows), while `level`/`maxLevel` are the badge's own tier. The top-level
-  `collectionLevel` field was previously a zero-valued stub, but player `#VGY28ULUG` returned `2036` on 2026-09-13,
-  exactly matching this badge's `progress`; use the top-level field on current profiles and this badge as a cross-check.
-  Treat an older zero or an absent field as legacy payload shape, never as a real level. Collection Level is the SUM of
-  the levels of every card the player owns, plus 5 for each Evolution and each Hero form unlocked, so it is a four-digit
-  number (observed 1673) and only ever rises. It is independent of King Tower Level, which is a separate ~1-16 value
-  earned by upgrading required counts of cards.
+  `collectionLevel` field (first present 2026-07-31) was at first a zero-valued stub, but a sampled current profile
+  returned `2036` on 2026-09-13, exactly matching its badge's `progress`; use the top-level field on current profiles
+  and this badge as a cross-check. Treat an older zero or an absent field as legacy payload shape, never as a real
+  level. Collection Level is the SUM of the levels of every card the player owns, plus 5 for each Evolution and each
+  Hero form unlocked, so it is a four-digit number (observed 1673) and only ever rises. It is independent of King Tower
+  Level, which is a separate ~1-16 value earned by upgrading required counts of cards.
 - `YearsPlayed` — its `level` is the number of completed years the account has existed, and its `progress` is the
   account age in days (observed live: level 4 / progress 1648 / target 1825 — targets are 365-day tiers). The badge
   first appears at one year, so absence USUALLY means a sub-1-year account — but not always: a 74-profile sweep
@@ -295,17 +306,15 @@ Chest, Epic Chest, Legendary Chest, Mega Lightning Chest, Royal Wild Chest, and 
     "trophies": 4257,
     "bestTrophies": 4337
   },
-  "AutoChess_2026_Mar": {
-    "arena": {
-      "id": 168000059,
-      "name": "Diamond",
-      "rawName": "AutoChessArena10_2025_Oct"
-    },
-    "trophies": 3460,
-    "bestTrophies": 3593
-  }
+  "AutoChess_2026_Mar": { "arena": { ... }, "trophies": 3460, "bestTrophies": 3593 }
 }
 ```
 
-`progress` is a map of opaque mode-season IDs to arena/trophy data. The empty string key is a legacy/default bucket. Do
-not treat the key names as a stable enum.
+`progress` is a map of opaque mode-season IDs to arena/trophy data. Do not treat the key names as a stable enum.
+
+A bucket's `arena.rawName` always belongs to the bucket's own mode and season (`AutoChess_2026_Season_11` →
+`AutoChessArena<N>_2026_Season_11`, `TripleDraftTrail` → `TripleDraftArena<N>`), across 206,926 archived buckets,
+March-September 2026. The `""` bucket always carries `AutoChessArena<N>_2025_Oct`: it is Merge Tactics' October 2025
+season under an empty key, present on all but 6 of 57,185 profile payloads. Event-league buckets (`CrazyArena`,
+`TripleDraftTrail`, `SuddenDeathTrail`, `AnarchyLeague`) were each seen for three weeks or less; the map is not a
+permanent history.

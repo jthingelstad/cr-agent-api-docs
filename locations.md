@@ -94,13 +94,14 @@ Get trophy leaderboard for players in a location.
 
 **Returns:** `{ items: [...], paging: { ... } }`
 
-Note: May return empty `items` array if no ranking data is available for the current season yet.
+Note: May return an empty `items` array, early in a season and late in one (below).
 
 Observed 2026-09-10 (day 3 of S136, which rolled 2026-09-07 10:00Z): `global` and `57000249` (United States) both
 returned `items: []` with no paging cursors, while `/pathoflegend/players` for the same two locations returned 836 and
 97 ranked players. Consistent with the seasonal trophy ranking endpoint being documented as broken below: treat the
 trophy leaderboard as unavailable and use Path of Legend rankings for competitive standing. Do not write an empty
-response through as "nobody is ranked".
+response through as "nobody is ranked". A read on 2026-09-05, two days before that roll, was also `items: []` with no
+cursors (one archived read), so the emptiness is not an early-season effect alone.
 
 ---
 
@@ -149,6 +150,10 @@ Get clan war (river race) leaderboard for a location.
 **Returns:** Same shape as clan rankings. The `clanScore` here reflects river race/war performance, not overall
 trophies.
 
+**Both clan boards stop at 1,000 with no cursor.** At `limit=1000`, 48 reads per board across three locations
+(2026-09-11 to 2026-09-25) averaged 999.3 clans, and every one returned `paging: { cursors: {} }`. This is the same cut
+the Path of Legend board makes (below); an empty `cursors` here does not mean the location has no more clans.
+
 ---
 
 ### GET /locations/{locationId}/pathoflegend/players
@@ -193,6 +198,9 @@ first filled, 2111 on 2026-09-19), and a player whose rating did not move can dr
 Country boards cap the same way (United States and Japan both returned 1,000 with no cursor, tails at 1791 and 1737), so
 a country's full board reaches far below the global cutoff. The population above the true floor is not observable from
 this endpoint; a per-location sweep is a lower bound only.
+
+Many locations have no board at all. Of 255 location boards read daily 2026-09-05 to 2026-09-25, 87 returned `items: []`
+on every read, so an empty country board is normal, not a failed fetch.
 
 **`eloRating` is the player's `currentPathOfLegendSeasonResult.trophies`, and the board `rank` is its `rank`.** Observed
 2026-09-18 on the global board's #1 and #3: board `eloRating` 2711 / `rank` 1 against the same player's profile
@@ -378,8 +386,9 @@ message such as `Unknown value for parameter locationId`. `type`/`detail` were n
 - **Season trophy rankings are broken** — `/seasons/{id}/rankings/players` returns notFound for all seasons. Use PoL
   season rankings.
 - `previousRank` of `-1` in clan rankings means the clan was not previously ranked
-- **Global player trophy rankings** may return empty results early in a season. PoL global rankings and clan rankings
-  work consistently.
+- **Player trophy rankings** (`/rankings/players`) have returned empty both early in a season (2026-09-10, `global` and
+  United States) and in a season's last week (2026-09-05, one archived read); treat the board as unavailable, as above.
+  PoL global rankings and clan rankings work consistently.
 - `/locations` returns all 262 locations with no limit by default. No pagination needed for the full list.
 - `/locations?limit=0` returns `400 badRequest`
 - Cache duration: location data is cached ~10 minutes server-side; rankings ~1 minute

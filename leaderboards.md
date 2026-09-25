@@ -109,7 +109,11 @@ Observed error bodies are usually `{ reason, message? }`. Invalid `leaderboardId
 - `clan` field on ranking entries is optional — omitted for clanless players
 - **No default limit:** `/leaderboard/{id}` returns ALL entries (up to 10,000 observed) when no `limit` is specified.
   Set a limit if you don't need the full list.
+- **Under a `limit` the board pages.** At `limit=1000`, 472 of 480 reads (31 of 32 boards, 2026-09-11 to 2026-09-25)
+  returned `paging.cursors.after`. The location boards (`/pathoflegend/players`, `/rankings/clans`,
+  `/rankings/clanwars`) stop at 1,000 with an empty `cursors` instead (see [locations.md](locations.md)). A game-mode
+  board past 1,000 is reached by following the cursor or by omitting `limit`.
 - `/leaderboard/{id}?limit=0` returns `400 badRequest`
 - Observed leaderboard names: Merge Tactics, Touchdown, Mega Draft Challenge, 2v2 League, Retro Royale, Goblin Queen's
-  Journey
+  Journey, Princess Gambit Tournament (first seen 2026-09-21, while the event of that name ran)
 - IDs in range 170000xxx for newer leaderboards; some older ones have smaller IDs (e.g. 270849)

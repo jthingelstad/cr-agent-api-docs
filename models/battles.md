@@ -43,7 +43,7 @@ Verified fields:
 - `remainingTowers?`
 
 Official Swagger also lists `challengeWinCountBefore`, `challengeId`, and `challengeTitle` on `Battle`. They were not
-observed in the March-April 2026 live-call pass; treat them as optional official-only fields until seen in payloads.
+observed in any of 1,062,672 archived battle-log entries, March-September 2026; treat them as official-only.
 
 Observed battle types:
 
@@ -70,6 +70,7 @@ Observed deck selections:
 - `draftCompetitive`
 - `predefined`
 - `quadDeckPick`
+- `unknown` (the All Random Princess modes, which disclose no deck)
 
 ## Battle Length And Phases
 
@@ -178,7 +179,10 @@ the pair later for a different event:
 
 `trail`+`TeamVsTeam` alone carries **ten** distinct event tags, `trail`+`Showdown_Friendly` twelve. So a pair like
 "trail, TeamVsTeam" is a slot, not an identity - the September burst above (68-680 battles a day until 09-06, 3,976 on
-09-07, a 40,680 peak on 09-20, 372 on 09-22) is one 2v2 tournament, `#2C9J990U`, not a property of the pair.
+09-07, a 40,680 peak on 09-20, 372 on 09-22) is the September 2026 2v2 League, `#2C9J990U`, not a property of the pair.
+Its battles are stamped with the league's own arenas (`2v2League_202609Arena1`/`Arena2`: 89,769 archived entries,
+2026-09-07 to 2026-09-24, exactly the tag's). The profile tracks it in the `2v2League_202609` progress bucket, and the
+`2v2LeagueCompletion` / `2v2LeagueRank` badges first appear on 2026-09-21, the day the burst ended.
 
 Two window shapes recur. The **36-day** ones land exactly on season boundaries (`#2RC8C0JU` runs 2026-08-03 to
 2026-09-07, which is season 135 to the day; `#2PRCGVPP` runs 2026-06-01 to 2026-07-06, season 133) - a recurring format
@@ -222,9 +226,9 @@ Two consequences for any consumer:
 
 **The same bucket holds permanent formats and two-week events, which is the strongest argument for keying on the pair.**
 Inside `type: trail`, `gameMode: Ladder` is a permanent seasonal format running at a steady 1,000-2,700 battles a day,
-while `gameMode: TeamVsTeam` was a time-boxed 2v2 tournament: 68-680 battles a day through 2026-09-06, then 3,976 on
-09-07, climbing to a peak of 40,680 on 09-20, 24,948 on 09-21, and **372 on 09-22** - back to baseline the day it ended.
-A consumer that groups on `type` alone pools a permanent ladder with a fortnight's tournament and sees neither.
+while `gameMode: TeamVsTeam` was the September 2v2 League: 68-680 battles a day through 2026-09-06, then 3,976 on 09-07,
+climbing to a peak of 40,680 on 09-20, 24,948 on 09-21, and **372 on 09-22** - back to baseline the day it ended. A
+consumer that groups on `type` alone pools a permanent ladder with a fortnight's league and sees neither.
 
 So `gameMode.name` alone does not identify a population, and neither does `type`: the pair does. The same ruleset name
 recurs under several types (24 of 62 observed modes do), because `gameMode` is the RULESET and `type` is the CONTEXT it
@@ -261,12 +265,12 @@ For 2v2 battles, use the first team entry because teammates share the same resul
 
 ```json
 {
-  "tag": "#PU9RCVYUG",
-  "name": "FJ21",
+  "tag": "#PLAYER1",
+  "name": "Player One",
   "crowns": 3,
   "kingTowerHitPoints": 9201,
   "princessTowersHitPoints": [6104, 6104],
-  "clan": { "tag": "#GP8292Y8", "name": "Miyake YT", "badgeId": 16000054 },
+  "clan": { "tag": "#CLAN1", "name": "Clan One", "badgeId": 16000054 },
   "cards": [],
   "supportCards": [],
   "elixirLeaked": 3.33,
@@ -297,9 +301,10 @@ Conditional notes:
 - `kingTowerHitPoints` and `princessTowersHitPoints` are the hitpoints _remaining_ when the battle ended — a
   margin-of-victory signal, not a tower level and not a maximum. Do not read them as progression or compare them across
   players as if they were levels.
-- Both hit-point fields can also be `null` (observed live 2026-09: `princessTowersHitPoints: null` on a regular 1-crown
-  ladder loss where a surviving princess tower is certain). Treat null as "the game did not report tower data for this
-  battle" — it carries no information about tower state.
+- `princessTowersHitPoints` can also be `null` (observed live 2026-09 on a regular 1-crown ladder loss where a surviving
+  princess tower is certain). Treat null as "the game did not report tower data for this battle" — it carries no
+  information about tower state. `kingTowerHitPoints` is always an integer at the participant level (never null or
+  absent in 2.37 million archived participant entries, March-September 2026; `0` when the King Tower fell).
 - `princessTowersHitPoints` shape (observed June–September 2026, ~50,000 rows): on head-to-head rows a destroyed tower
   is omitted, so length runs 2 → 1, and the field is `null` whenever no princess tower survives (all 2-crown-conceded
   and king-fallen rows) plus a few 1-crown rows. A `0` entry never appears on head-to-head rows. On duel rows destroyed
@@ -309,20 +314,23 @@ Conditional notes:
 - `trophyChange` appears only on PvP and Path of Legend battles.
 - `globalRank` is present on all battles and is null unless the player is globally ranked.
 - `supportCards` is always an array and may be empty.
-- `cards` can also be empty (`[]`) on `type=trail` event-challenge battles: the API discloses no deck for some event
-  formats. Observed 2026-09-15 on 1,976 recorded participants, all `trail`, June 2026. An empty list is not a deck
-  identity - do not hash or compare it as one.
+- `cards` can also be empty (`[]`): the API discloses no deck for the All Random Princess modes
+  (`deckSelection: unknown`, 72000501 and 72000519). Observed on every one of 14,130 archived entries of those modes,
+  June-September 2026, and on no other mode's team side. An empty list is not a deck identity - do not hash or compare
+  it as one.
 - On `type=boatBattle` entries the defending side's `cards` is the 12-card boat-defense list, not a played deck, and its
   `evolutionLevel` is ownership-style (can be `3`). See [players.md](../players.md) on `evolutionLevel`.
 - `clan` is absent if the player has no clan.
-- `rounds` appears only on river race duel battles (`riverRaceDuel` and `riverRaceDuelColosseum`).
+- `rounds` appears on every best-of-3 duel: `riverRaceDuel`, `riverRaceDuelColosseum` and the 1v1 Duel friendly
+  (`Duel_1v1_Friendly` 72000314, `deckSelection: quadDeckPick`). Observed March-September 2026 on 15,614 archived
+  entries, all of them duels.
 
 `cards[*].evolutionLevel` is played-as state for that battle, not collection ownership. See
 [players.md](players.md#evolution-fields).
 
 ## Duel Rounds
 
-Used in `riverRaceDuel` and `riverRaceDuelColosseum` battles.
+Used in river race duels and in `Duel_1v1_Friendly`.
 
 ```json
 {
@@ -337,10 +345,15 @@ Used in `riverRaceDuel` and `riverRaceDuelColosseum` battles.
 Fields:
 
 - `crowns`
-- `kingTowerHitPoints`
+- `kingTowerHitPoints?`
 - `princessTowersHitPoints`
 - `elixirLeaked`
 - `cards`
+
+Round tower fields differ from the participant's. A round's `princessTowersHitPoints` always holds two entries (`0` for
+a destroyed tower) and is never `null` (36,732 archived rounds per side, March-September 2026). Its `kingTowerHitPoints`
+is absent, not `0`, in a round where the opponent took three crowns (all 108 such rounds in a one-clan sample of 1,038,
+July-September 2026, and present on every other round).
 
 Cards in duel rounds include an additional `used` boolean. Each round has a different deck. Rounds arrays usually
 contain 2-3 rounds, and the participant's top-level `cards` is all rounds concatenated, not a deck.
@@ -355,11 +368,17 @@ June–September 2026, 412 duel rows):
 
 ## CHAOS Modifiers
 
-`modifiers` appears on CHAOS mode battles, currently `type=trail` with `Crazy_Arena`.
+`modifiers` appears on every battle of the seven CHAOS rulesets and on no other: `Crazy_Arena` (72000502),
+`Crazy_Arena_EpicOnly` (72000504), `Crazy_Arena_InfiniteElixir` (72000510), `Crazy_Arena_SuddenDeath` (72000511),
+`Chaos_1v1_Draft` (72000505), `Chaos_1v1_TripleDraft` (72000506) and `Chaos_1v1_MegaDraft_All` (72000512). This holds
+whatever the `type` (`trail`, `friendly`, `unknown`); observed March-September 2026 on 66,914 archived entries. It holds
+one element per participant. Each lists 1-6 modifiers, 4 most often, not a fixed three. A modifier is
+`<card codename><tier 1-3>` using the Mastery badge codenames: `AxeMan2` is Executioner at tier 2 (see
+[players.md](players.md#badges)).
 
 ```json
 [
-  { "tag": "#PU9RCVYUG", "modifiers": ["Pekka3", "Graveyard2", "Rage1"] },
-  { "tag": "#2JVGV9CG9", "modifiers": ["Fireball3", "GoblinHut2", "Berserker1"] }
+  { "tag": "#PLAYER1", "modifiers": ["Pekka3", "Graveyard2", "Rage1", "AxeMan2"] },
+  { "tag": "#PLAYER2", "modifiers": ["Fireball3", "GoblinHut2", "Berserker1", "Assassin1"] }
 ]
 ```

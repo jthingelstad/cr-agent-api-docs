@@ -101,8 +101,9 @@ surfaces.
 | Draft / Triple Draft / Mega Draft                              | Decks are selected during the match setup rather than purely from the player's active ladder deck. Use `deckSelection` instead of assuming `currentDeck`.  |
 | Double / Triple / Infinite Elixir, Ramp Up, Sudden Death, Rage | Elixir or overtime rules differ from normal ladder. These are usually event/challenge/riverrace rotating rule sets.                                        |
 
-For event variants, the API's best stable handles are `eventTag`, `gameMode.id`, `gameMode.name`, and `deckSelection`.
-Names and active availability change over time, so use `/events` and battle logs as the live source.
+For event variants, the API's best stable handles are `gameMode.id`, `gameMode.name` and `deckSelection`; `eventTag` is
+stable only for one run of an event (see [events.md](events.md)). Names and active availability change over time, so use
+`/events` and battle logs as the live source.
 
 ---
 
