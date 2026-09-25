@@ -165,6 +165,14 @@ Agent context:
 - Friendly battles can appear in battle logs but are practice context, not progression evidence.
 - Trade Tokens, emotes, and many social cosmetics are useful wiki context but are not fully represented in the public
   API.
+- Clan chat and the **Clan Leader Message** are not in the public API: nothing reads or sends either. A Leader Message
+  is a title and a message that a leader or co-leader (only) sends to the clan; it lands in every member's in-game Inbox
+  and stays there, unlike chat. Observed in the game on 2026-09-25 by typing to the limit: the title takes at most 24
+  characters and the message about 180 (bounded by typing, not read from a spec).
+- The in-game chat filter masks some innocent text. Found 2026-07-17 by comparing composed clan-chat lines with the
+  masked result in the game and by controlled tests: `&` between two words (the `&` and both flanking words are masked;
+  "and" passes), `+` directly before digits (read as a phone-number prefix; bare numbers pass), and words on its slang
+  list even when meant innocently. Whether the Leader Message applies the same filter has not been observed.
 
 ### Events, Challenges, And Temporary Modes
 
