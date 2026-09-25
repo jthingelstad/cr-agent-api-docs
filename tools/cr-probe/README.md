@@ -105,7 +105,7 @@ uv run crprobe survey week-close --clan '#J2RGCRVG' --human
 ```
 
 `finish-time` exists because the Colosseum sentinel rule looked obvious after one week and only became trustworthy after
-ten. `week-close` shows the weekly race close is stable within a season and drifts between them — the distinction that a
+ten. `week-close` shows a race's weekly close is stable within a season and moves between them — the distinction that a
 phantom season came from conflating.
 
 ## Captures

@@ -372,9 +372,10 @@ Consequences worth designing for:
 - **There is no payload that announces the new season.** `seasonId` is absent from the live race, and between the roll
   and the new race there is no race at all. A consumer learns the season changed only when the new race appears with
   `sectionIndex 0` - which is up to well over an hour late.
-- **The stand-by window is the dangerous one.** For ~26 minutes the API returns a payload that describes the OLD race
-  while the calendar has (or is about to) move on. Deriving the season from wall-clock during that window stamps the old
-  race's final section with the NEW season id.
+- **The stand-by window is the dangerous one.** From the race's own close slot to 10:00Z (~26 minutes for this race; up
+  to ~30 for another, since slots are per race) the API returns a payload that describes the OLD race while the calendar
+  has (or is about to) move on. Deriving the season from wall-clock during that window stamps the old race's final
+  section with the NEW season id.
 - **`periodLogs` is `[]` on a fresh race.** Anything that reads "the most recent closed day" must handle empty, not
   assume at least one entry.
 - **`fame` is `0` on a fresh race** even though the previous race ended with a large value. Do not read `fame: 0` as a
@@ -425,14 +426,16 @@ Consequences worth designing for:
   entries do not occur during colosseum week. Avoid surfacing boat-defense or repair-point copy when
   `periodType=colosseum`.
 - **River race default limit:** `/riverracelog` returns 10 entries by default.
-- **Race close time anchor — not a global clock, per-race and per-season:** `finishTime` on the rank-1 clan in
-  `/riverracelog` entries is the moment the race closed, not when that specific clan met a threshold. In one sampled
-  race set, 4 consecutive weeks of Season 130 varied by ±2 seconds (09:56:03 to 09:56:05) — far too tight for per-clan
-  completion pacing and consistent with a scheduled server-side race-close job. At the Season 131 roll the anchor jumped
-  ~19 minutes earlier (09:37:03) and stayed there. Working theory: Supercell stages matchmaking in batches at season
-  roll, each race lands in a staggered close slot, and that slot is stable for the duration of the season. The REST API
-  does not expose a `nextWarStart` / `timeUntilTransition` countdown. For approximate transition timing, derive the
-  anchor from the most recent non-sentinel `finishTime` and assume it holds until the next season roll.
+- **`finishTime` is not a clock, and one clan's close is not the game's.** The rank-1 `finishTime` in a `/riverracelog`
+  entry is the war-day close at which that race's boat reached the line (see "`finishTime` is a war-day close" below),
+  not the moment the week closed and not a mid-day crossing. Its time of day is the race's own close slot: per race,
+  drawn at the season roll, and so far always in the `09:30Z`-`10:00Z` band (see "The race-close time is per race"
+  above). That is why one clan's rank-1 `finishTime` held 09:56:03-09:56:05 across four weeks of Season 130 and sat at
+  09:37:03 after the Season 131 roll: that race's slot moved, not a global close. The REST API exposes no `nextWarStart`
+  / `timeUntilTransition` countdown. To learn a race's slot, read that clan's own `riverracelog[].createdDate` (the week
+  close, present on Colosseum weeks too), not `finishTime`, whose date is the finishing war day and which is the
+  sentinel on every Colosseum week and every non-rank-1 entry. Never read one clan's `finishTime` or close as the
+  transition time for other clans; the 10:00Z season hour is the only global instant.
 - **Non-rank-1 clans carry a sentinel `finishTime`:** in a NORMAL war week only the rank-1 standings entry shows a real
   `finishTime`; the other four clans in the race show `19691231T235959.000Z` (epoch zero) because they didn't hit a
   completion condition. Don't treat the sentinel as a real time.
@@ -449,9 +452,9 @@ Consequences worth designing for:
   participants' own `fame` (points) stops moving while `decksUsed` keeps counting.
 - **In a Colosseum week EVERY clan carries the sentinel, rank 1 included.** Colosseum has no finish line — it scores war
   points across all four battle days with no completion condition to hit — so no entry in that week's standings has a
-  real `finishTime`. Code that reads "the rank-1 `finishTime`" as the race-close anchor gets epoch zero on exactly the
-  week that ends a season. Clean across 10 consecutive weeks of `#J2RGCRVG` (`riverracelog`, 2026-09-07) - every
-  Colosseum week all-sentinel, every normal week not:
+  real `finishTime`. Code that reads the rank-1 `finishTime` as a close time gets epoch zero on exactly the week that
+  ends a season; read the slot from `createdDate` instead. Clean across 10 consecutive weeks of `#J2RGCRVG`
+  (`riverracelog`, 2026-09-07) - every Colosseum week all-sentinel, every normal week not:
 
   | week      | Colosseum (`trophyChange` 100) | rank-1 `finishTime`    | all five sentinel |
   | --------- | ------------------------------ | ---------------------- | ----------------- |

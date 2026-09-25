@@ -16,12 +16,13 @@ open-questions list below is empty.
 | **War week roll** | Every Monday that is NOT the first of the month      | 09:15 UTC          |
 | **Season roll**   | First Monday of the month, season rolls 10:00:00 UTC | 09:15 UTC          |
 
-The weekly race close drifts season to season (09:37 in S133, 09:30 in S134, 09:34 in S135) but is stable within a
-season, so 09:15 UTC is early enough without guessing. Confirm the current season's close with
-`crprobe survey week-close` rather than assuming last season's.
+Each race closes in its own slot, drawn per race at the season roll: one clan's close is not another's, and one season's
+is not the next. Every slot observed so far falls between 09:30 and 10:00 UTC (see "The race-close time is per race" in
+[clans.md](../clans.md)), so 09:15 UTC is early enough for any race without guessing. Confirm the watched clan's slot
+for the current season with `crprobe survey week-close` rather than assuming last season's or another clan's.
 
-On a first Monday BOTH boundaries happen: the week closes ~09:34 and the season rolls at 10:00. Use the season prompt
-that day — it covers both.
+On a first Monday BOTH boundaries happen: the watched race's week closes in its slot (09:30-10:00) and the season rolls
+at 10:00. Use the season prompt that day — it covers both.
 
 ## The day before: pre-flight
 
@@ -47,9 +48,10 @@ recipes/observe-a-boundary.md, and anything we learn goes into the docs.
 Before the boundary:
 1. Pre-flight: `uv run crprobe keys --human` and `uv run pytest -q`. If a key
    does not work from this machine, stop and tell me.
-2. Establish the expected close time for the CURRENT season with
+2. Establish this clan's race close slot for the CURRENT season with
    `crprobe survey week-close --clan '#J2RGCRVG' --human`. Do not assume last
-   season's time; it drifts between seasons.
+   season's slot or another clan's: the slot is per race and re-drawn at each
+   season roll.
 3. Read the "war week" and "season rollover" sections of clans.md and
    models/river-race.md so you know what we currently claim. The point of the
    exercise is to confirm or contradict those claims.
@@ -118,16 +120,11 @@ far was estimated rather than measured.
 Then:
 - Update the minute-by-minute table in clans.md with measured bounds, and add
   this season's row to the gap-length table.
-- Check the war-week close time against the previous season: did it drift?
+- Check this race's close slot against the previous season's: did it move?
 - Tick off or refine the open questions, and add any new one the run raised.
 - Add any newly observed enum value or fact to
   tools/docs-build/scripts/validate-observed-enums.mjs.
 - Run the docs build, commit and push.
-
-Also worth checking, because these are downstream of the season id and have
-been wrong before: does Elixir MCP's war_current report the new season with a
-sensible section index, and does elixir-bot close the season and grant awards?
-Report anything that disagrees.
 ```
 
 ---
@@ -145,28 +142,28 @@ baked and these prompts can retire (or become a scheduled job).
 - [ ] Does the new `riverracelog` entry appear before, with, or after the race itself changes?
 - [ ] Does `clan.fame` reset to 0 at the boundary, or lag by a poll?
 - [ ] `periodLogs` is documented as spanning the whole SEASON. Confirm it is NOT cleared at a week boundary.
-- [ ] Is the week-close time stable within a season to the second? S135 varied 09:34:04-09:34:06 across five weeks;
-      confirm the pattern in S136.
+- [ ] Is a race's close slot stable within a season to the second? The watched race held 09:34:04-09:34:06 across S135's
+      five weeks, while some other races in clans.md spread over minutes; confirm the pattern in S136.
 - [ ] Does `clanWarTrophies` update at the week close or at the next race?
 
 ### Season roll
 
 - [ ] **True bounds of the 404 window.** Every figure we have (~16 min July, ~77 min August, ~9 min September) was
       inferred, not measured.
-- [ ] Is the season roll exactly 10:00:00Z every month, or does it drift like the week close does?
+- [ ] Is the season roll exactly 10:00:00Z every month, or does it move the way a race's close slot does?
 - [ ] What does `riverracelog` return during the 404 window — the closed season's final week, immediately?
 - [ ] When does a player profile's previous-season / Path of Legend result flip relative to 10:00:00Z? In September it
       had already flipped by 09:45, i.e. BEFORE the season formally rolled.
 - [ ] Does the first race of a season always appear at `sectionIndex 0`, `periodIndex 0`, `periodType training`?
-- [ ] Does the week-close time drift at the season boundary specifically, or can it move mid-season?
+- [ ] Does a race's close slot move only at the season boundary, or can it move mid-season?
 - [ ] Is Pass Royale's season length always aligned to the war season?
 
 ### Answered
 
-- [x] The week close and the season roll are two different events ~26 minutes apart (2026-09-07). Documented in
-      clans.md.
-- [x] The season hour is 10:00:00Z, not the ~09:30 the week close suggested (2026-09-07, confirmed against the client's
-      own countdown).
+- [x] The week close and the season roll are two different events: the race closes in its own slot (~26 minutes before
+      the roll for the watched race) and the season rolls at 10:00:00Z (2026-09-07). Documented in clans.md.
+- [x] The season hour is 10:00:00Z, not the ~09:30 one race's week close suggested (2026-09-07, confirmed against the
+      client's own countdown).
 - [x] `currentriverrace` 404s between the season roll and the new race, while `GET /clans/{tag}` still returns 200
       (2026-09-07).
 - [x] Colosseum weeks carry the epoch-zero `finishTime` sentinel on EVERY standings entry, rank 1 included (2026-09-07,

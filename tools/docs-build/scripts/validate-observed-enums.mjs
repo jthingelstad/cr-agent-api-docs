@@ -76,6 +76,16 @@ const OBSERVED_CLAIMS = [
   ["cards.md", "all 123 standard cards matched", "the form bit field corroborated by icon assets (2026-09-09)"],
   ["models/players.md", "14,000", "the real Trophy Road ceiling"],
   ["clans.md", "19691231T235959.000Z", "the epoch-zero finishTime sentinel"],
+  [
+    "clans.md",
+    "`finishTime` is a war-day close",
+    "finishTime is the war-day close the boat crossed on, not the week close (observed 2026-09-21)",
+  ],
+  [
+    "clans.md",
+    "The race-close time is per race, drawn at the season roll",
+    "the close slot is per race, never one clan's clock (observed across six clans 2026-09-17)",
+  ],
   ["clans.md", "Waiting for Clan War to start", "the 404 window between races"],
   ["models/river-race.md", "category error", "fame vs periodPoints are not interchangeable"],
   [
