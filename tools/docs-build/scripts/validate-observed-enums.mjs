@@ -10,9 +10,9 @@
  * Only add an entry here once it has been observed on the wire and written
  * into the docs -- this asserts what we know, it does not wish for coverage.
  *
- * Inherited from a downstream project (elixir-bot), which had been carrying
- * this guard against its own vendored copy of these docs. The copy is gone;
- * the guard belongs with the docs it guards.
+ * Inherited from a project that had been carrying this guard against its
+ * own vendored copy of these docs. The copy is gone; the guard belongs with
+ * the docs it guards.
  */
 
 import { readFileSync } from "node:fs";
