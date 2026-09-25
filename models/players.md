@@ -192,7 +192,8 @@ One-time badges omit `level`, `maxLevel`, and `target` entirely. They are not pr
 
 Badge categories observed:
 
-- Mastery badges, such as `MasteryKnight`
+- Mastery badges, such as `MasteryKnight` - tiered, with `maxLevel` 10 (all 68 Mastery badges on one recorded profile,
+  2026-09-25)
 - Challenge badges, such as `Classic12Wins`
 - Mode badges, such as `2v2`, `RampUp`, `SuddenDeath`, `Draft`, `2xElixir`
 - Collection badges, such as `EmoteCollection`, `BannerCollection`, `CollectionLevel`, `ClanDonations`
