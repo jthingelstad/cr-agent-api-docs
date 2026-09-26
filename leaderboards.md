@@ -79,6 +79,10 @@ Get players ranked on a specific leaderboard.
 | `score` | integer | Leaderboard score (mode-specific trophies/points)                  |
 | `clan`  | object  | Optional — `{ tag, name, badgeId }` — absent if player has no clan |
 
+Entries carry no `expLevel` (observed September 26, 2026, `/leaderboard/170000019?limit=5`: every entry's keys were
+exactly `tag`, `name`, `rank`, `score`, `clan`). The location and Path of Legends rankings still send the retired
+`expLevel`; this endpoint does not, so a reader shared across boards must not require it.
+
 ---
 
 ## Error Codes
