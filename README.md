@@ -101,13 +101,15 @@ Run Markdown formatting with:
 npm --prefix tools/docs-build run format
 ```
 
-To enable the versioned local Git hooks in a fresh clone, run:
+The gate is CI: every pull request runs the docs build, the offline `crprobe` tests and a workflow lint, and `main`
+accepts a change only when the aggregate `validate` check is green. See [AGENTS.md](AGENTS.md) for how changes land.
+
+As an optional convenience, versioned local Git hooks run the same docs build before a commit or push. They are not
+installed by default; to enable them in a clone, run:
 
 ```sh
 git config core.hooksPath tools/git-hooks
 ```
-
-The local `pre-commit` and `pre-push` hooks run the same docs build as CI.
 
 ## Fan Content and Attribution
 

@@ -49,6 +49,24 @@ This repository is an agent-first reference for the public Clash Royale API.
 - When you add an observed enum value or a specific fact, add it to
   `tools/docs-build/scripts/validate-observed-enums.mjs` so a later rewrite cannot quietly drop it.
 
+## Landing Changes
+
+Since 2026-09-26, `main` takes only pull requests, merged on a green `validate` check (the docs build, the offline
+`crprobe` tests and `sh scripts/test-workflows.sh`). There is no bypass, Jamie's account included; the agents push as
+it. A reference fix from any run lands this way, so the observed-enum guard runs before `main`, not after.
+
+1. `git switch -c <topic>/<slug>` before the first edit, then commit.
+2. `git push -u origin HEAD`, `gh pr create --fill`, `gh pr merge --auto --rebase --delete-branch`.
+3. `gh pr checks --watch --fail-fast`; when merged, `git switch main && git pull --ff-only`.
+
+- If `main` moves under an open PR: `gh pr update-branch --rebase`.
+- A rebase merge gives the commit a new SHA on `main`. To cite the landed commit, read it from
+  `gh pr view <n> --json mergeCommit`.
+- A check that fails and then passes on re-run is a flake, and a flake is a defect: fix it in the PR or record it the
+  same day.
+- Unfinished work stays an open PR; the checkout goes back to `main`.
+- Outside contributors: fork, then PR. Same check.
+
 ## Official Docs Comparison
 
 The official Swagger UI is a useful baseline, but observed live API behavior is higher-confidence when the two conflict.

@@ -78,7 +78,7 @@ Then:
   run raised.
 - Add any newly observed enum value or fact to
   tools/docs-build/scripts/validate-observed-enums.mjs.
-- Run the docs build, commit and push.
+- Run the docs build, then land it as a pull request (AGENTS.md, "Landing changes").
 
 Report what changed versus what we already documented. If everything matched,
 say so plainly — a boring confirmation is a real result and should be recorded
@@ -124,7 +124,7 @@ Then:
 - Tick off or refine the open questions, and add any new one the run raised.
 - Add any newly observed enum value or fact to
   tools/docs-build/scripts/validate-observed-enums.mjs.
-- Run the docs build, commit and push.
+- Run the docs build, then land it as a pull request (AGENTS.md, "Landing changes").
 ```
 
 ---
