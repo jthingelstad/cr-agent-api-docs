@@ -3,23 +3,37 @@ name: Docs Build
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
-permissions:
-  contents: read
+# The job named `validate` is the check the `main` ruleset requires.
+# Rename both together or merges stop.
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# Least privilege: the token can read the repository and nothing else,
+# and no checkout leaves it in .git/config. Actions are pinned to full
+# commit SHAs with the tag in the comment beside each; Dependabot keeps
+# them current. scripts/test-workflows.sh enforces all three.
+permissions: {}
 
 jobs:
   docs-build:
     name: Docs build
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
           cache: npm
@@ -38,15 +52,19 @@ jobs:
     name: crprobe tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
     # A separate job on purpose: a bug in the tooling must never block a
     # documentation fix, and the docs gate must never wait on Python.
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           enable-cache: true
 
@@ -55,3 +73,29 @@ jobs:
         # No network and no credentials here: every test is offline by design,
         # so CI cannot depend on the live API being up or on a key being valid.
         run: uv run --frozen pytest -q
+
+  workflow-lint:
+    name: Workflow lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Lint workflows
+        run: sh scripts/test-workflows.sh
+
+  validate:
+    name: validate
+    if: always()
+    needs: [docs-build, cr-probe, workflow-lint]
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: every job passed
+        run: test "${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'skipped') }}" = true

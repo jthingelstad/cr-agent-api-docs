@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /tools/docs-build
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    # One PR a week for routine bumps instead of one per package; each
+    # still goes through main's required `validate` check.
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    commit-message:
+      prefix: deps
+
+  # Keeps the workflow SHA pins and their tag comments current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
