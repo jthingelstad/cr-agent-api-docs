@@ -301,20 +301,20 @@ Read a battle's arena as context for the battle, never as the player's arena.
 
 **Battle types observed:**
 
-| `type`                   | Description                                                                                      | Game Modes                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| `PvP`                    | Ladder / trophy battles                                                                          | `Ladder`                                                                                   |
-| `pathOfLegend`           | Ranked Path of Legend                                                                            | `Ranked1v1_NewArena`, `Ranked1v1_NewArena2`                                                |
-| `trail`                  | Event/challenge battles                                                                          | `Crazy_Arena`, `Challenge_AllCards_EventDeck_NoSet`                                        |
-| `clanMate`               | Friendly battle within clan (1v1)                                                                | `Friendly`                                                                                 |
-| `clanMate2v2`            | 2v2 with clanmate                                                                                | `TeamVsTeam`                                                                               |
-| `friendly`               | Friendly battle (not clanmate)                                                                   | `Crazy_Arena`, `7xElixir_Friendly`                                                         |
-| `riverRacePvP`           | River race 1v1 battle                                                                            | `CW_Battle_1v1`                                                                            |
-| `riverRaceDuel`          | River race duel (best-of-3)                                                                      | `CW_Duel_1v1`                                                                              |
-| `riverRaceDuelColosseum` | Colosseum duel variant                                                                           | `CW_Duel_1v1`                                                                              |
-| `tournament`             | Player-created tournament battle                                                                 | `Tournament` (72000009, bring-your-own-deck), `Draft_Competitive` (72000194, Triple Draft) |
-| `boatBattle`             | River race boat attack/defense                                                                   | `ClanWar_BoatBattle`                                                                       |
-| `unknown`                | Rare fallback on some friendlies; since 2026-09-21 also every battle of the `RR_` event rulesets | `Friendly`, `RR_*` (72000520-72000531)                                                     |
+| `type`                   | Description                                                                                      | Game Modes                                                                                                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PvP`                    | Ladder / trophy battles                                                                          | `Ladder`                                                                                                                                                                         |
+| `pathOfLegend`           | Ranked Path of Legend                                                                            | `Ranked1v1_NewArena`, `Ranked1v1_NewArena2`                                                                                                                                      |
+| `trail`                  | Event/challenge battles                                                                          | `Crazy_Arena`, `Challenge_AllCards_EventDeck_NoSet`                                                                                                                              |
+| `clanMate`               | Friendly battle within clan (1v1)                                                                | `Friendly`                                                                                                                                                                       |
+| `clanMate2v2`            | 2v2 with clanmate                                                                                | `TeamVsTeam`                                                                                                                                                                     |
+| `friendly`               | Friendly battle (not clanmate)                                                                   | `Crazy_Arena`, `7xElixir_Friendly`                                                                                                                                               |
+| `riverRacePvP`           | River race 1v1 battle                                                                            | `CW_Battle_1v1`                                                                                                                                                                  |
+| `riverRaceDuel`          | River race duel (best-of-3)                                                                      | `CW_Duel_1v1`                                                                                                                                                                    |
+| `riverRaceDuelColosseum` | Colosseum duel variant                                                                           | `CW_Duel_1v1`                                                                                                                                                                    |
+| `tournament`             | Player-created tournament battle                                                                 | `Tournament` (72000009, bring-your-own-deck), `Draft_Competitive` (72000194, Triple Draft), `RampUpElixirSpawnGhostMode_Tournament` (72000180), `Duel_1v1_Tournament` (72000316) |
+| `boatBattle`             | River race boat attack/defense                                                                   | `ClanWar_BoatBattle`                                                                                                                                                             |
+| `unknown`                | Rare fallback on some friendlies; since 2026-09-21 also every battle of the `RR_` event rulesets | `Friendly`, `RR_*` (72000520-72000531)                                                                                                                                           |
 
 **Deck selection values:**
 
@@ -328,7 +328,7 @@ Read a battle's arena as context for the battle, never as the player's arena.
 | `draftCompetitive` | `Draft_Competitive` friendlies and tournaments; `Chaos_1v1_TripleDraft`                                                                                                                                  |
 | `predefined`       | preset-deck friendlies (`MirrorDeck_Friendly`, `ClassicDecks_Friendly`)                                                                                                                                  |
 | `unknown`          | Both All Random Princess modes (`All_Random_Princess` 72000501, `All_Random_Princess_Friendly` 72000519; 14,130 archived entries, June-September 2026). These battles disclose no deck: `cards` is `[]`. |
-| `quadDeckPick`     | 1v1 Duel friendlies (`72000314 Duel_1v1_Friendly`) — 4 decks brought per match                                                                                                                           |
+| `quadDeckPick`     | 1v1 Duel friendlies (`72000314 Duel_1v1_Friendly`) and player-created tournaments (`72000316 Duel_1v1_Tournament`) — 4 decks brought per match                                                           |
 
 **Known game mode IDs:**
 
@@ -358,6 +358,7 @@ Read a battle's arena as context for the battle, never as the player's arena.
 | 72000073 | Rage_Ladder                                                                                 |
 | 72000087 | ClassicDecks_Friendly                                                                       |
 | 72000091 | Heist_Friendly                                                                              |
+| 72000180 | RampUpElixirSpawnGhostMode_Tournament (observed September 2026)                             |
 | 72000194 | Draft_Competitive                                                                           |
 | 72000232 | 7xElixir_Friendly                                                                           |
 | 72000254 | MirrorDeck_Friendly                                                                         |
@@ -367,6 +368,7 @@ Read a battle's arena as context for the battle, never as the player's arena.
 | 72000268 | CW_Battle_1v1                                                                               |
 | 72000286 | TeamVsTeam_TripleElixir_Friendly                                                            |
 | 72000314 | Duel_1v1_Friendly                                                                           |
+| 72000316 | Duel_1v1_Tournament (observed September 2026)                                               |
 | 72000321 | Touchdown_ClanWar                                                                           |
 | 72000376 | Event_RestlessDead                                                                          |
 | 72000450 | Ranked1v1_NewArena                                                                          |
@@ -401,6 +403,11 @@ Read a battle's arena as context for the battle, never as the player's arena.
 The twelve `RR_` modes (72000520-72000531) arrived together on 2026-09-21 as one event, `#2C9J8QUU`: their 3,720
 archived entries, 2026-09-21 to 2026-09-25, are exactly that event tag's. Every battle of them carries that `eventTag`,
 `type: unknown` and `deckSelection: collection`. Key on the event tag, not on twelve modes.
+
+Two player-created tournament modes were first seen in late September 2026. `RampUpElixirSpawnGhostMode_Tournament`
+(72000180) appeared in 17 archived battles on September 25 with `deckSelection: collection`; `Duel_1v1_Tournament`
+(72000316) appeared in 13 on September 27 with `deckSelection: quadDeckPick`. All 30 carried `type: tournament` and a
+`tournamentTag`, with no `eventTag`; they are tournament rule variants, not scheduled events.
 
 Note: `gameMode.name` was observed on 100% of battles across March–April 2026 sampling (all tournament battles
 included). Earlier notes suggesting `name` might be absent on some tournament modes no longer apply — treat `name` as

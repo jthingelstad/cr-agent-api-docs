@@ -125,11 +125,11 @@ to the season start. Anything aggregating it must scope to the current section (
 it silently inflates per-week totals for every week after the first. It is absent (no key, never `[]`) on a freshly
 created race, until the first war day closes.
 
-**A Colosseum battle day is not logged, in the five-week seasons observed.** In archived payloads March-September 2026,
-including the section-4 Colosseum weeks that closed Seasons 130 and 135, `periodLogs[].periodIndex` held only regular
-war days (3-6, 10-13, 17-20, 24-27) and never 31-34. During those Colosseum weeks the newest entry was still the
-previous week's last war day; read the Colosseum score from the live `clans[].fame` instead. Whether a four-week
-season's Colosseum days (section 3, `periodIndex` 24-27) are logged is not yet observed.
+**A Colosseum battle day is not logged.** In archived payloads March-October 2026, the section-4 Colosseum weeks that
+closed five-week Seasons 130 and 135 never added indices 31-34 to `periodLogs[].periodIndex`. Four-week Season 136
+confirmed the same behavior: none of 223 Colosseum payloads from 11 recorded clans on October 2-3 added indices 24 or 25
+after those days closed, even as the live race advanced through period index 26. During a Colosseum week the newest
+entry remains the previous regular week's last war day; read the Colosseum score from the live `clans[].fame` instead.
 
 Every entry's `items[]` names the CURRENT race's clans, including the entries for earlier sections when those clans were
 in other brackets (observed 2026-08-31 and 2026-09-17: a section-1 war-day-1 payload carried entries for periods 3-6 and
