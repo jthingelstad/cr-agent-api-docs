@@ -151,8 +151,14 @@ const OBSERVED_CLAIMS = [
   [
     "models/river-race.md",
     "A Colosseum battle day is not logged",
-    "five-week indices 31-34 absent; four-week S136 indices 24-25 absent after close (223 payloads, 11 clans, 2026-10-02..03)",
+    "five-week indices 31-34 absent; four-week S136 indices 24-25 absent after close (223 payloads, 11 clans, 2026-10-02..03), 24-27 absent in stand-by (2026-10-05)",
   ],
+  // The S136 -> S137 season roll, recorded by crprobe at 10 s (session s137-roll, 2026-10-05).
+  ["models/river-race.md", "- `matchmaking`", "a race state with no clan, between the season-roll 404 and the matched race (observed 2026-10-05)"],
+  ["clans.md", "The 404 window measured 490-510 seconds", "the season-roll 404 measured from both sides (2026-10-05)"],
+  ["clans.md", "already zeroed while the section and period were still the old ones", "the stand-by payload zeroes fame and decks (observed 2026-10-05)"],
+  ["clans.md", "`093804Z`-`093805Z` for all four weeks of Season 136", "a race's close slot held to the second across S136 (2026-09-14..10-05)"],
+  ["clans.md", "`+100 / +50 / -25 / -50 / -100`", "Colosseum trophyChange is graded by rank, not ±100 (60 brackets, S118-135)"],
   ["clans.md", "`collectionEndTime` and `warEndTime` are not sent", "never observed in 7,140 race payloads 2026-03..09"],
   ["leaderboards.md", "472 of 480 reads", "game-mode boards return an after cursor at limit=1000 (2026-09-11..09-25)"],
   ["locations.md", "Both clan boards stop at 1,000 with no cursor", "48 reads per board, 3 locations, 2026-09-11..09-25"],
