@@ -173,6 +173,9 @@ const OBSERVED_CLAIMS = [
   ["wiki-api-crosswalk.md", "`edging`", "a slang-list word masked whatever the meaning (observed 2026-07-17)"],
   ["wiki-api-crosswalk.md", "Season *** ** ********", "the unexplained Season 135 blank (observed 2026-08-03)"],
   ["wiki-api-crosswalk.md", "the title takes at most 24", "the Leader Message title limit (observed 2026-09-25)"],
+  ["wiki-api-crosswalk.md", "sending is limited to **one per day**", "operator-reported Leader Message daily limit (2026-10-05)"],
+  ["wiki-api-crosswalk.md", "a delivered Inbox entry had a readable subject", "Leader Message masking screenshot observation (2026-10-05)"],
+  ["wiki-api-crosswalk.md", "Identical filter rules between Leader Messages and clan chat have not been established", "Leader Message filter uncertainty"],
 ];
 
 const failures = [];
