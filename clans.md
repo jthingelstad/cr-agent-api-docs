@@ -222,9 +222,10 @@ across 40 log entries sampled April 2026.
   captured in that gap — which still describe the FINISHED race, at the OLD section index — get stamped with the NEXT
   season id. That produces impossible `(season N+1, last section)` rows.
 - **The race-close time is per race, drawn at the season roll; the 10:00Z season hour is global.** Observed closes for
-  one clan: `093005Z` for every week of Season 134, `093404Z`-`093406Z` for every week of Season 135. Stable within a
-  season, moved between them. Confirmed across clans 2026-09-17 (six clans, five countries, `riverracelog[].createdDate`
-  for the same weeks): the week KEY `(seasonId, sectionIndex)` is identical everywhere, the close INSTANT is not.
+  one clan: `093005Z` for every week of Season 134, `093404Z`-`093406Z` for every week of Season 135,
+  `093804Z`-`093805Z` for all four weeks of Season 136, its Colosseum included. Stable within a season, moved between
+  them. Confirmed across clans 2026-09-17 (six clans, five countries, `riverracelog[].createdDate` for the same weeks):
+  the week KEY `(seasonId, sectionIndex)` is identical everywhere, the close INSTANT is not.
 
   | clan (country)      | S134 weeks | S135 weeks          | S136 week 0 |
   | ------------------- | ---------- | ------------------- | ----------- |
@@ -247,8 +248,13 @@ across 40 log entries sampled April 2026.
 - `standings` lists the race's clans ranked by finish position: usually 5, but not always. 821 archived log entries
   (March-September 2026) held 4,101 standings rather than 4,105, so at least one week was logged with fewer than five.
   Do not index `standings[4]` without a length check.
-- `trophyChange`: regular weeks = ±20, final week (colosseum) = ±100. Colosseum is always the last section of a season —
-  section 3 in a 4-week season, section 4 in a 5-week season.
+- `trophyChange`: regular weeks stay within ±20. The final week (colosseum) is graded by rank, not ±100: in 60 archived
+  Colosseum brackets (Seasons 118-135, the latest war logs of 36 clans, read 2026-10-05) the commonest table was
+  `+100 / +50 / -25 / -50 / -100` for ranks 1-5 (29 brackets), and the rest gave smaller losses, several ranks the same
+  figure (`+100 / -5 / -5 / -5 / -5`, `+100 / +50 / 0 / 0 / 0`), or a shared top (`+75 / +75`); Season 136's closed
+  `+100 / +50 / -15 / -45 / -45` for one bracket (2026-10-05). Rank 1 took `+100` in 58 of 60. Read the figure from the
+  log; do not derive it from rank. Colosseum is always the last section of a season — section 3 in a 4-week season,
+  section 4 in a 5-week season.
 - `finishTime`: normal value for clans that finished; sentinel value `19691231T235959.000Z` (epoch 0) for the final
   week/colosseum
 - Prefer `finishTime` over fame thresholds when determining whether the race is finished
@@ -361,16 +367,28 @@ therefore fires up to well over an hour AFTER the season itself rolls. Do not tr
 
 ## The season rollover, minute by minute
 
-Watched end to end on the S135 -> S136 roll, 2026-09-07, against `#J2RGCRVG`. Nearly every rollover bug comes from
-assuming this is ONE instant. It is a sequence, and the API says different things at each stage.
+Watched by hand on the S135 -> S136 roll, 2026-09-07, and recorded with `crprobe` (10-second polls, session `s137-roll`)
+on the S136 -> S137 roll, 2026-10-05, both against `#J2RGCRVG`. Nearly every rollover bug comes from assuming this is
+ONE instant. It is a sequence, and the API says different things at each stage. Times below are the October recording; a
+bound is the last poll before and the first poll after.
 
-| UTC           | What happens     | `currentriverrace`                                                                             | Client says                        |
-| ------------- | ---------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `09:34:04`    | Race closes      | `200`, still the FINISHED race: old `sectionIndex`, final fame                                 | "Week N ending... Please stand by" |
-| `09:34-10:00` | Stand-by         | unchanged - still the finished race                                                            | season countdown running           |
-| `10:00:00`    | **Season rolls** | unchanged - still the finished race                                                            | countdown hits zero                |
-| `10:00-10:09` | No race exists   | **`404 notFound`** (`GET /clans/{tag}` still `200`)                                            | "Waiting for Clan War to start..." |
-| `~10:09`      | New race created | `200`, `sectionIndex 0`, `periodIndex 0`, `periodType training`, `fame 0`, no `periodLogs` key | "Training Days Started! Week 1"    |
+| UTC (2026-10-05)      | What happens          | `currentriverrace`                                                                                                                                                                        | Client says                        |
+| --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `09:38:04`            | Race closes           | the war log's `createdDate`; the closed week is already the log's first entry                                                                                                             | "Week N ending... Please stand by" |
+| `09:46:30`-`10:00:31` | Stand-by              | `200`, old `sectionIndex` 3, `periodIndex` 27, `periodType colosseum`, but every `fame`, `periodPoints` and `decksUsed` is `0` and `clanScore` already includes the week's `trophyChange` | season countdown running           |
+| `10:00:00`            | **Season rolls**      | unchanged: still the stand-by payload for at least 31 seconds                                                                                                                             | countdown hits zero                |
+| `10:00:31`-`10:00:41` | No race exists        | **`404 notFound`** begins (`GET /clans/{tag}` still `200`)                                                                                                                                | "Waiting for Clan War to start..." |
+| `10:08:51`-`10:09:01` | New race, matchmaking | `200`, and the whole body is `{"periodIndex":0,"sectionIndex":0,"state":"matchmaking"}`: no `clan`, `clans`, `periodType` or `periodLogs`                                                 | not observed                       |
+| `10:10:51`-`10:11:01` | New race, matched     | `state full`, `periodType training`, `fame 0`, no `periodLogs` key                                                                                                                        | "Training Days Started! Week 1"    |
+
+The 404 window measured 490-510 seconds and matchmaking about two minutes. From 09:46 to 10:15 the profile and the war
+log did not change; the log served the closed week through the stand-by, the 404 and the new race.
+
+**The stand-by payload is not the finished race's figures.** The September hand watch recorded stand-by as "still the
+finished race, final fame", but no stand-by payload from that roll was kept. In October the first observation, 8 minutes
+after the close, was already zeroed while the section and period were still the old ones. Whether the zeroing happens at
+the close or some minutes after it is not yet measured. Either way, a stand-by read is not a source for the finished
+week's figures: read those from the log, or keep the last value seen before the close.
 
 Consequences worth designing for:
 
@@ -388,8 +406,12 @@ Consequences worth designing for:
   failed capture.
 - **The 404 is normal.** It recurs monthly. It is not a deleted clan, not an auth failure (that is `403 invalidIp`), and
   not a reason to alarm or to drop the clan from a roster.
-- **The gap length is not stable.** ~16 min (July), ~77 min (August), ~9 min (September) after the season roll. Do not
-  encode a timeout that assumes the short case.
+- **A race can exist before it has a clan.** For about two minutes after the 404 ended (2026-10-05) the race answered
+  `200` with `state: "matchmaking"` and only `periodIndex` and `sectionIndex`. Code that reads `clan.tag` or `clans[]`
+  off any `200` will fail there. Treat a race without `clan` like the 404: no race yet.
+- **The gap length is not stable.** ~16 min (July), ~77 min (August), ~9 min (September), 8m51s-9m01s to the new race
+  and 10m51s-11m01s to a matched one (October, measured) after the season roll. Do not encode a timeout that assumes the
+  short case.
 
 ## Agent Notes
 
@@ -407,8 +429,8 @@ Consequences worth designing for:
   alone. Search is case-insensitive.
 - **River race structure:** A season is mostly 4 weeks but sometimes 5 weeks (Supercell adjusts to align with Pass
   Royale seasons). Each section has multiple periods (days). The final section is always colosseum week with higher
-  trophy stakes (±100 vs ±20). Do not hardcode which `sectionIndex` is colosseum — use `trophyChange` from the log or
-  `periodType` from `currentriverrace` to identify it.
+  trophy stakes (up to +100 / -100, graded by rank, vs ±20). Do not hardcode which `sectionIndex` is colosseum — use
+  `trophyChange` from the log or `periodType` from `currentriverrace` to identify it.
 - **`periodType` lifecycle:** In ~1,400 live captures over March–April 2026 only three values were observed: `training`
   on practice days, `warDay` on regular-week battle days, and `colosseum` on final-week battle days. Variants like
   `trainingDay` / `battleDay` appear in some community fixtures but were not seen on the wire — treat them as defensive

@@ -17,7 +17,14 @@ Verified fields:
 - `clans`
 - `periodLogs?`
 
-Observed `state`: `full`.
+Observed `state`:
+
+- `full` — every one of 8,447 archived race payloads (2026-03-07 to 2026-10-05).
+- `matchmaking` — a newly created race before its bracket is drawn. Recorded for about two minutes after the season
+  roll's 404 ended (2026-10-05, `10:08:51`-`10:09:01` to `10:10:51`-`10:11:01`Z). The whole body was
+  `{"periodIndex":0,"sectionIndex":0,"state":"matchmaking"}`: no `clan`, `clans`, `periodType` or `periodLogs`. Check
+  for `clan` before reading it; a race without one is "no race yet", like the 404 before it. Whether a mid-season week
+  roll passes through `matchmaking` is not yet observed.
 
 Observed `periodType` values:
 
@@ -128,8 +135,10 @@ created race, until the first war day closes.
 **A Colosseum battle day is not logged.** In archived payloads March-October 2026, the section-4 Colosseum weeks that
 closed five-week Seasons 130 and 135 never added indices 31-34 to `periodLogs[].periodIndex`. Four-week Season 136
 confirmed the same behavior: none of 223 Colosseum payloads from 11 recorded clans on October 2-3 added indices 24 or 25
-after those days closed, even as the live race advanced through period index 26. During a Colosseum week the newest
-entry remains the previous regular week's last war day; read the Colosseum score from the live `clans[].fame` instead.
+after those days closed, even as the live race advanced through period index 26. The stand-by payload after the race
+closed (2026-10-05, 09:46-10:00Z) still logged only 3-6, 10-13 and 17-20, so none of the four Colosseum days was ever
+logged. During a Colosseum week the newest entry remains the previous regular week's last war day; read the Colosseum
+score from the live `clans[].fame` instead.
 
 Every entry's `items[]` names the CURRENT race's clans, including the entries for earlier sections when those clans were
 in other brackets (observed 2026-08-31 and 2026-09-17: a section-1 war-day-1 payload carried entries for periods 3-6 and
@@ -161,10 +170,11 @@ between participants with and without boat attacks.
 
 **Finish line / Colosseum.** A standard River Race week runs until a clan reaches the end of the river (a
 cumulative-fame threshold — commonly 10,000 in a normal week). **Colosseum** (the season's final section,
-`periodType: "colosseum"`) is a multi-day period-point contest rather than a weekly fame race, and uses ±100 trophy
-stakes (vs ±20 for regular weeks — see `RiverRaceStanding`). It has **no finish line**, which is why no clan in a
-Colosseum week carries a real `finishTime`. Note the labelling trap: the API keeps reporting the Colosseum score in
-`clan.fame` (values well past the normal 10,000 finish line) while `periodPoints` stays `0` — the game calls it points.
+`periodType: "colosseum"`) is a multi-day period-point contest rather than a weekly fame race, and uses larger trophy
+stakes graded by rank, commonly `+100 / +50 / -25 / -50 / -100` (vs ±20 for regular weeks — see `RiverRaceStanding` and
+the `trophyChange` notes in [clans.md](../clans.md)). It has **no finish line**, which is why no clan in a Colosseum
+week carries a real `finishTime`. Note the labelling trap: the API keeps reporting the Colosseum score in `clan.fame`
+(values well past the normal 10,000 finish line) while `periodPoints` stays `0` — the game calls it points.
 
 `trophyChange` appears in `/riverracelog` standings, not in the live `currentriverrace` payload.
 
@@ -265,4 +275,5 @@ Season and section notes:
 - Most seasons are 4 weeks, but some are 5 weeks.
 - Colosseum is always the final section, but do not infer it from `sectionIndex` alone.
 - Use `trophyChange` from the log or `periodType` from current river race to identify colosseum context.
-- Regular weeks use ±20 trophy changes; colosseum uses ±100.
+- Regular weeks use ±20 trophy changes; colosseum is graded by rank, up to `+100` for first and as low as `-100` for
+  last, and not symmetric (see [clans.md](../clans.md)).

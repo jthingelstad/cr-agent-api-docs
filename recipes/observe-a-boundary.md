@@ -141,25 +141,36 @@ baked and these prompts can retire (or become a scheduled job).
 - [ ] Does `periodIndex` step cleanly (6 → 7) across a week boundary, or reset?
 - [ ] Does the new `riverracelog` entry appear before, with, or after the race itself changes?
 - [ ] Does `clan.fame` reset to 0 at the boundary, or lag by a poll?
-- [ ] Is a race's close slot stable within a season to the second? The watched race held 09:34:04-09:34:06 across S135's
-      five weeks, while some other races in clans.md spread over minutes; confirm the pattern in S136.
 - [ ] Does `clanWarTrophies` update at the week close or at the next race?
-- [ ] Are a four-week season's Colosseum battle days logged in `periodLogs`? A five-week season's were not (Seasons 130
-      and 135). Check one live read after S136's first Colosseum day closes (2026-10-02).
+- [ ] Does a week roll pass through `state: matchmaking` (a race with no `clan`) the way the S137 season roll did?
+- [ ] When does the stand-by payload zero its `fame`, `periodPoints` and `decksUsed`: at the race close, or minutes
+      later? On 2026-10-05 it was already zeroed 8 minutes after the close; start by 09:15 to see the close itself.
 
 ### Season roll
 
-- [ ] **True bounds of the 404 window.** Every figure we have (~16 min July, ~77 min August, ~9 min September) was
-      inferred, not measured.
-- [ ] Is the season roll exactly 10:00:00Z every month, or does it move the way a race's close slot does?
-- [ ] What does `riverracelog` return during the 404 window — the closed season's final week, immediately?
+- [ ] Is the season roll exactly 10:00:00Z every month? On 2026-10-05 the stand-by payload outlived 10:00:00 and the 404
+      began between 10:00:31 and 10:00:41; one more measured roll says whether that lag is fixed.
 - [ ] When does a player profile's previous-season / Path of Legend result flip relative to 10:00:00Z? In September it
-      had already flipped by 09:45, i.e. BEFORE the season formally rolled.
-- [ ] Does the first race of a season always appear at `sectionIndex 0`, `periodIndex 0`, `periodType training`?
+      had already flipped by 09:45, i.e. BEFORE the season formally rolled. The S137 recording watched `#20JJJ2CCRU`,
+      whose profile carries no Path of Legend result and did not change at all; watch a player who played Ranked.
+- [ ] Does a new season's race always pass through `state: matchmaking` before `full` / `training`? (Once, 2026-10-05,
+      about two minutes.)
 - [ ] Does a race's close slot move only at the season boundary, or can it move mid-season?
 - [ ] Is Pass Royale's season length always aligned to the war season?
 
 ### Answered
+
+- [x] **Bounds of the season-roll 404**, measured once: began `10:00:31`-`10:00:41`, ended `10:08:51`-`10:09:01`
+      (490-510 s), 2026-10-05. The new race then answered `state: matchmaking` with no `clan` until
+      `10:10:51`-`10:11:01`. July/August/September figures stay estimates.
+- [x] `riverracelog` during the 404 window serves the closed season's final week: it was the log's first entry from
+      before 09:46 (`createdDate` 09:38:04) to after the new race appeared, unchanged (2026-10-05).
+- [x] The first race of S137 appeared at `sectionIndex 0`, `periodIndex 0`, then `periodType training` once matched
+      (2026-10-05).
+- [x] A race's close slot is stable within a season to the second: the watched race closed `093804Z`-`093805Z` in all
+      four weeks of S136, Colosseum included, after `093404Z`-`093406Z` across S135 (2026-10-05).
+- [x] A four-week season's Colosseum battle days are not logged in `periodLogs`, like a five-week season's (S136,
+      2026-10-03 and 2026-10-05).
 
 - [x] The week close and the season roll are two different events: the race closes in its own slot (~26 minutes before
       the roll for the watched race) and the season rolls at 10:00:00Z (2026-09-07). Documented in clans.md.
