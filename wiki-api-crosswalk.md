@@ -169,6 +169,11 @@ Agent context:
   is a title and a message that a leader or co-leader (only) sends to the clan; it lands in every member's in-game Inbox
   and stays there, unlike chat. Observed in the game on 2026-09-25 by typing to the limit: the title takes at most 24
   characters and the message about 180 (bounded by typing, not read from a spec).
+- Leader Message sending and retention (operator report, 2026-10-05): sending is limited to **one per day**. The reset
+  rule (calendar day versus rolling cooldown), timezone and whether the limit is per clan or per sender have not been
+  established. The report describes clan chat retaining roughly the last 200 messages, which may age out in a day or two
+  of busy chat, and Inbox messages lasting roughly a month. These are approximate user observations, not verified
+  retention guarantees. The public API exposes neither message usage nor the next slot.
 - The in-game chat filter masks some innocent text with asterisks, often taking a neighbouring word with it. Found by
   comparing composed clan-chat lines with the masked result in the game, and by controlled tests:
   - `&` between two words (observed 2026-07-17): the `&` and both flanking words are masked; the same words joined by
@@ -184,7 +189,11 @@ Agent context:
   - Words on its slang list, whatever the meaning (observed 2026-07-17): `edging`, as in "edging ahead".
   - Not explained (observed 2026-08-03): `Season 135 is underway.` came out as `Season *** ** ********` while `134`
     passed unmasked in the same message. No trigger has been identified, and one sample is not enough to name one.
-  - Whether the Leader Message applies the same filter has not been observed.
+  - Leader Message masking (operator-provided screenshot, 2026-10-05): a delivered Inbox entry had a readable subject
+    and five body lines masked with asterisks; an older entry remained readable. This was a delivered masked message,
+    not a visible rejection or send error. The original body was not visible, so no triggering substring can be
+    identified. Identical filter rules between Leader Messages and clan chat have not been established; successful
+    sending does not establish readable delivery. No controlled resend was performed.
 
 ### Events, Challenges, And Temporary Modes
 
