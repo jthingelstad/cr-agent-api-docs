@@ -57,7 +57,7 @@ Start it before the boundary — first Monday of the month, 10:00 UTC — and wa
 ```sh
 uv run crprobe record --preset season-roll \
   --clan '#J2RGCRVG' --player '#20JJJ2CCRU' \
-  --session s137-roll --interval 10 --for 4h
+  --session s137-roll --interval 10 --for 14400
 uv run crprobe timeline s137-roll --human
 ```
 

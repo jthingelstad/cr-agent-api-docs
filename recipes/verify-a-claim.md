@@ -44,7 +44,7 @@ week and once a day. Record them unattended rather than trying to be awake:
 
 ```sh
 uv run crprobe record --preset season-roll \
-  --clan '#YOURCLAN' --player '#YOURTAG' --session s137-roll --for 4h
+  --clan '#YOURCLAN' --player '#YOURTAG' --session s137-roll --for 14400
 uv run crprobe timeline s137-roll --human
 ```
 
