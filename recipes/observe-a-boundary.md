@@ -58,7 +58,7 @@ Before the boundary:
 
 Record it:
    crprobe record --preset season-roll --clan '#J2RGCRVG' \
-     --player '#20JJJ2CCRU' --session <sYYY-wN> --interval 10 --for 3h
+     --player '#20JJJ2CCRU' --session <sYYY-wN> --interval 10 --for 10800
 Start by 09:15 UTC. Use the season-roll preset even for a week roll: it watches
 the race, the war log and a player profile together, and we do not yet know
 which of them moves first at a WEEK boundary.
@@ -104,7 +104,7 @@ Before the boundary:
 
 Record it:
    crprobe record --preset season-roll --clan '#J2RGCRVG' \
-     --player '#20JJJ2CCRU' --session <sNNN-roll> --interval 10 --for 4h
+     --player '#20JJJ2CCRU' --session <sNNN-roll> --interval 10 --for 14400
 Start by 09:15 UTC. Four hours is not excessive: the gap between the season
 rolling and the new race appearing was ~16 min in July, ~77 min in August and
 ~9 min in September, so it is not predictable.
