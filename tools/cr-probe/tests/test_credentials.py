@@ -3,6 +3,8 @@
 import base64
 import json
 
+import pytest
+
 from crprobe.credentials import Candidate, discover
 
 
@@ -68,7 +70,8 @@ def test_reads_a_file_that_is_only_the_token(tmp_path):
 
 def test_key_name_narrows_to_one_variable(tmp_path):
     env = tmp_path / ".env"
-    env.write_text(f"FIRST={SUPERCELL}\nSECOND={SUPERCELL[:-1]}x\n")
+    second = _fake_jwt({"iss": "supercell", "candidate": "second"})
+    env.write_text(f"FIRST={SUPERCELL}\nSECOND={second}\n")
 
     found = discover((str(env),), name="SECOND")
 
@@ -90,3 +93,23 @@ def test_label_never_exposes_the_value():
 
     assert candidate.label == "elixir-mcp/.env:CR_API_TOKEN"
     assert SUPERCELL not in repr(candidate)
+
+
+@pytest.mark.parametrize("segment", [0, 1], ids=["header", "payload"])
+def test_deeply_nested_jwt_is_not_a_candidate(tmp_path, segment):
+    """Unverified candidate inspection must reject malformed recursive input."""
+    parts = SUPERCELL.split(".")
+    nested = b"[" * 2000 + b"0" + b"]" * 2000
+    parts[segment] = base64.urlsafe_b64encode(nested).decode().rstrip("=")
+    env = tmp_path / ".env"
+    env.write_text(f"CANDIDATE={'.'.join(parts)}\n")
+
+    assert discover((str(env),)) == []
+
+
+def test_noncanonical_signature_is_not_a_candidate(tmp_path):
+    """Identification still requires syntactically valid JWT segments."""
+    env = tmp_path / ".env"
+    env.write_text(f"CANDIDATE={SUPERCELL[:-1]}x\n")
+
+    assert discover((str(env),)) == []
