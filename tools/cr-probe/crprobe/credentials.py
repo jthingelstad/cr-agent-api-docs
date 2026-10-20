@@ -44,7 +44,6 @@ _NOT_OURS = re.compile(
 # key that works from THIS machine rather than from deployed infrastructure.
 DEFAULT_KEY_FILES = (
     "~/Projects/clash-royale/drop.poapkings.com/.env",
-    "~/Projects/clash-royale/elixir-bot/.env",
     "~/Projects/clash-royale/elixir-mcp/.env",
     "~/Projects/clash-royale/cr-agent-api-docs/.env",
     "./.env",
