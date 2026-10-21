@@ -71,8 +71,9 @@ Fields:
 
 - `leagueNumber` - integer; 1-7 on current and last results. `bestPathOfLegendSeasonResult` can also carry 8-10 (29.9%
   of non-null bests, March-September 2026) from an earlier season whose league scale ran higher. Current and last never
-  exceeded 7 on any archived profile. Never read a best against the current seven leagues. League names for 1-7, and why
-  a best has none: [game-modes.md](../game-modes.md#leagues-and-leaguenumber).
+  exceeded 7 on any archived profile. A rated best (`trophies` above 0) is Ultimate Champion whatever its
+  `leagueNumber`; never read an unrated best against the current seven leagues. League names for 1-7, and why an unrated
+  best has none: [game-modes.md](../game-modes.md#leagues-and-leaguenumber).
 - `trophies` - integer; the Ultimate Champion rating, and 0 in every other league, on any scale (observed 2026-10-20). A
   rated best is Ultimate Champion; `leagueNumber` 1 with 0 is also what a player who did not play reads.
 - `rank` - integer or null

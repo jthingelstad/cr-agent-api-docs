@@ -94,8 +94,12 @@ which removed Challenger I-III, Ranked has seven leagues, so `leagueNumber` 1 is
   five clans (one outside the top, and the global top four): every current and last result in leagues 1-6 read
   `trophies: 0`, every league-7 result was rated (1,151 to 2,279), and `rank` appeared on league 7 only.
 - A player who has not played Ranked in a season reads `leagueNumber: 1, trophies: 0`, the same as a Master I finish,
-  because every season starts there. In that survey the 55 last-season results at 1 and 0 came from players with 6,004
-  to 14,000 Trophy Road trophies. Read 1 with 0 as "not past Master I", never as a Master I finish.
+  because every season starts there and `trophies` stays 0 below Ultimate Champion however far the season went. Observed
+  2026-10-20 against two players whose battle logs were recorded through the 2026-03 to 2026-09 seasons: one with no
+  `pathOfLegend` battle in any of them read 1 and 0 at every season's end, and one with 28 `pathOfLegend` battles in the
+  2026-09 season, every one at `leagueNumber` 1 and 24 of them wins at `+30`, read 1 and 0 at that season's end too. So
+  1 with 0 cannot tell a player who sat the season out from one who played it in Master I: read it as "not past Master
+  I", never as a Master I finish.
 - Read the table against current and last season results and a battle's `leagueNumber`. A `bestPathOfLegendSeasonResult`
   can come from a season on the earlier ten-league scale, which began at Challenger I and also ended at Ultimate
   Champion: in the same survey a best of 10 was always rated (74 players) and a best of 8 or 9 never was. So a rated
