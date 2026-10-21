@@ -132,6 +132,8 @@ const OBSERVED_CLAIMS = [
   ["models/battles.md", "always holds two entries", "round princess towers are always a pair (observed 2026-03 to 2026-09)"],
   ["models/battles.md", "is absent, not `0`, in a round", "round king HP absent when the king fell (observed 2026-07 to 2026-09)"],
   ["models/players.md", "can also carry 8-10", "best PoL league numbers exceed the current 1-7 (observed 2026-03 to 2026-09)"],
+  ["game-modes.md", "`leagueNumber` 1 is Master I and 7 is Ultimate Champion", "Ranked league names since the July 2025 update (sourced 2026-10-20)"],
+  ["game-modes.md", "a best has no name from this table", "a best PoL league may be on the earlier ten-league scale (sourced 2026-10-20)"],
   ["players.md", "`All_Random_Princess_Friendly` 72000519", "deckSelection unknown and empty cards on both All Random Princess modes (observed 2026-06 to 2026-09)"],
   ["models/battles.md", "September 2026 2v2 League", "#2C9J990U is the 2v2 League (observed 2026-09)"],
   ["players.md", "`AutoChessArena<N>_2025_Oct`", "the empty progress key is Merge Tactics' October 2025 season (observed 2026-03 to 2026-09)"],
