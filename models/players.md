@@ -71,7 +71,8 @@ Fields:
 
 - `leagueNumber` - integer; 1-7 on current and last results. `bestPathOfLegendSeasonResult` can also carry 8-10 (29.9%
   of non-null bests, March-September 2026) from an earlier season whose league scale ran higher. Current and last never
-  exceeded 7 on any archived profile. Never read a best against the current seven leagues.
+  exceeded 7 on any archived profile. Never read a best against the current seven leagues. League names for 1-7, and why
+  a best has none: [game-modes.md](../game-modes.md#leagues-and-leaguenumber).
 - `trophies` - integer
 - `rank` - integer or null
 

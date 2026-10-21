@@ -68,6 +68,33 @@ Important distinctions:
 - The player profile's current/last/best Path of Legend result objects can be `null`, and `rank` inside those objects
   can also be `null`.
 
+### Leagues and `leagueNumber`
+
+The API carries a Ranked league only as `leagueNumber`; no payload names it. Since the July 2025 update (7 July 2025),
+which removed Challenger I-III, Ranked has seven leagues, so `leagueNumber` 1 is Master I and 7 is Ultimate Champion:
+
+| `leagueNumber` | League            |
+| -------------- | ----------------- |
+| 1              | Master I          |
+| 2              | Master II         |
+| 3              | Master III        |
+| 4              | Champion          |
+| 5              | Grand Champion    |
+| 6              | Royal Champion    |
+| 7              | Ultimate Champion |
+
+- Sources: the names and their order agree on [clashest.com/leagues](https://clashest.com/leagues) and the Fandom
+  [Ranked](https://clashroyale.fandom.com/wiki/Ranked) page, which also dates the July 2025 change (both read
+  2026-10-20). They are not read from the API.
+- The API agrees on the top: 7 is the only rated league. `startingTrophies` appears on `pathOfLegend` participants only
+  in league 7, and `trophyChange` there moves on every win and loss, while below it only a win carries one, always `+30`
+  ([players.md](players.md)).
+- Each season starts everyone in Ranked at Master I.
+- Read the table against current and last season results and a battle's `leagueNumber`. A `bestPathOfLegendSeasonResult`
+  can come from a season on the earlier ten-league scale, which began at Challenger I: a best of 8-10 is from that scale
+  and a best of 1-7 could be from either, so a best has no name from this table
+  ([models/players.md](models/players.md)).
+
 Implementation guidance:
 
 - Treat `type=pathOfLegend` battle-log rows as ranked games even if user-facing copy says Ranked.
