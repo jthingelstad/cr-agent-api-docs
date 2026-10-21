@@ -60,6 +60,18 @@ const OBSERVED_GAME_MODES = [
   [72000531, "RR_CaptureTheEgg_Friendly"],
 ];
 
+// Ranked `leagueNumber` to league name since the July 2025 update, one row each in game-modes.md's
+// "Leagues and `leagueNumber`" table (sourced 2026-10-20). Matched per row, whatever the column padding.
+const RANKED_LEAGUES = [
+  [1, "Master I"],
+  [2, "Master II"],
+  [3, "Master III"],
+  [4, "Champion"],
+  [5, "Grand Champion"],
+  [6, "Royal Champion"],
+  [7, "Ultimate Champion"],
+];
+
 // Free-text claims that must survive a rewrite, keyed to the file that owns them.
 const OBSERVED_CLAIMS = [
   ["models/players.md", "`MasteryElixir Collector`", "a badge name with a literal space, observed 2026-09-19"],
@@ -137,6 +149,8 @@ const OBSERVED_CLAIMS = [
   ["game-modes.md", "Only Ultimate Champion is rated", "only league 7 carries trophies on current and last PoL results (observed 2026-10-20)"],
   ["game-modes.md", "is Ultimate Champion on either scale", "a rated best PoL result is Ultimate Champion, best 10 included (observed 2026-10-20)"],
   ["game-modes.md", "the same as a Master I finish", "a non-participant reads leagueNumber 1 with 0 trophies (observed 2026-10-20)"],
+  ["game-modes.md", "1 with 0 cannot tell a player who sat the season out from one who played it in Master I", "a 1/0 final from a season with no Ranked battle and from one with 28 league-1 battles (observed 2026-10-20)"],
+  ["models/players.md", "A rated best (`trophies` above 0) is Ultimate Champion", "a rated best PoL result is Ultimate Champion on either scale (observed 2026-10-20)"],
   ["players.md", "`All_Random_Princess_Friendly` 72000519", "deckSelection unknown and empty cards on both All Random Princess modes (observed 2026-06 to 2026-09)"],
   ["models/battles.md", "September 2026 2v2 League", "#2C9J990U is the 2v2 League (observed 2026-09)"],
   ["players.md", "`AutoChessArena<N>_2025_Oct`", "the empty progress key is Merge Tactics' October 2025 season (observed 2026-03 to 2026-09)"],
@@ -192,6 +206,13 @@ for (const [id, name] of OBSERVED_GAME_MODES) {
   }
 }
 
+const gameModes = read("game-modes.md");
+for (const [n, name] of RANKED_LEAGUES) {
+  if (!new RegExp(`^\\| *${n} *\\| *${name} *\\|`, "m").test(gameModes)) {
+    failures.push(`game-modes.md: Ranked league ${n} (${name}) is no longer a row of the league table`);
+  }
+}
+
 for (const [file, needle, why] of OBSERVED_CLAIMS) {
   if (!read(file).includes(needle)) {
     failures.push(`${file}: lost "${needle}" — ${why}`);
@@ -208,6 +229,6 @@ if (failures.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Validated ${OBSERVED_GAME_MODES.length} observed game mode(s) and ${OBSERVED_CLAIMS.length} observed claim(s).`,
+    `Validated ${OBSERVED_GAME_MODES.length} observed game mode(s), ${RANKED_LEAGUES.length} Ranked league(s) and ${OBSERVED_CLAIMS.length} observed claim(s).`,
   );
 }
