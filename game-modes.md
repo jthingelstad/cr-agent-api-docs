@@ -90,9 +90,17 @@ which removed Challenger I-III, Ranked has seven leagues, so `leagueNumber` 1 is
   in league 7, and `trophyChange` there moves on every win and loss, while below it only a win carries one, always `+30`
   ([players.md](players.md)).
 - Each season starts everyone in Ranked at Master I.
+- Only Ultimate Champion is rated, and a result's `trophies` is that rating. Observed 2026-10-20 across 249 players in
+  five clans (one outside the top, and the global top four): every current and last result in leagues 1-6 read
+  `trophies: 0`, every league-7 result was rated (1,151 to 2,279), and `rank` appeared on league 7 only.
+- A player who has not played Ranked in a season reads `leagueNumber: 1, trophies: 0`, the same as a Master I finish,
+  because every season starts there. In that survey the 55 last-season results at 1 and 0 came from players with 6,004
+  to 14,000 Trophy Road trophies. Read 1 with 0 as "not past Master I", never as a Master I finish.
 - Read the table against current and last season results and a battle's `leagueNumber`. A `bestPathOfLegendSeasonResult`
-  can come from a season on the earlier ten-league scale, which began at Challenger I: a best of 8-10 is from that scale
-  and a best of 1-7 could be from either, so a best has no name from this table
+  can come from a season on the earlier ten-league scale, which began at Challenger I and also ended at Ultimate
+  Champion: in the same survey a best of 10 was always rated (74 players) and a best of 8 or 9 never was. So a rated
+  best is Ultimate Champion on either scale. An unrated best of 7 is from the earlier scale (8 players), and an unrated
+  best of 1-7 could be from either, so an unrated best has no name from this table
   ([models/players.md](models/players.md)).
 
 Implementation guidance:
