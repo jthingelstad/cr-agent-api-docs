@@ -73,7 +73,8 @@ Fields:
   of non-null bests, March-September 2026) from an earlier season whose league scale ran higher. Current and last never
   exceeded 7 on any archived profile. Never read a best against the current seven leagues. League names for 1-7, and why
   a best has none: [game-modes.md](../game-modes.md#leagues-and-leaguenumber).
-- `trophies` - integer
+- `trophies` - integer; the Ultimate Champion rating, and 0 in every other league, on any scale (observed 2026-10-20). A
+  rated best is Ultimate Champion; `leagueNumber` 1 with 0 is also what a player who did not play reads.
 - `rank` - integer or null
 
 The parent season-result field itself can be null for players without Path of Legend history.
