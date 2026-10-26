@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "markdownlint-cli": "^0.49.1",
-    "prettier": "^3.9.9"
+    "prettier": "^3.9.10"
   },
   "overrides": {
     "markdownlint-cli": {
