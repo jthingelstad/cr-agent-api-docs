@@ -236,9 +236,17 @@ where Trophy Road ends: 14,000 means "at the seasonal road's floor", and anythin
 #### The profile rolls per player, not at the season hour
 
 Recorded 2026-11-02 across the S137 -> S138 roll (`crprobe` session `s138-roll`, three profiles polled every 10 s from
-09:10Z to 13:10Z): **no profile changed at 10:00:00Z.** Each rolled at its own moment, `10:44:25`-`10:44:35`,
-`12:26:40`-`12:26:50` and `12:44:30`-`12:44:40`Z, 44 minutes to 2 h 45 min after the season. Every season field of a
-profile moved in the same poll:
+09:10Z to 13:10Z): **no profile changed at 10:00:00Z.** Each rolled at its own moment, 44 minutes to 2 h 45 min after
+the season:
+
+| profile                                                                          | rolled (UTC)          | what it showed                                   |
+| -------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------ |
+| `#20JJJ2CCRU` (every Path of Legend result league 1 at 0, no `leagueStatistics`) | `10:44:25`-`10:44:35` | the old month's `progress` bucket dropped        |
+| a second player (carries `leagueStatistics`)                                     | `12:26:40`-`12:26:50` | the bucket dropped and `previousSeason` restored |
+| a third player (played Ranked that season)                                       | `12:44:30`-`12:44:40` | the bucket dropped and Path of Legend rotated    |
+
+The second and third players are not named here because this repository is public; the recording that holds them is the
+local `s138-roll` capture. Every season field of a profile moved in the same poll:
 
 - the old month's `progress` bucket (`seasonal-trophy-road-202610`) was dropped. The new month's bucket
   (`seasonal-trophy-road-202611`) was already present on all three profiles at 09:10Z, before the roll.
