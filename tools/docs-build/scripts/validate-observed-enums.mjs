@@ -186,6 +186,10 @@ const OBSERVED_CLAIMS = [
   ["players.md", "no profile changed at 10:00:00Z.", "profiles roll per player, hours after the season (three profiles, 2026-11-02)"],
   ["players.md", "result is not updated live during a season", "bestPathOfLegendSeasonResult updated only at the profile's roll (2026-11-02)"],
   ["players.md", "`trophies: 14122`, `bestTrophies: 14210`", "a climbed seasonal-trophy-road bucket starts at 14,000 (2026-11-02)"],
+  // Which profile rolled when, and what it showed: a RegExp so a table reflow keeps the row's cells bound together.
+  ["players.md", /\| `#20JJJ2CCRU` \(every Path of Legend result league 1 at 0, no `leagueStatistics`\) +\| `10:44:25`-`10:44:35` +\| the old month's `progress` bucket dropped/, "the s138-roll profile with no Ranked result rolled first (2026-11-02)"],
+  ["players.md", /\| a second player \(carries `leagueStatistics`\) +\| `12:26:40`-`12:26:50` +\| the bucket dropped and `previousSeason` restored/, "the s138-roll leagueStatistics profile and its roll window (2026-11-02)"],
+  ["players.md", /\| a third player \(played Ranked that season\) +\| `12:44:30`-`12:44:40` +\| the bucket dropped and Path of Legend rotated/, "the s138-roll Ranked profile and its roll window (2026-11-02)"],
   ["clans.md", "`+100 / +50 / -25 / -50 / -100`", "Colosseum trophyChange is graded by rank, not ±100 (60 brackets, S118-135)"],
   ["clans.md", "`collectionEndTime` and `warEndTime` are not sent", "never observed in 7,140 race payloads 2026-03..09"],
   ["leaderboards.md", "472 of 480 reads", "game-mode boards return an after cursor at limit=1000 (2026-09-11..09-25)"],
@@ -223,7 +227,8 @@ for (const [n, name] of RANKED_LEAGUES) {
 }
 
 for (const [file, needle, why] of OBSERVED_CLAIMS) {
-  if (!read(file).includes(needle)) {
+  const text = read(file);
+  if (!(needle instanceof RegExp ? needle.test(text) : text.includes(needle))) {
     failures.push(`${file}: lost "${needle}" — ${why}`);
   }
 }
