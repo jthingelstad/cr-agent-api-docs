@@ -224,8 +224,11 @@ across 40 log entries sampled April 2026.
 - **The race-close time is per race, drawn at the season roll; the 10:00Z season hour is global.** Observed closes for
   one clan: `093005Z` for every week of Season 134, `093404Z`-`093406Z` for every week of Season 135,
   `093804Z`-`093805Z` for all four weeks of Season 136, its Colosseum included. Stable within a season, moved between
-  them. Confirmed across clans 2026-09-17 (six clans, five countries, `riverracelog[].createdDate` for the same weeks):
-  the week KEY `(seasonId, sectionIndex)` is identical everywhere, the close INSTANT is not.
+  them, for those three seasons. Season 137 broke the pattern: the same race closed `094805Z`, `094918Z`, `094805Z` and
+  `094851Z` (weeks 0-3, Colosseum last; `crprobe survey week-close`, 2026-11-02), so a slot can move by over a minute
+  inside a season. Read each week's close from that week's own `createdDate`, never from an earlier week. Confirmed
+  across clans 2026-09-17 (six clans, five countries, `riverracelog[].createdDate` for the same weeks): the week KEY
+  `(seasonId, sectionIndex)` is identical everywhere, the close INSTANT is not.
 
   | clan (country)      | S134 weeks | S135 weeks          | S136 week 0 |
   | ------------------- | ---------- | ------------------- | ----------- |
@@ -367,38 +370,54 @@ therefore fires up to well over an hour AFTER the season itself rolls. Do not tr
 
 ## The season rollover, minute by minute
 
-Watched by hand on the S135 -> S136 roll, 2026-09-07, and recorded with `crprobe` (10-second polls, session `s137-roll`)
-on the S136 -> S137 roll, 2026-10-05, both against `#J2RGCRVG`. Nearly every rollover bug comes from assuming this is
-ONE instant. It is a sequence, and the API says different things at each stage. Times below are the October recording; a
-bound is the last poll before and the first poll after.
+Watched by hand on the S135 -> S136 roll, 2026-09-07, and recorded with `crprobe` at 10-second polls on the S136 -> S137
+roll (session `s137-roll`, 2026-10-05, polling from 09:46:30) and the S137 -> S138 roll (session `s138-roll`,
+2026-11-02, polling from 09:10:01), all against `#J2RGCRVG`. Nearly every rollover bug comes from assuming this is ONE
+instant. It is a sequence, and the API says different things at each stage. A bound is the last poll before and the
+first poll after.
 
-| UTC (2026-10-05)      | What happens          | `currentriverrace`                                                                                                                                                                        | Client says                        |
-| --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `09:38:04`            | Race closes           | the war log's `createdDate`; the closed week is already the log's first entry                                                                                                             | "Week N ending... Please stand by" |
-| `09:46:30`-`10:00:31` | Stand-by              | `200`, old `sectionIndex` 3, `periodIndex` 27, `periodType colosseum`, but every `fame`, `periodPoints` and `decksUsed` is `0` and `clanScore` already includes the week's `trophyChange` | season countdown running           |
-| `10:00:00`            | **Season rolls**      | unchanged: still the stand-by payload for at least 31 seconds                                                                                                                             | countdown hits zero                |
-| `10:00:31`-`10:00:41` | No race exists        | **`404 notFound`** begins (`GET /clans/{tag}` still `200`)                                                                                                                                | "Waiting for Clan War to start..." |
-| `10:08:51`-`10:09:01` | New race, matchmaking | `200`, and the whole body is `{"periodIndex":0,"sectionIndex":0,"state":"matchmaking"}`: no `clan`, `clans`, `periodType` or `periodLogs`                                                 | not observed                       |
-| `10:10:51`-`10:11:01` | New race, matched     | `state full`, `periodType training`, `fame 0`, no `periodLogs` key                                                                                                                        | "Training Days Started! Week 1"    |
+| Stage                     | 2026-10-05 (UTC)                           | 2026-11-02 (UTC)                                                                | What the API says                                                                                                                                                                         | Client says                        |
+| ------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Race closes               | `09:38:04`                                 | `09:48:51`                                                                      | the closed week's `createdDate` in the war log                                                                                                                                            | "Week N ending... Please stand by" |
+| Closed race still served  | not observed (polling began 09:46:30)      | to `09:50:03`, 72 s after the close stamp                                       | `currentriverrace` `200` with the final figures (`fame` 30,300) and the old `clanScore`; the war log's first entry is still the previous week                                             |                                    |
+| Stand-by                  | by `09:46:30` to `10:00:31`                | `09:50:03`-`09:50:13` to `10:00:23`                                             | `200`, old `sectionIndex` 3, `periodIndex` 27, `periodType colosseum`, but every `fame`, `periodPoints` and `decksUsed` is `0` and `clanScore` already includes the week's `trophyChange` | season countdown running           |
+| Log gains the closed week | by `09:46:30`                              | `09:50:13`-`09:50:23`                                                           | `riverracelog` first entry becomes the closed week, 82-92 s after its own `createdDate` and one poll after the race zeroed                                                                | season countdown running           |
+| **Season rolls**          | `10:00:00`                                 | `10:00:00`                                                                      | unchanged: the stand-by payload outlives the roll by 23-41 s across the two recordings                                                                                                    | countdown hits zero                |
+| No race exists            | `10:00:31`-`10:00:41` begins               | `10:00:23`-`10:00:33` begins                                                    | **`404 notFound`** (`GET /clans/{tag}` still `200`)                                                                                                                                       | "Waiting for Clan War to start..." |
+| New race, matchmaking     | `10:08:51`-`10:09:01`                      | not seen at 10 s                                                                | `200`, and the whole body is `{"periodIndex":0,"sectionIndex":0,"state":"matchmaking"}`: no `clan`, `clans`, `periodType` or `periodLogs`                                                 | not observed                       |
+| New race, matched         | `10:10:51`-`10:11:01`                      | `10:08:14`-`10:08:24`                                                           | `state full`, `periodType training`, `sectionIndex 0`, `periodIndex 0`, `fame 0`, no `periodLogs` key                                                                                     | "Training Days Started! Week 1"    |
+| Player profiles roll      | not seen (the profile had nothing to roll) | per player: `10:44:25`-`10:44:35`, `12:26:40`-`12:26:50`, `12:44:30`-`12:44:40` | every season field of one profile moves in the same poll, at a different moment for each player; see [players.md](players.md#the-profile-rolls-per-player-not-at-the-season-hour)         |                                    |
 
-The 404 window measured 490-510 seconds and matchmaking about two minutes. From 09:46 to 10:15 the profile and the war
-log did not change; the log served the closed week through the stand-by, the 404 and the new race.
+The 404 window measured 490-510 seconds in October and 460-480 seconds in November. October's new race spent about two
+minutes in `matchmaking`; November's went from the 404 straight to a matched race within one 10-second poll, so
+`matchmaking` is not a stage every roll shows for long enough to see. The war log served the closed week, unchanged,
+through the stand-by, the 404 and the new race, until both recordings ended (13:46Z and 13:10Z).
 
 **The stand-by payload is not the finished race's figures.** The September hand watch recorded stand-by as "still the
 finished race, final fame", but no stand-by payload from that roll was kept. In October the first observation, 8 minutes
-after the close, was already zeroed while the section and period were still the old ones. Whether the zeroing happens at
-the close or some minutes after it is not yet measured. Either way, a stand-by read is not a source for the finished
-week's figures: read those from the log, or keep the last value seen before the close.
+after the close, was already zeroed while the section and period were still the old ones. November, polled from 09:10,
+measured the zeroing: the live race kept serving the final `fame` (30,300) until `09:50:03` and was zeroed by
+`09:50:13`, 72-82 s after the war log's close stamp, with `clanScore` gaining the week's `trophyChange` (+100) in the
+same poll. So for a minute or so after the close stamp the race looks like it is still running, and after that it looks
+like a race nobody played. Neither is a source for the finished week's figures: read those from the log once the closed
+week appears there, or keep the last value seen before the close.
+
+**`createdDate` is not when the log entry becomes readable.** In November the closed week (`createdDate`
+`20261102T094851`) first appeared in `riverracelog` between `09:50:13` and `09:50:23`: 82-92 s after its own stamp, and
+one poll after the live race zeroed. Polling the log at the close slot does not find the closed week.
 
 Consequences worth designing for:
 
 - **There is no payload that announces the new season.** `seasonId` is absent from the live race, and between the roll
   and the new race there is no race at all. A consumer learns the season changed only when the new race appears with
   `sectionIndex 0` - which is up to well over an hour late.
-- **The stand-by window is the dangerous one.** From the race's own close slot to 10:00Z (~26 minutes for this race; up
-  to ~30 for another, since slots are per race) the API returns a payload that describes the OLD race while the calendar
-  has (or is about to) move on. Deriving the season from wall-clock during that window stamps the old race's final
-  section with the NEW season id.
+- **The stand-by window is the dangerous one.** From the race's own close slot to 10:00Z (~11 to ~26 minutes for this
+  race; up to ~30 for another, since slots are per race) the API returns a payload that describes the OLD race while the
+  calendar has (or is about to) move on. Deriving the season from wall-clock during that window stamps the old race's
+  final section with the NEW season id.
+- **A profile is not a season clock either.** Player profiles roll one at a time, up to hours after 10:00Z (see
+  [players.md](players.md#the-profile-rolls-per-player-not-at-the-season-hour)). A profile read after the roll can still
+  describe the old season.
 - **`periodLogs` is absent on a fresh race, not `[]`.** No archived race payload (7,139, March-September 2026) carried
   an empty array; 685 had no key. Anything that reads "the most recent closed day" must handle a missing key, not only
   an empty list.
@@ -408,10 +427,11 @@ Consequences worth designing for:
   not a reason to alarm or to drop the clan from a roster.
 - **A race can exist before it has a clan.** For about two minutes after the 404 ended (2026-10-05) the race answered
   `200` with `state: "matchmaking"` and only `periodIndex` and `sectionIndex`. Code that reads `clan.tag` or `clans[]`
-  off any `200` will fail there. Treat a race without `clan` like the 404: no race yet.
+  off any `200` will fail there. Treat a race without `clan` like the 404: no race yet. The November roll skipped past
+  this stage between two polls; design for it anyway.
 - **The gap length is not stable.** ~16 min (July), ~77 min (August), ~9 min (September), 8m51s-9m01s to the new race
-  and 10m51s-11m01s to a matched one (October, measured) after the season roll. Do not encode a timeout that assumes the
-  short case.
+  and 10m51s-11m01s to a matched one (October, measured), 8m14s-8m24s to a matched one (November, measured) after the
+  season roll. Do not encode a timeout that assumes the short case.
 
 ## Agent Notes
 
@@ -463,13 +483,14 @@ Consequences worth designing for:
 - **`finishTime` is not a clock, and one clan's close is not the game's.** The rank-1 `finishTime` in a `/riverracelog`
   entry is the war-day close at which that race's boat reached the line (see "`finishTime` is a war-day close" below),
   not the moment the week closed and not a mid-day crossing. Its time of day is the race's own close slot: per race,
-  drawn at the season roll, and so far always in the `09:30Z`-`10:00Z` band (see "The race-close time is per race"
-  above). That is why one clan's rank-1 `finishTime` held 09:56:03-09:56:05 across four weeks of Season 130 and sat at
-  09:37:03 after the Season 131 roll: that race's slot moved, not a global close. The REST API exposes no `nextWarStart`
-  / `timeUntilTransition` countdown. To learn a race's slot, read that clan's own `riverracelog[].createdDate` (the week
-  close, present on Colosseum weeks too), not `finishTime`, whose date is the finishing war day and which is the
-  sentinel on every Colosseum week and every non-rank-1 entry. Never read one clan's `finishTime` or close as the
-  transition time for other clans; the 10:00Z season hour is the only global instant.
+  drawn at the season roll (and able to drift within a season, as Season 137 did), and so far always in the
+  `09:30Z`-`10:00Z` band (see "The race-close time is per race" above). That is why one clan's rank-1 `finishTime` held
+  09:56:03-09:56:05 across four weeks of Season 130 and sat at 09:37:03 after the Season 131 roll: that race's slot
+  moved, not a global close. The REST API exposes no `nextWarStart` / `timeUntilTransition` countdown. To learn a race's
+  slot, read that clan's own `riverracelog[].createdDate` (the week close, present on Colosseum weeks too), not
+  `finishTime`, whose date is the finishing war day and which is the sentinel on every Colosseum week and every
+  non-rank-1 entry. Never read one clan's `finishTime` or close as the transition time for other clans; the 10:00Z
+  season hour is the only global instant.
 - **Non-rank-1 clans carry a sentinel `finishTime`:** in a NORMAL war week only the rank-1 standings entry shows a real
   `finishTime`; the other four clans in the race show `19691231T235959.000Z` (epoch zero) because they didn't hit a
   completion condition. Don't treat the sentinel as a real time.
