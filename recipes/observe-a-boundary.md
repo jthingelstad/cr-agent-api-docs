@@ -139,26 +139,38 @@ baked and these prompts can retire (or become a scheduled job).
 - [ ] **Does `currentriverrace` 404 between weeks?** We know it does between seasons. Whether a plain week boundary has
       the same gap is unknown, and it changes how consumers should treat a 404 on any Monday.
 - [ ] Does `periodIndex` step cleanly (6 → 7) across a week boundary, or reset?
-- [ ] Does the new `riverracelog` entry appear before, with, or after the race itself changes?
-- [ ] Does `clan.fame` reset to 0 at the boundary, or lag by a poll?
+- [ ] Does the new `riverracelog` entry appear before, with, or after the race itself changes? At the season-final week
+      close (2026-11-02) it came one poll AFTER the race zeroed, 82-92 s after its own `createdDate`; a plain week close
+      is not yet observed.
+- [ ] Does `clan.fame` reset to 0 at the boundary, or lag by a poll? At the season-final week close (2026-11-02) the
+      race kept the final fame for 72-82 s past the close stamp; a plain week close is not yet observed.
 - [ ] Does `clanWarTrophies` update at the week close or at the next race?
 - [ ] Does a week roll pass through `state: matchmaking` (a race with no `clan`) the way the S137 season roll did?
-- [ ] When does the stand-by payload zero its `fame`, `periodPoints` and `decksUsed`: at the race close, or minutes
-      later? On 2026-10-05 it was already zeroed 8 minutes after the close; start by 09:15 to see the close itself.
 
 ### Season roll
 
-- [ ] Is the season roll exactly 10:00:00Z every month? On 2026-10-05 the stand-by payload outlived 10:00:00 and the 404
-      began between 10:00:31 and 10:00:41; one more measured roll says whether that lag is fixed.
-- [ ] When does a player profile's previous-season / Path of Legend result flip relative to 10:00:00Z? In September it
-      had already flipped by 09:45, i.e. BEFORE the season formally rolled. The S137 recording watched `#20JJJ2CCRU`,
-      whose profile carries no Path of Legend result and did not change at all; watch a player who played Ranked.
-- [ ] Does a new season's race always pass through `state: matchmaking` before `full` / `training`? (Once, 2026-10-05,
-      about two minutes.)
-- [ ] Does a race's close slot move only at the season boundary, or can it move mid-season?
 - [ ] Is Pass Royale's season length always aligned to the war season?
+- [ ] Does a profile roll when the player is next active? On 2026-11-02 each of three profiles rolled within minutes of
+      that player's first donation of the morning, but that is a coincidence in time, not a cause shown.
+- [ ] When does `leagueStatistics.previousSeason` disappear before the roll? Present at about 03:10Z on 2026-11-02,
+      absent at 09:10Z; start a recording earlier on a profile that carries it to bound it.
 
 ### Answered
+
+- [x] **Profiles roll per player, not at 10:00:00Z** (2026-11-02, three profiles): at `10:44:25`-`10:44:35`,
+      `12:26:40`-`12:26:50` and `12:44:30`-`12:44:40`Z, every season field of a profile in one poll (Path of Legend
+      results rotated, the old month's `progress` bucket dropped, `previousSeason` restored). Documented in players.md.
+      The September "flipped by 09:45" was not reproduced; the only pre-roll change seen was `previousSeason`
+      disappearing.
+- [x] **The season-roll 404 lags 10:00:00Z by about half a minute**: began `10:00:31`-`10:00:41` (2026-10-05) and
+      `10:00:23`-`10:00:33` (2026-11-02). It lasted 490-510 s and 460-480 s.
+- [x] **`matchmaking` is not a stage every roll shows**: two minutes on 2026-10-05, not seen at 10 s on 2026-11-02 (the
+      404 went straight to `full` / `training`).
+- [x] **A close slot can move mid-season**: Season 137 closed `094805Z`, `094918Z`, `094805Z`, `094851Z` (weeks 0-3),
+      after S134-S136 each held to the second.
+- [x] **The stand-by zeroing is measured**: at the season-final week close on 2026-11-02 the live race served the final
+      `fame` until 72 s after the close stamp and was zeroed by 82 s, `clanScore` gaining the `trophyChange` in the same
+      poll.
 
 - [x] **Bounds of the season-roll 404**, measured once: began `10:00:31`-`10:00:41`, ended `10:08:51`-`10:09:01`
       (490-510 s), 2026-10-05. The new race then answered `state: matchmaking` with no `clan` until

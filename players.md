@@ -229,6 +229,42 @@ road's own scale (Trophy Road ends at 14,000, where the seasonal arenas begin) u
 observed. The `""` bucket on the same three profiles carried `rawName: "AutoChessArena1_2025_Oct"`, the Merge Tactics
 pre-season arena, with zero trophies: a legacy Merge Tactics bucket, not a mirror of any live mode.
 
+A profile that HAS climbed the seasonal road was observed on 2026-11-02: its `seasonal-trophy-road-202610` bucket read
+`trophies: 14122`, `bestTrophies: 14210` while its Trophy Road `trophies` stayed 14,000. So the bucket's scale starts
+where Trophy Road ends: 14,000 means "at the seasonal road's floor", and anything above it is seasonal-road progress.
+
+#### The profile rolls per player, not at the season hour
+
+Recorded 2026-11-02 across the S137 -> S138 roll (`crprobe` session `s138-roll`, three profiles polled every 10 s from
+09:10Z to 13:10Z): **no profile changed at 10:00:00Z.** Each rolled at its own moment, 44 minutes to 2 h 45 min after
+the season:
+
+| profile                                                                          | rolled (UTC)          | what it showed                                   |
+| -------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------ |
+| `#20JJJ2CCRU` (every Path of Legend result league 1 at 0, no `leagueStatistics`) | `10:44:25`-`10:44:35` | the old month's `progress` bucket dropped        |
+| a second player (carries `leagueStatistics`)                                     | `12:26:40`-`12:26:50` | the bucket dropped and `previousSeason` restored |
+| a third player (played Ranked that season)                                       | `12:44:30`-`12:44:40` | the bucket dropped and Path of Legend rotated    |
+
+The second and third players are not named here because this repository is public; the recording that holds them is the
+local `s138-roll` capture. Every season field of a profile moved in the same poll:
+
+- the old month's `progress` bucket (`seasonal-trophy-road-202610`) was dropped. The new month's bucket
+  (`seasonal-trophy-road-202611`) was already present on all three profiles at 09:10Z, before the roll.
+- on the profile that played Ranked that season, the Path of Legend results rotated: `currentPathOfLegendSeasonResult`
+  `leagueNumber` 5 -> 1, `lastPathOfLegendSeasonResult` 1 -> 5, and `bestPathOfLegendSeasonResult` 3 -> 5. **The best
+  result is not updated live during a season**: the profile showed a current league 5 above a best of 3 until its roll.
+- on the profile carrying `leagueStatistics`, `previousSeason` came back as `id: "2026-10"`, with the same `trophies`
+  and `bestTrophies` (5,005) it had carried as `id: "2026-09"` in a read at about 03:10Z. It was absent from 09:10Z, the
+  start of the recording, until that profile rolled: `previousSeason` disappears some time before the season hour and
+  returns only when the profile rolls. Its figures did not change, so a `previousSeason.id` is not evidence that the
+  player played that season.
+
+Each roll fell within minutes of that player's first visible activity of the morning (a donation): one in the same poll,
+one about 2 minutes after it, one about 4 minutes before it. That is consistent with a profile rolling when the account
+is next loaded, but it is not proven. Consequences: a profile read after 10:00Z can still describe the closed season,
+for hours; do not read `lastPathOfLegendSeasonResult` or `previousSeason` as last season's result until that profile has
+rolled (the old month's `progress` bucket is gone); and a player who is not active may not roll for a long time.
+
 ---
 
 ### GET /players/{playerTag}/battlelog

@@ -23,8 +23,10 @@ Observed `state`:
 - `matchmaking` — a newly created race before its bracket is drawn. Recorded for about two minutes after the season
   roll's 404 ended (2026-10-05, `10:08:51`-`10:09:01` to `10:10:51`-`10:11:01`Z). The whole body was
   `{"periodIndex":0,"sectionIndex":0,"state":"matchmaking"}`: no `clan`, `clans`, `periodType` or `periodLogs`. Check
-  for `clan` before reading it; a race without one is "no race yet", like the 404 before it. Whether a mid-season week
-  roll passes through `matchmaking` is not yet observed.
+  for `clan` before reading it; a race without one is "no race yet", like the 404 before it. The next roll did not show
+  it: on 2026-11-02 the race went from the 404 straight to `full` / `training` between two 10-second polls
+  (`10:08:14`-`10:08:24`Z), so `matchmaking` can be shorter than a poll or skipped. Whether a mid-season week roll
+  passes through `matchmaking` is not yet observed.
 
 Observed `periodType` values:
 
@@ -137,8 +139,9 @@ closed five-week Seasons 130 and 135 never added indices 31-34 to `periodLogs[].
 confirmed the same behavior: none of 223 Colosseum payloads from 11 recorded clans on October 2-3 added indices 24 or 25
 after those days closed, even as the live race advanced through period index 26. The stand-by payload after the race
 closed (2026-10-05, 09:46-10:00Z) still logged only 3-6, 10-13 and 17-20, so none of the four Colosseum days was ever
-logged. During a Colosseum week the newest entry remains the previous regular week's last war day; read the Colosseum
-score from the live `clans[].fame` instead.
+logged. Season 137's Colosseum did the same: every race payload from 09:10Z to the 404 on 2026-11-02, before and after
+the close, logged only 3-6, 10-13 and 17-20. During a Colosseum week the newest entry remains the previous regular
+week's last war day; read the Colosseum score from the live `clans[].fame` instead.
 
 Every entry's `items[]` names the CURRENT race's clans, including the entries for earlier sections when those clans were
 in other brackets (observed 2026-08-31 and 2026-09-17: a section-1 war-day-1 payload carried entries for periods 3-6 and
