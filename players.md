@@ -269,13 +269,14 @@ rolled (the old month's `progress` bucket is gone); and a player who is not acti
 
 ### Names can carry colour markup
 
-The game lets a player type colour markup into a name, and the API returns the name as typed. Observed forms:
-`<c2>Name`, `<c9>Na<c5>me`, `<c2>Name<\c>`, and with a space, `< c2>Name`. In game these colour the text; anywhere else
-they read as noise, so a consumer that shows names has to strip them.
+Observed 2026-11-06 across the player names and clan names recorded from these responses: the API returns a name as the
+player typed it, including markup. Forms seen: `<c2>Name`, `<c9>Na<c5>me`, `<c2>Name<\c>`, and with a space,
+`< c2>Name`. Reading these as colour codes comes from their shape; how the game client draws them was not checked. A
+consumer that shows names outside the game should strip them.
 
 Only those forms are markup. A name such as `<Ox>~Stoat` or `4<Stoat` is the player's own text, so strip the colour
-forms rather than everything in angle brackets. A name can be nothing but markup, so decide what to show before
-stripping leaves it empty.
+forms rather than everything in angle brackets. A consumer should also decide what to show if stripping would leave
+nothing.
 
 ### GET /players/{playerTag}/battlelog
 

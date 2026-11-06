@@ -74,6 +74,9 @@ const RANKED_LEAGUES = [
 
 // Free-text claims that must survive a rewrite, keyed to the file that owns them.
 const OBSERVED_CLAIMS = [
+  ["players.md", "`<c2>Name`, `<c9>Na<c5>me`, `<c2>Name<\\c>`", "colour markup in names, observed 2026-11-06"],
+  ["players.md", "`< c2>Name`", "the spaced colour markup form, observed 2026-11-06"],
+  ["players.md", "`<Ox>~Stoat` or `4<Stoat`", "angle brackets that are a player's own text, observed 2026-11-06"],
   ["models/players.md", "`MasteryElixir Collector`", "a badge name with a literal space, observed 2026-09-19"],
   ["models/players.md", "`SkeletonWarriors` = Guards", "the Mastery badge codename that reads as code, observed 2026-09-19"],
   ["models/players.md", "`RoyalTournamentRank_v2`", "the _v2 twin of an undated badge, observed 2026-09-19"],
