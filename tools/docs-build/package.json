@@ -18,8 +18,8 @@
     "validate:card-roles": "node scripts/validate-card-roles.mjs"
   },
   "devDependencies": {
-    "markdownlint-cli": "^0.49.1",
-    "prettier": "^3.9.9"
+    "markdownlint-cli": "^0.50.0",
+    "prettier": "^3.9.10"
   },
   "overrides": {
     "markdownlint-cli": {
