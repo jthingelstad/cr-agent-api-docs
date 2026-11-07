@@ -270,7 +270,7 @@ rolled (the old month's `progress` bucket is gone); and a player who is not acti
 ### Names can carry colour markup
 
 Observed 2026-11-06 across the player names and clan names recorded from these responses: the API returns a name as the
-player typed it, including markup. Forms seen: `<c2>Name`, `<c9>Na<c5>me`, `<c2>Name<\c>`, and with a space,
+player typed it, including markup. Forms seen: `<c2>Name`, `<c9>Na<c5>me`, `<c2>Name<\c>`, `Name<c/>`, and with a space,
 `< c2>Name`. Reading these as colour codes comes from their shape; how the game client draws them was not checked. A
 consumer that shows names outside the game should strip them.
 
