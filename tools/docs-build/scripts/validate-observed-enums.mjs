@@ -147,6 +147,7 @@ const OBSERVED_CLAIMS = [
   ["models/battles.md", "seven CHAOS rulesets", "modifiers on the seven CHAOS modes, any type (observed 2026-03 to 2026-09)"],
   ["models/battles.md", "always holds two entries", "round princess towers are always a pair (observed 2026-03 to 2026-09)"],
   ["models/battles.md", "is absent, not `0`, in a round", "round king HP absent when the king fell (observed 2026-07 to 2026-09)"],
+  ["players.md", "absent, not `0`, for the side whose opponent took three crowns", "the battle-log page points at the round king HP omission"],
   ["models/players.md", "can also carry 8-10", "best PoL league numbers exceed the current 1-7 (observed 2026-03 to 2026-09)"],
   ["game-modes.md", "`leagueNumber` 1 is Master I and 7 is Ultimate Champion", "Ranked league names since the July 2025 update (sourced 2026-10-20)"],
   ["game-modes.md", "an unrated best has no name from this table", "a best PoL league may be on the earlier ten-league scale (observed 2026-10-20)"],

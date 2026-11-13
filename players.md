@@ -525,6 +525,10 @@ above for the full three-context semantics.
 }
 ```
 
+A round's `kingTowerHitPoints` is optional: it is absent, not `0`, for the side whose opponent took three crowns in that
+round (see Duel Rounds in [models/battles.md](models/battles.md#duel-rounds)). The participant-level field is always
+sent.
+
 The `used` boolean on each card in a round indicates if that card was played. Each round has a different deck (up to 3
 decks for a duel; a 2-0 duel carries 2 rounds). The top-level `cards` array on a duel participant is all rounds
 concatenated (16 or 24 cards), so it is not a deck: read `rounds[*].cards` for deck identity.
