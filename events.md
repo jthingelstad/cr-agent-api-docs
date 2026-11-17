@@ -67,6 +67,8 @@ Observed error bodies are usually `{ reason, message? }`. `type`/`detail` were n
   `/players/{tag}/battlelog`)
 - `title` and `description` are localized — locale is determined by the API token's configured region
 - `description` can be null for some events (observed for "Merge Tactics")
+- `title` can hold a newline: `"King of Cards\nQuick Wit Challenge"` (read live November 2026). Collapse whitespace
+  before showing a title on one line
 - Returns only currently active events, not upcoming or historical
 - Query params appear to be ignored — `/events?limit=5` still returned the full bare array in March 2026 testing
 - `eventTag` values appear in battle log entries (`Battle.eventTag`) — can be used to cross-reference which event a

@@ -39,6 +39,7 @@ const OBSERVED_GAME_MODES = [
   [72000510, "Crazy_Arena_InfiniteElixir"],
   [72000511, "Crazy_Arena_SuddenDeath"],
   [72000512, "Chaos_1v1_MegaDraft_All"],
+  [72000513, "Competitive_Multideck"],
   [72000013, "DraftModeInsane"],
   [72000024, "Overtime_Tournament"],
   [72000027, "TripleElixir_Tournament"],
@@ -58,6 +59,11 @@ const OBSERVED_GAME_MODES = [
   [72000529, "RR_FourCard_Friendly"],
   [72000530, "RR_MortarCapture_Friendly"],
   [72000531, "RR_CaptureTheEgg_Friendly"],
+  [72000532, "Event_GlobalLightning_EventDeck"],
+  [72000533, "202610_Event_Spooky_Chess"],
+  [72000534, "Crazy_Arena_Blackout"],
+  [72000535, "Crazy_Arena_PowerSurge"],
+  [72000536, "Chaos_1v1_MegaDraft_S3"],
 ];
 
 // Ranked `leagueNumber` to league name since the July 2025 update, one row each in game-modes.md's
@@ -74,6 +80,10 @@ const RANKED_LEAGUES = [
 
 // Free-text claims that must survive a rewrite, keyed to the file that owns them.
 const OBSERVED_CLAIMS = [
+  ["players.md", "| `quickplay`", "the quickplay battle type, observed 2026-11-07"],
+  ["players.md", "**A challenge's run counter.**", "a challenge's wins counter in startingTrophies, observed 2026-10/11"],
+  ["players.md", "battle of the ten CHAOS rulesets observed", "the CHAOS rulesets carrying modifiers, observed 2026-11"],
+  ["events.md", "`title` can hold a newline", "an event title with a newline, observed 2026-11"],
   ["players.md", "`<c2>Name`, `<c9>Na<c5>me`, `<c2>Name<\\c>`", "colour markup in names, observed 2026-11-06"],
   ["players.md", "`< c2>Name`", "the spaced colour markup form, observed 2026-11-06"],
   ["players.md", "`Name<c/>`", "the closing colour markup form, observed 2026-11-06"],
