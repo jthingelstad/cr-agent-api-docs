@@ -214,8 +214,8 @@ Badge categories observed:
   (archived profiles, March-September 2026; the last pair, `2v2LeagueCompletion` / `2v2LeagueRank`, first seen
   2026-09-21). For `RoyalTournament` and `ClassicRoyaleTournament` the Rank badge also occurs as a `_v2` twin. Also
   seen: `RouletteAllModes` (first seen 2026-09-21) and `Chaos_S2`.
-- League badges named `<Mode>LeagueBadge`, tiered with `maxLevel` 2: `MegaDraftLeagueBadge` and
-  `TouchdownLeagueBadge` (one recorded profile, read 2026-11-17).
+- League badges named `<Mode>LeagueBadge`, tiered with `maxLevel` 2: `MegaDraftLeagueBadge` and `TouchdownLeagueBadge`
+  (one recorded profile, read 2026-11-17).
 
 **What `progress` counts** differs by family (one recorded profile, every badge read at once, 2026-11-17):
 
