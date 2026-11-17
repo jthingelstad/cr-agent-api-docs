@@ -233,6 +233,16 @@ const OBSERVED_CLAIMS = [
   ["wiki-api-crosswalk.md", "Identical filter rules between Leader Messages and clan chat have not been established", "Leader Message filter uncertainty"],
 ];
 
+// Published gameplay rules have primary-source provenance, not wire observations.
+// Supercell's final shipped announcement, effective 2026-03-16.
+const PUBLISHED_GAME_CLAIMS = [
+  ["models/players.md", /^\| *Evolution *\| *Active Evolution *\| *Arena 3 *\|/m, "Evolution slot and Arena unlock"],
+  ["models/players.md", /^\| *Hero *\| *Active Hero or Champion *\| *Arena 5 *\|/m, "Hero and Champion eligibility and Arena unlock"],
+  ["models/players.md", /^\| *Wild *\| *Active Evolution, active Hero or Champion *\| *Arena 10 *\|/m, "Wild slot and Arena unlock"],
+  ["models/players.md", "https://supercell.com/en/games/clashroyale/blog/news/mid-march-update/", "the dated primary source"],
+  ["models/players.md", "do not establish an API array-order guarantee", "game rules do not imply API order"],
+];
+
 const failures = [];
 
 const players = read("players.md");
@@ -249,7 +259,7 @@ for (const [n, name] of RANKED_LEAGUES) {
   }
 }
 
-for (const [file, needle, why] of OBSERVED_CLAIMS) {
+for (const [file, needle, why] of [...OBSERVED_CLAIMS, ...PUBLISHED_GAME_CLAIMS]) {
   const text = read(file);
   if (!(needle instanceof RegExp ? needle.test(text) : text.includes(needle))) {
     failures.push(`${file}: lost "${needle}" — ${why}`);
@@ -260,12 +270,12 @@ if (failures.length) {
   console.error("Observed-value guard failed:\n");
   for (const f of failures) console.error(`  - ${f}`);
   console.error(
-    "\nThese were observed on the live API. If one is genuinely obsolete, remove it from" +
+    "\nObserved claims come from the live API; published game rules cite Supercell. If a claim is obsolete, remove it from" +
       "\ntools/docs-build/scripts/validate-observed-enums.mjs in the same commit and say why.",
   );
   process.exitCode = 1;
 } else {
   console.log(
-    `Validated ${OBSERVED_GAME_MODES.length} observed game mode(s), ${RANKED_LEAGUES.length} Ranked league(s) and ${OBSERVED_CLAIMS.length} observed claim(s).`,
+    `Validated ${OBSERVED_GAME_MODES.length} observed game mode(s), ${RANKED_LEAGUES.length} Ranked league(s) and ${OBSERVED_CLAIMS.length} observed claim(s) and ${PUBLISHED_GAME_CLAIMS.length} published game rule(s).`,
   );
 }

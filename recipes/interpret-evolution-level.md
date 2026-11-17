@@ -25,3 +25,9 @@ For active deck or battle behavior, read `currentDeck[]` or battle-log card arra
 
 - [../players.md](../players.md)
 - [../models/players.md](../models/players.md)
+
+## Special deck slots
+
+For current Evolution, Hero and Wild eligibility and unlocks, see
+[Special Deck Slots](../models/players.md#special-deck-slots). Published slot rules do not establish the order of API
+arrays.
