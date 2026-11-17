@@ -214,6 +214,20 @@ Badge categories observed:
   (archived profiles, March-September 2026; the last pair, `2v2LeagueCompletion` / `2v2LeagueRank`, first seen
   2026-09-21). For `RoyalTournament` and `ClassicRoyaleTournament` the Rank badge also occurs as a `_v2` twin. Also
   seen: `RouletteAllModes` (first seen 2026-09-21) and `Chaos_S2`.
+- League badges named `<Mode>LeagueBadge`, tiered with `maxLevel` 2: `MegaDraftLeagueBadge` and
+  `TouchdownLeagueBadge` (one recorded profile, read 2026-11-17).
+
+**What `progress` counts** differs by family (one recorded profile, every badge read at once, 2026-11-17):
+
+- **Mastery:** `progress` equals `level`, and `target` is `level + 1`, on every Mastery badge below its top; at the top
+  (level 10) `progress` is 10 and `target` is absent. So a Mastery badge's level is the whole signal; `progress` adds
+  nothing.
+- **`BattleWins`:** `progress` equals the profile's top-level `wins`.
+- **`ClanDonations`:** `progress` equals the profile's `totalDonations`.
+- **`YearsPlayed`:** `maxLevel` 11 (see below for `level` and `progress`).
+- **12-win challenge badges** (`Classic12Wins`, `Grand12Wins`): `progress` appears to count completed 12-win runs in
+  that challenge (the example above, `Classic12Wins` at level 1 with `progress` 2 and `target` 10, fits a first tier at
+  one run). Not yet verified against a run observed before and after; treat it as inferred.
 
 **`name` is an internal identifier, not a display name.** A badge carries no player-facing name anywhere in the API;
 only `iconUrls` is what the game shows. Anything that prints a badge to a person has to translate. Observed across 1,773
