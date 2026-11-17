@@ -82,6 +82,11 @@ const RANKED_LEAGUES = [
 const OBSERVED_CLAIMS = [
   ["players.md", "| `quickplay`", "the quickplay battle type, observed 2026-11-07"],
   ["players.md", "**A challenge's run counter.**", "a challenge's wins counter in startingTrophies, observed 2026-10/11"],
+  ["players.md", "`startingTrophies` is the player's wins so far in", "the run counter counts wins, observed 2026-10/11"],
+  ["players.md", "the run (absent at 0 wins)", "the run counter is absent at zero wins, observed 2026-10/11"],
+  ["players.md", "`trophyChange` is `+1` on a win and absent on a loss", "the run counter's change, observed 2026-10/11"],
+  ["players.md", "It counts wins, not a standing", "the run counter is not trophies, observed 2026-10/11"],
+  ["players.md", "`Showdown_Friendly` (72000065) is also the always-on \"Classic 1v1\" event", "Classic 1v1's mode, observed 2026-10/11"],
   ["players.md", "battle of the ten CHAOS rulesets observed", "the CHAOS rulesets carrying modifiers, observed 2026-11"],
   ["events.md", "`title` can hold a newline", "an event title with a newline, observed 2026-11"],
   ["players.md", "`<c2>Name`, `<c9>Na<c5>me`, `<c2>Name<\\c>`", "colour markup in names, observed 2026-11-06"],
