@@ -217,6 +217,12 @@ Badge categories observed:
 - League badges named `<Mode>LeagueBadge`, tiered with `maxLevel` 2: `MegaDraftLeagueBadge` and `TouchdownLeagueBadge`
   (one recorded profile, read 2026-11-17).
 
+**`iconUrls.large` is one image per badge and tier.** A tiered badge's icon changes with its `level`: across 5,811
+captured profiles (March-November 2026), 251 distinct `name` + `level` pairs carried 251 distinct URLs, no URL shared by
+two pairs, and every badge carried one. The URL is
+`https://api-assets.clashroyale.com/playerbadges/512/<opaque id>.png`. Keep the icon per `name` and `level`, never per
+`name` alone, or a badge drawn at one level shows another level's art.
+
 **What `progress` counts** differs by family (one recorded profile, every badge read at once, 2026-11-17):
 
 - **Mastery:** `progress` equals `level`, and `target` is `level + 1`, on every Mastery badge below its top; at the top

@@ -97,6 +97,7 @@ const OBSERVED_CLAIMS = [
   ["models/players.md", "`SkeletonWarriors` = Guards", "the Mastery badge codename that reads as code, observed 2026-09-19"],
   ["models/players.md", "`RoyalTournamentRank_v2`", "the _v2 twin of an undated badge, observed 2026-09-19"],
   ["models/players.md", "tiered, with `maxLevel` 10", "Mastery badges cap at level 10, observed 2026-09-25"],
+  ["models/players.md", "is one image per badge and tier", "a badge icon per level, observed 2026-11-17"],
   ["models/players.md", "`MegaDraftLeagueBadge`", "the <Mode>LeagueBadge family, observed 2026-11-17"],
   ["models/players.md", "`progress` equals `level`, and `target` is `level + 1`", "Mastery progress is its level, observed 2026-11-17"],
   ["models/leaderboards.md", "`name` - string or `null`", "leaderboard metadata name nullability observed 2026-09-14"],
