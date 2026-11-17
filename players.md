@@ -181,6 +181,9 @@ all 123 standard cards matched (`maxEvolutionLevel & 1` ⇔ `iconUrls.evolutionM
 
 **Implementation guidance:**
 
+- The game's current Evo, Hero and Wild slot rules, including Champion eligibility and Trophy Road unlocks, are in
+  [Special Deck Slots](models/players.md#special-deck-slots). They do not establish an API-order guarantee.
+
 - For ownership questions (upgrade advice, "do they have Evo X unlocked"), read from
   `player_profile_snapshots.cards_json`
 - For deployment questions ("what's their signature card as Evo", "are they wasting an Evo unlock by putting it in a

@@ -152,6 +152,31 @@ slot positions match evo/hero slot mechanics, and `evolutionLevel=3` was not obs
 For ownership checks, read `cards[]`. For deployment or played-as checks, read `currentDeck[]` or battle-log card
 arrays.
 
+## Special Deck Slots
+
+The game's slot rules and a card array's API order are separate facts. Supercell's
+[16 March 2026 update](https://supercell.com/en/games/clashroyale/blog/news/mid-march-update/) defines three special
+slots, also described in its
+[Cards & Decks support](https://support.supercell.com/clash-royale/en/articles/cards-and-decks-6.html):
+
+| Slot      | Eligible cards                            | Trophy Road unlock |
+| --------- | ----------------------------------------- | ------------------ |
+| Evolution | Active Evolution                          | Arena 3            |
+| Hero      | Active Hero or Champion                   | Arena 5            |
+| Wild      | Active Evolution, active Hero or Champion | Arena 10           |
+
+Ranked, events and challenges use all three slots under the March rework. A Champion's rarity makes it eligible for the
+Hero or Wild slot; that does not change its played form to `evolutionLevel=2`.
+
+These gameplay rules do not establish an API array-order guarantee or recover an unreported physical slot. Use
+played-form evidence, not `maxEvolutionLevel`, collection ownership or available artwork, to identify an active
+Evolution or Hero. Missing active forms do not prove a slot is locked. The current profile's Arena or King level cannot
+establish which slots were available in a historical battle; earlier rules differed. Boat-defense lists and concatenated
+duel rounds are not one eight-card deck.
+
+The dated slot-position observations above describe their sample, not a promise that every endpoint returns the
+deck-edit screen's order. Preserve the source order separately from any display ordering.
+
 ## Card Level Interpretation
 
 `level` and `maxLevel` use the API's rarity-relative scale, not a universal cross-rarity scale.
