@@ -42,8 +42,16 @@ jobs:
       - name: Install docs build dependencies
         run: npm ci --prefix tools/docs-build
 
+      - name: Test dependency audit policy
+        run: npm --prefix tools/docs-build run test:audit
+
+      - name: Audit production dependencies without exceptions
+        run: npm audit --prefix tools/docs-build --omit=dev --audit-level=low
+
+      # Jamie approved only GHSA-fc5q-39xc-vjpf in dev-only installations.
+      # Other high/critical findings remain gated; see tools/docs-build/AUDIT.md.
       - name: Audit docs build dependencies
-        run: npm audit --prefix tools/docs-build --audit-level=high
+        run: npm --prefix tools/docs-build run audit:dependencies
 
       - name: Run docs build
         run: npm --prefix tools/docs-build run build
@@ -98,4 +106,6 @@ jobs:
     permissions: {}
     steps:
       - name: every job passed
-        run: test "${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'skipped') }}" = true
+        run:
+          test "${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') &&
+          !contains(needs.*.result, 'skipped') }}" = true

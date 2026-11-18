@@ -15,7 +15,9 @@
     "validate:links": "node scripts/validate-markdown-links.mjs",
     "build": "npm run lint && npm run validate:json && npm run validate:links && npm run validate:observed && npm run validate:card-roles",
     "validate:observed": "node scripts/validate-observed-enums.mjs",
-    "validate:card-roles": "node scripts/validate-card-roles.mjs"
+    "validate:card-roles": "node scripts/validate-card-roles.mjs",
+    "test:audit": "node --test test/audit-dependencies.test.mjs",
+    "audit:dependencies": "node scripts/audit-dependencies.mjs"
   },
   "devDependencies": {
     "markdownlint-cli": "^0.49.1",

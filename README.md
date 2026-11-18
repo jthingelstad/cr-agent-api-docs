@@ -101,6 +101,11 @@ Run Markdown formatting with:
 npm --prefix tools/docs-build run format
 ```
 
+The docs tooling's dependency checks are `npm --prefix tools/docs-build run test:audit`,
+`npm audit --prefix tools/docs-build --omit=dev --audit-level=low` and
+`npm --prefix tools/docs-build run audit:dependencies`. The [audit policy](tools/docs-build/AUDIT.md) records the one
+approved development-only exception and its removal condition.
+
 The gate is CI: every pull request runs the docs build, the offline `crprobe` tests and a workflow lint, and `main`
 accepts a change only when the aggregate `validate` check is green. See [AGENTS.md](AGENTS.md) for how changes land.
 
